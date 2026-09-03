@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
-import { db } from '../../../../lib/firebase-admin';
-import { verifySessionToken, SESSION_COOKIE_NAME } from '../../../../lib/auth-session';
+import { db } from '@/lib/firebase-admin';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
 export async function GET(){
   try{
     const token=(await cookies()).get(SESSION_COOKIE_NAME)?.value; const session=verifySessionToken(token);

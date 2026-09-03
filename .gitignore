@@ -2,9 +2,15 @@ node_modules/
 .next/
 .env
 .env.local
+.env.production
 .env.*
 service-account*.json
+firebase-adminsdk-*.json
 *.pem
 .vercel/
 *.log
 .DS_Store
+*.xlsx
+*.xlsm
+*.xls
+SIAP_UPLOAD_GITHUB/

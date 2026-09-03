@@ -1,8 +1,8 @@
-import { requireAdmin } from '../../../../../lib/admin-auth';
-import { db } from '../../../../../lib/firebase-admin';
-import { verifySessionToken, SESSION_COOKIE_NAME } from '../../../../../lib/auth-session';
-import { readRekap } from '../../../../../lib/google-sheets';
-import { detectRekap, normalize } from '../../../../../lib/rekap-detector';
+import { requireAdmin } from '@/lib/admin-auth';
+import { db } from '@/lib/firebase-admin';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
+import { readRekap } from '@/lib/google-sheets';
+import { detectRekap, normalize } from '@/lib/rekap-detector';
 
 export const dynamic = 'force-dynamic';
 

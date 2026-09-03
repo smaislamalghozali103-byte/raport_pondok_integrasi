@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
-import { db } from '../../../../lib/firebase-admin';
-import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '../../../../lib/auth-session';
+import { db } from '@/lib/firebase-admin';
+import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/auth-session';
 
 export async function POST(req) {
   try {

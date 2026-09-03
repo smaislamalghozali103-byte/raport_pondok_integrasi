@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
-import { db } from '../../../../lib/firebase-admin';
-import { verifySessionToken, SESSION_COOKIE_NAME } from '../../../../lib/auth-session';
-import { archiveSpreadsheet } from '../../../../lib/google-drive';
+import { db } from '@/lib/firebase-admin';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
+import { archiveSpreadsheet } from '@/lib/google-drive';
 
 const clean=v=>String(v??'').trim();
 

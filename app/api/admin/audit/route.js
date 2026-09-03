@@ -1,5 +1,5 @@
-import { db } from '../../../../lib/firebase-admin';
-import { requireAdmin } from '../../../../lib/admin-auth';
+import { db } from '@/lib/firebase-admin';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export async function GET(request){
   const a=await requireAdmin(); if(!a.ok)return Response.json({success:false,message:a.message},{status:a.status});

@@ -1,5 +1,5 @@
-import { db } from '../../../../lib/firebase-admin';
-import { requireAdmin } from '../../../../lib/admin-auth';
+import { db } from '@/lib/firebase-admin';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 

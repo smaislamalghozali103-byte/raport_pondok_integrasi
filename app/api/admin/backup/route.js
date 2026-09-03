@@ -1,6 +1,6 @@
-import { db } from '../../../../lib/firebase-admin';
-import { requireAdmin } from '../../../../lib/admin-auth';
-import { writeAudit } from '../../../../lib/audit-log';
+import { db } from '@/lib/firebase-admin';
+import { requireAdmin } from '@/lib/admin-auth';
+import { writeAudit } from '@/lib/audit-log';
 
 const collections=['teachers','units','classes','subjects','students','teacher_assignments'];
 const serialize=v=>{

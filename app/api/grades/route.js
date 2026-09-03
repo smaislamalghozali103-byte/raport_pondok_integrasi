@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
-import { db } from "../../../lib/firebase-admin";
-import { verifySessionToken, SESSION_COOKIE_NAME } from "../../../lib/auth-session";
-import { canTeach } from "../../../lib/authorization";
-import { writeAudit } from "../../../lib/audit-log";
+import { db } from "@/lib/firebase-admin";
+import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth-session";
+import { canTeach } from "@/lib/authorization";
+import { writeAudit } from "@/lib/audit-log";
 
 const clean = (v) => String(v ?? "").trim();
 

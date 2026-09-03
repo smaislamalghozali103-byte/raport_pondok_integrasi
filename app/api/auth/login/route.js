@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { checkRateLimit } from '../../../../lib/rate-limit';
-import { clientIp } from '../../../../lib/security';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { clientIp } from '@/lib/security';
 import { cookies } from 'next/headers';
-import { db } from '../../../../lib/firebase-admin';
-import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '../../../../lib/auth-session';
+import { db } from '@/lib/firebase-admin';
+import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/auth-session';
 
 export async function POST(req) {
   try {

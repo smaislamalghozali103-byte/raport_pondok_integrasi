@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { db } from '../../../lib/firebase-admin';
-import { verifySessionToken, SESSION_COOKIE_NAME } from '../../../lib/auth-session';
-import { canTeach } from '../../../lib/authorization';
+import { db } from '@/lib/firebase-admin';
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
+import { canTeach } from '@/lib/authorization';
 export async function GET(request){const session=verifySessionToken((await cookies()).get(SESSION_COOKIE_NAME)?.value);if(!session)return Response.json({success:false,message:'Belum login.'},{status:401});const q=new URL(request.url).searchParams;const classId=q.get('class_id')||q.get('classId');const subjectId=q.get('subject_id')||q.get('subjectId');if(!classId)return Response.json({success:false,message:'class_id wajib.'},{status:400});if(subjectId&&!await canTeach(session,classId,subjectId))return Response.json({success:false,message:'Guru tidak memiliki akses ke kelas/mapel ini.'},{status:403});let snap=await db.collection('students').where('classId','==',classId).get();const students=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>String(x.status||'AKTIF').toUpperCase()==='AKTIF').sort((a,b)=>String(a.name||a.fullName||'').localeCompare(String(b.name||b.fullName||''),'id'));return Response.json({success:true,students});}
