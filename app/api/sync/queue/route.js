@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { db } from '@/lib/firebase-admin';
 import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
 import { readRekap, writeRekapCells } from '@/lib/google-sheets';
-import { detectRekap, normalize } from '@/lib/rekap-detector';
+import { detectRekap, normalize, colLetter } from '@/lib/rekap-detector';
 import { archiveSpreadsheet } from '@/lib/google-drive';
 
 const clean=v=>String(v??'').trim();
@@ -50,32 +50,69 @@ export async function POST(request){
     const grades=gradesSnap.docs.map(d=>({id:d.id,...d.data()}));
     if(!grades.length) throw new Error('Tidak ada nilai pada batch.');
 
-    const {values}=await readRekap(spreadsheetId,sheetName);
-    const layout=detectRekap(values,[subjectName]);
-    const subjectInfo=layout.subjectColumns[normalize(subjectName)];
-    if(!subjectInfo) throw new Error(`Kolom mata pelajaran "${subjectName}" tidak ditemukan pada Rekap.`);
+    const { values } = await readRekap(spreadsheetId, sheetName);
+    const allSubjectsSnap = await db.collection('subjects').where('status', '==', 'AKTIF').get();
+    const allSubjectNames = allSubjectsSnap.docs.map(d => d.data().name).filter(Boolean);
+    const subjectList = Array.from(new Set([subjectName, ...allSubjectNames]));
 
-    const byNisn=new Map(),byNis=new Map(),byName=new Map();
-    for(const s of layout.students){
-      if(s.nisn) byNisn.set(normalize(s.nisn),s);
-      if(s.nis) byNis.set(normalize(s.nis),s);
-      if(s.name) byName.set(normalize(s.name),s);
+    const layout = detectRekap(values, subjectList);
+    let subjectInfo = layout.subjectColumns[normalize(subjectName)];
+
+    if (!subjectInfo) {
+      const normTarget = normalize(subjectName);
+      const foundKey = Object.keys(layout.subjectColumns).find(k => k.includes(normTarget) || normTarget.includes(k));
+      if (foundKey) {
+        subjectInfo = layout.subjectColumns[foundKey];
+      }
     }
-    const cells=[]; const matched=[]; const unmatched=[];
-    for(const g of grades){
-      const student=studentById.get(g.studentId);
-      if(!student){unmatched.push({studentId:g.studentId,reason:'Siswa tidak ditemukan di Firestore'});continue;}
-      const target=student.nisn?byNisn.get(normalize(student.nisn)):null;
-      const target2=!target&&student.nis?byNis.get(normalize(student.nis)):null;
-      const target3=!target&&!target2&&student.name?byName.get(normalize(student.name)):null;
-      const row=target||target2||target3;
-      if(!row){unmatched.push({studentId:g.studentId,name:student.name||'',reason:'Siswa tidak ditemukan di Rekap'});continue;}
-      const value=g.value===null||g.value===undefined?'':g.value;
-      cells.push({a1:`${subjectInfo.a1Column}${row.row+1}`,value});
-      matched.push({studentId:g.studentId,name:student.name||row.name,row:row.row+1,value});
+
+    if (!subjectInfo) {
+      const layoutRef = db.collection('rekap_layouts').doc(`${batch.classId}__${batch.schoolYear || schoolYearDefault()}__${sheetName}`.replace(/[^a-zA-Z0-9_-]/g, '_'));
+      const lSnap = await layoutRef.get();
+      if (lSnap.exists) {
+        const sm = lSnap.data().subjectMapping || {};
+        subjectInfo = sm[normalize(subjectName)] || Object.values(sm).find(x => normalize(x.name || '').includes(normalize(subjectName)));
+      }
     }
-    if(!cells.length) throw new Error('Tidak ada siswa yang cocok dengan Rekap.');
-    const result=await writeRekapCells(spreadsheetId,sheetName,cells);
+
+    if (!subjectInfo) {
+      const headerRow = values[layout.headerRow] || [];
+      for (let c = 0; c < headerRow.length; c++) {
+        const cell = normalize(headerRow[c]);
+        if (cell && (cell.includes(normalize(subjectName)) || normalize(subjectName).includes(cell))) {
+          subjectInfo = { column: c, a1Column: colLetter(c), name: headerRow[c] };
+          break;
+        }
+      }
+    }
+
+    if (!subjectInfo) {
+      throw new Error(`Kolom mata pelajaran "${subjectName}" tidak ditemukan pada sheet ${sheetName}.`);
+    }
+
+    const byNisn = new Map(), byNis = new Map(), byName = new Map(), byRow = new Map();
+    for (const s of layout.students) {
+      if (s.nisn) byNisn.set(normalize(s.nisn), s);
+      if (s.nis) byNis.set(normalize(s.nis), s);
+      if (s.name) byName.set(normalize(s.name), s);
+      byRow.set(s.row + 1, s);
+    }
+    const cells = []; const matched = []; const unmatched = [];
+    for (const g of grades) {
+      const student = studentById.get(g.studentId);
+      if (!student) { unmatched.push({ studentId: g.studentId, reason: 'Siswa tidak ditemukan di database' }); continue; }
+      const target = student.nisn ? byNisn.get(normalize(student.nisn)) : null;
+      const target2 = !target && student.nis ? byNis.get(normalize(student.nis)) : null;
+      const target3 = !target && !target2 && student.name ? byName.get(normalize(student.name)) : null;
+      const target4 = !target && !target2 && !target3 && student.rekapRow ? byRow.get(student.rekapRow) : null;
+      const row = target || target2 || target3 || target4;
+      if (!row) { unmatched.push({ studentId: g.studentId, name: student.name || '', reason: 'Siswa tidak ditemukan di baris Rekap' }); continue; }
+      const value = g.value === null || g.value === undefined ? '' : g.value;
+      cells.push({ a1: `${subjectInfo.a1Column}${row.row + 1}`, value });
+      matched.push({ studentId: g.studentId, name: student.name || row.name, row: row.row + 1, value });
+    }
+    if (!cells.length) throw new Error('Tidak ada siswa yang cocok dengan baris Rekap.');
+    const result = await writeRekapCells(spreadsheetId, sheetName, cells);
     const now=new Date();
     const gradeBatch=db.batch();
     for(const g of grades){
