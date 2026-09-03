@@ -189,6 +189,44 @@ export default function DashboardClient() {
     return headers.find(h => candidates.some(c => normalize(h).includes(normalize(c))));
   }
 
+  async function downloadTemplate() {
+    try {
+      const XLSX = await import("xlsx");
+
+      const rows = students.map((s, idx) => ({
+        "No": idx + 1,
+        "NISN": s.nisn || s.nis || "",
+        "Nama Siswa": s.name || s.fullName || "",
+        "Nilai": grades[s.id] !== undefined && grades[s.id] !== "" ? Number(grades[s.id]) : ""
+      }));
+
+      const dataToExport = rows.length > 0 ? rows : [
+        { "No": 1, "NISN": "0012345678", "Nama Siswa": "Contoh Nama Santri 1", "Nilai": 85 },
+        { "No": 2, "NISN": "0012345679", "Nama Siswa": "Contoh Nama Santri 2", "Nilai": 90 }
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+
+      worksheet["!cols"] = [
+        { wch: 6 },
+        { wch: 16 },
+        { wch: 35 },
+        { wch: 12 }
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Template Nilai");
+
+      const className = selectedClass?.name ? selectedClass.name.replace(/[^a-zA-Z0-9_-]/g, "_") : "Kelas";
+      const subjName = selectedSubject?.name ? selectedSubject.name.replace(/[^a-zA-Z0-9_-]/g, "_") : "Mapel";
+      const fileName = `Template_Nilai_${className}_${subjName}.xlsx`;
+
+      XLSX.writeFile(workbook, fileName);
+    } catch (err) {
+      setError("Gagal mengunduh template Excel: " + err.message);
+    }
+  }
+
   async function handleExcel(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -378,7 +416,16 @@ export default function DashboardClient() {
             <h1 style={styles.title}>RAPORT INTEGRASI</h1>
             <p style={styles.school}>Pondok Modern Al-Ghozali</p>
           </div>
-          <button onClick={logout} style={styles.logout}>KELUAR</button>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <button
+              onClick={() => router.push("/admin")}
+              style={{ ...styles.logout, background: "#176b3a", color: "#fff", display: "flex", alignItems: "center", gap: 6 }}
+              title="Akses menu Admin untuk mengatur Spreadsheet ID per kelas"
+            >
+              ⚙️ KELOLA SPREADSHEET (ADMIN)
+            </button>
+            <button onClick={logout} style={styles.logout}>KELUAR</button>
+          </div>
         </header>
 
         <div style={styles.teacherBox}>
@@ -424,9 +471,14 @@ export default function DashboardClient() {
                 <h2 style={styles.sectionTitle}>{selectedSubject?.name} — {selectedClass?.name}</h2>
                 <p style={styles.meta}>Guru: {teacher?.teacherName} · {students.length} siswa</p>
               </div>
-              <div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                <button onClick={downloadTemplate} style={styles.downloadBtn} title="Unduh template Excel dengan daftar nama santri kelas ini">
+                  📥 UNDUH TEMPLATE EXCEL
+                </button>
                 <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: "none" }} />
-                <button onClick={() => fileRef.current?.click()} style={styles.secondary}>UPLOAD NILAI EXCEL</button>
+                <button onClick={() => fileRef.current?.click()} style={styles.secondary} title="Upload file Excel nilai yang sudah diisi">
+                  📤 UPLOAD NILAI EXCEL
+                </button>
               </div>
             </div>
 
@@ -504,6 +556,7 @@ const styles = {
   sectionTitle: { color: "#176b3a", fontSize: 18, margin: "20px 0 10px" },
   label: { display: "block", fontWeight: 700, fontSize: 14, margin: "14px 0 7px" },
   input: { width: "100%", boxSizing: "border-box", padding: "12px 13px", border: "1px solid #d5d5d5", borderRadius: 10, background: "#fff", fontSize: 15 },
+  downloadBtn: { border: "1px solid #176b3a", borderRadius: 10, padding: "12px 18px", background: "#f0fdf4", color: "#15803d", fontWeight: 800, cursor: "pointer", transition: "all .2s" },
   secondary: { padding: "12px 18px", borderRadius: 10, border: "1px solid #1f6f43", background: "#fff", color: "#1f6f43", fontWeight: 700, cursor: "pointer" },
   primary: { border: 0, borderRadius: 10, padding: "12px 18px", background: "#176b3a", color: "#fff", fontWeight: 800, cursor: "pointer" },
   secondary: { border: "1px solid #176b3a", borderRadius: 10, padding: "12px 18px", background: "#fff", color: "#176b3a", fontWeight: 800, cursor: "pointer" },
