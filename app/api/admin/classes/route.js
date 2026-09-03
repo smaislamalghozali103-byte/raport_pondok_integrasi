@@ -1,4 +1,5 @@
 import { db } from '../../../../../lib/firebase-admin';
+export const dynamic = 'force-dynamic';
 import { requireAdmin } from '../../../../../lib/admin-auth';
 import { spreadsheetIdFromUrl, readSheet } from '../../../../../lib/google-sheets';
 
