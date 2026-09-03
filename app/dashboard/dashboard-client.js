@@ -333,11 +333,11 @@ export default function DashboardClient() {
 
     if (payloadGrades.some(x => !Number.isFinite(x.value) || x.value < 0 || x.value > 100)) {
       setError("Ada nilai yang tidak valid. Nilai harus 0-100.");
-      return;
+      return null;
     }
 
-    if (!window.confirm(`Simpan ${payloadGrades.length} nilai untuk ${selectedSubject?.name} kelas ${selectedClass?.name}?`)) {
-      return;
+    if (!skipConfirm && !window.confirm(`Simpan ${payloadGrades.length} nilai untuk ${selectedSubject?.name} kelas ${selectedClass?.name}?`)) {
+      return null;
     }
 
     try {
@@ -362,35 +362,48 @@ export default function DashboardClient() {
       if (!data.success) throw new Error(data.message);
 
       setLastBatchId(data.batchId);
-      setMessage(`✓ ${data.saved} nilai berhasil disimpan di Firestore. Siap disinkronkan ke Google Sheets.`);
+      setMessage(`✓ ${data.saved} nilai berhasil disimpan di database.`);
       setExcelPreview(null);
+      return data.batchId;
     } catch (err) {
       setError(err.message || "Gagal menyimpan nilai.");
+      return null;
     } finally {
       setSaving(false);
     }
   }
 
   async function syncLastBatch() {
-    if (!lastBatchId) {
-      setError("Belum ada transaksi nilai yang bisa disinkronkan.");
+    if (filledGrades().length === 0) {
+      setError("Belum ada nilai yang diisi.");
       return;
     }
+
+    let activeBatch = lastBatchId;
+
+    // Jika belum pernah disimpan manual, simpan otomatis dulu ke Firestore
+    if (!activeBatch) {
+      activeBatch = await saveGrades(true);
+      if (!activeBatch) return;
+    }
+
     try {
       setSyncing(true);
       setError("");
-      setMessage("");
+      setMessage("Sedang menyinkronkan nilai ke Google Sheets Rekap...");
+
       const res = await fetch("/api/sync/queue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ batchId: lastBatchId }),
+        body: JSON.stringify({ batchId: activeBatch }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
+
       if (data.unmatched) {
-        setMessage(`✓ Sinkronisasi selesai sebagian. ${data.matched} siswa masuk ke Rekap, ${data.unmatched} tidak cocok${data.archive ? ` · Arsip Drive: ${data.archive.archiveName}` : data.archiveError ? ` · Arsip Drive gagal: ${data.archiveError}` : ''}.`);
+        setMessage(`✓ Sinkronisasi selesai. ${data.matched} siswa masuk ke Google Sheets Rekap, ${data.unmatched} tidak cocok${data.archive ? ` · Arsip Drive: ${data.archive.archiveName}` : data.archiveError ? ` · Arsip Drive gagal: ${data.archiveError}` : ''}.`);
       } else {
-        setMessage(`✓ ${data.updatedCells} sel nilai berhasil dikirim ke Google Sheets/Rekap${data.archive ? ` · Arsip Drive tersimpan: ${data.archive.archiveName}` : data.archiveError ? ` · Arsip Drive gagal: ${data.archiveError}` : ''}.`);
+        setMessage(`✓ Berhasil! ${data.updatedCells || data.matched || 'Semua'} nilai santri berhasil masuk ke Google Sheets Rekap${data.archive ? ` · Arsip Drive: ${data.archive.archiveName}` : ''}.`);
       }
     } catch (err) {
       setError(err.message || "Gagal sinkronisasi ke Google Sheets.");
@@ -530,11 +543,21 @@ export default function DashboardClient() {
 
             <div style={styles.actions}>
               <span style={styles.count}>{filledGrades().length} / {students.length} nilai terisi</span>
-              <button onClick={saveGrades} disabled={saving} style={styles.primary}>
-                {saving ? "MENYIMPAN..." : "SIMPAN NILAI"}
+              <button
+                onClick={() => saveGrades(false)}
+                disabled={saving || syncing || filledGrades().length === 0}
+                style={styles.secondary}
+                title="Simpan nilai ke database tanpa langsung mengirim ke Google Sheets"
+              >
+                {saving ? "MENYIMPAN..." : "💾 SIMPAN SAJA (DATABASE)"}
               </button>
-              <button onClick={syncLastBatch} disabled={syncing || !lastBatchId} style={styles.secondary}>
-                {syncing ? "MENYINKRONKAN..." : "SINKRONKAN KE GOOGLE SHEETS"}
+              <button
+                onClick={syncLastBatch}
+                disabled={saving || syncing || filledGrades().length === 0}
+                style={{ ...styles.primary, background: "#176b3a", boxShadow: "0 4px 14px rgba(23,107,58,.3)" }}
+                title="Simpan nilai ke database dan langsung kirim ke Google Sheets kelas"
+              >
+                {syncing ? "MENYINKRONKAN KE GOOGLE SHEETS..." : "⚡ SIMPAN & SINKRONKAN KE GOOGLE SHEETS"}
               </button>
             </div>
           </div>
