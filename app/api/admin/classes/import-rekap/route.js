@@ -4,6 +4,8 @@ import { verifySessionToken, SESSION_COOKIE_NAME } from '../../../../../lib/auth
 import { readRekap } from '../../../../../lib/google-sheets';
 import { detectRekap, normalize } from '../../../../../lib/rekap-detector';
 
+export const dynamic = 'force-dynamic';
+
 const clean=v=>String(v??'').trim();
 export async function POST(request){
   try{
