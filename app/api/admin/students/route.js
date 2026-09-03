@@ -1,0 +1,3 @@
+import { db } from '../../../../../lib/firebase-admin';
+import { requireAdmin } from '../../../../../lib/admin-auth';
+export async function GET(req){const a=await requireAdmin();if(!a.ok)return Response.json({success:false,message:a.message},{status:a.status});const p=new URL(req.url).searchParams;const classId=String(p.get('classId')||'').trim();if(!classId)return Response.json({success:false,message:'classId wajib.'},{status:400});const s=await db.collection('students').where('classId','==',classId).get();const students=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>String(x.name||'').localeCompare(String(y.name||''),'id'));return Response.json({success:true,students});}

@@ -1,0 +1,123 @@
+Viewed vercel.json:1-4
+Viewed .gitignore:1-11
+
+Pilihan yang sangat tepat! **Vercel** adalah platform pembuat Next.js, sehingga performanya paling optimal, **100% gratis**, dan tidak memerlukan kartu kredit.
+
+Database Firestore Anda tetap berada di Firebase, sedangkan aplikasi web dan API-nya berjalan di Vercel.
+
+---
+
+### Cara Deploy ke Vercel (Metode Paling Mudah via GitHub):
+
+#### Langkah 1: Push Proyek ke GitHub
+*(File `.env` dan `service-account.json` sudah otomatis aman dan tidak akan ter-upload karena sudah ada di `.gitignore`)*.
+
+Buka terminal PowerShell baru di folder proyek ini dan jalankan perintah berikut:
+
+```powershell
+git init
+git add .
+git commit -m "Initial commit V16.0"
+git branch -M main
+```
+
+1. Buka [GitHub](https://github.com/new) dan buat **Repository Baru** (disarankan pilih **Private**).
+2. Salin perintah remote dari GitHub, misalnya:
+   ```powershell
+   git remote add origin https://github.com/username-anda/nama-repo.git
+   git push -u origin main
+   ```
+
+---
+
+#### Langkah 2: Hubungkan & Deploy di Vercel
+
+1. Buka situs **[vercel.com](https://vercel.com/)** dan login (bisa langsung pakai akun GitHub Anda).
+2. Di halaman Dashboard Vercel, klik tombol **"Add New..."** &rarr; pilih **"Project"**.
+3. Di daftar repositori GitHub, cari repositori yang baru saja Anda push, lalu klik **"Import"**.
+
+---
+
+#### Langkah 3: Masukkan Environment Variables di Vercel *(Paling Penting!)*
+
+Sebelum klik tombol Deploy, buka bagian **Environment Variables** di halaman setup Vercel, lalu tambahkan variabel-variabel berikut (salin nilainya dari file [`.env.local`](file:///d:/raport-integrasi-firebase-v16.0/.env.local)):
+
+| Key (Nama Variabel) | Value (Nilai) |
+| :--- | :--- |
+| `FIREBASE_PROJECT_ID` | `raport-integrasi-pondok` |
+| `FIREBASE_CLIENT_EMAIL` | `firebase-adminsdk-fbsvc@raport-integrasi-pondok.iam.gserviceaccount.com` |
+| `FIREBASE_PRIVATE_KEY` | *(Salin seluruh teks private key dari `.env.local` termasuk kutipnya)* |
+| `SESSION_SECRET` | `c7e48b9f1d0a52384a6c9d7e1b3f02485e9a7c6d1b2f3e4a5c6b7d8e9f0a1b2c` |
+| `GOOGLE_PROJECT_ID` | `raport-integrasi-pondok` |
+| `GOOGLE_CLIENT_EMAIL` | `firebase-adminsdk-fbsvc@raport-integrasi-pondok.iam.gserviceaccount.com` |
+| `GOOGLE_PRIVATE_KEY` | *(Salin seluruh teks private key dari `.env.local`)* |
+| `NEXT_PUBLIC_APP_NAME` | `Raport Integrasi \| Pondok Modern Al-Ghozali` |
+| `NEXT_PUBLIC_SCHOOL_YEAR`| `2026-2027` |
+| `NODE_ENV` | `production` |
+
+> 💡 **Trik Cepat**: Di Vercel ada tombol atau kolom teks di mana Anda bisa langsung **Copy-Paste seluruh isi file `.env.local` sekaligus**, dan Vercel akan otomatis membaginya ke masing-masing baris!
+
+---
+
+#### Langkah 4: Klik Deploy! 🚀
+
+1. Klik tombol **Deploy**.
+2. Tunggu proses build sekitar 1–2 menit.
+3. Begitu selesai, Anda akan mendapatkan URL publik gratis ber-HTTPS (contoh: `https://raport-integrasi-pondok.vercel.app`).
+4. Guru-guru di pondok/sekolah sekarang bisa langsung mengakses aplikasi tersebut lewat HP atau laptop masing-masing dari mana saja!
+
+
+Untuk menambahkan **`spreadsheet_id`** per kelas, tempatnya ada di halaman **Admin** pada menu **"Kelas & Spreadsheet"**.
+
+Berikut langkah-langkahnya:
+
+---
+
+### Langkah 1: Berikan Akses Admin ke Akun Anda
+Agar Anda bisa membuka halaman `/admin`, daftarkan ID guru Anda terlebih dahulu:
+
+1. Buka file [`.env.local`](file:///d:/raport-integrasi-firebase-v16.0/.env.local).
+2. Cari baris `ADMIN_TEACHER_IDS=`.
+3. Masukkan ID / Nama Guru yang Anda gunakan saat login tadi, contoh:
+   ```env
+   ADMIN_TEACHER_IDS=NAMA_GURU_ANDA
+   ```
+   *(Atau jika ingin membolehkan beberapa orang, pisahkan dengan koma: `GURU_01,GURU_02`)*.
+
+---
+
+### Langkah 2: Buka Menu Admin di Web
+1. Buka browser dan masuk ke URL:
+   👉 **`http://localhost:3000/admin`**
+2. Klik tab **"Kelas & Spreadsheet"** di bagian atas.
+3. Anda akan melihat tabel seluruh daftar kelas (ada 75 kelas yang sudah diimpor dari master).
+
+---
+
+### Langkah 3: Masukkan Spreadsheet ID
+Di baris kelas yang ingin dihubungkan:
+
+1. **Kolom "Spreadsheet"**:
+   Tempelkan **URL lengkap Google Sheets** atau **Spreadsheet ID**-nya.
+   > Contoh Spreadsheet ID yang diambil dari link Google Sheet:
+   > `https://docs.google.com/spreadsheets/d/`**`1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms`**`/edit`
+   > *(Bisa langsung paste seluruh link URL-nya, sistem otomatis mengekstrak ID-nya)*.
+
+2. **Kolom "Sheet"**:
+   Pastikan namanya sesuai dengan nama tab/lembar rekap di Google Sheet Anda (default: **`Rekap`**).
+
+3. Klik tombol **Simpan** di sebelah kanan.
+
+---
+
+### Langkah 4: Tes & Impor Siswa
+Setelah disimpan:
+
+1. **PENTING**: Pastikan Google Spreadsheet kelas tersebut sudah Anda **Share / Bagikan** ke email Service Account sebagai **Editor**:
+   ```text
+   firebase-adminsdk-fbsvc@raport-integrasi-pondok.iam.gserviceaccount.com
+   ```
+2. Klik tombol **Tes** &rarr; Jika berhasil, akan muncul notifikasi: `Koneksi OK: X baris`.
+3. Klik tombol **Impor Rekap** &rarr; Sistem akan otomatis membaca daftar nama santri/siswa dari sheet tersebut dan menyimpannya ke database.
+
+Setelah langkah di atas selesai, saat guru membuka kelas tersebut di Dashboard, seluruh daftar siswa akan otomatis muncul dan siap diinput nilainya!

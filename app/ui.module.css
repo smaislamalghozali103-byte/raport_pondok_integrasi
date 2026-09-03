@@ -1,0 +1,53 @@
+:global(*) { box-sizing: border-box; }
+.page {
+  min-height: 100vh; padding: 28px 16px;
+  background: #f4f7fb; color: #172033; font-family: Arial, sans-serif;
+}
+.header {
+  max-width: 900px; margin: 0 auto 20px; display:flex; gap:14px;
+  align-items:center;
+}
+.logo {
+  width:52px; height:52px; border-radius:14px; display:grid; place-items:center;
+  background:#173b6d; color:white; font-weight:800;
+}
+.header h1 { margin:0; font-size:25px; }
+.header p { margin:4px 0 0; color:#6b7280; }
+.card {
+  max-width:900px; margin:auto; background:white; border-radius:18px;
+  padding:25px; box-shadow:0 8px 30px rgba(20,30,50,.08);
+}
+.steps { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:25px; }
+.steps span { padding:8px 12px; border-radius:999px; background:#eef1f5; color:#667085; font-size:13px; }
+.steps .active { background:#173b6d; color:white; }
+:global(h2) { margin-bottom:5px; }
+.muted { color:#667085; margin-top:0; margin-bottom:22px; }
+:global(label) { display:block; margin:15px 0 7px; font-weight:700; }
+:global(select), :global(button) {
+  width:100%; padding:12px 13px; border-radius:10px; border:1px solid #d0d5dd;
+  font-size:15px;
+}
+:global(button) {
+  margin-top:22px; border:0; background:#173b6d; color:white; font-weight:700; cursor:pointer;
+}
+:global(button:disabled) { opacity:.5; cursor:not-allowed; }
+.info { margin-top:16px; padding:12px; border-radius:10px; background:#eef6ff; }
+:global(footer) { max-width:900px; margin:20px auto 0; text-align:center; color:#7a8495; font-size:12px; }
+
+:global(input) { width:100%; padding:12px 13px; border:1px solid #d0d5dd; border-radius:10px; font-size:15px; }
+.login { max-width:480px; margin:80px auto; }
+.login .logo { margin:auto; }
+.login h1, .login p { text-align:center; }
+.error { margin-top:15px; padding:12px; background:#fff0f0; border-radius:10px; color:#a11; }
+.logout { width:auto; margin:0 0 0 auto; padding:9px 13px; }
+.tableWrap { overflow:auto; margin-top:20px; }
+:global(table) { width:100%; border-collapse:collapse; min-width:620px; }
+:global(th), :global(td) { border-bottom:1px solid #eaecf0; padding:10px; text-align:left; }
+:global(th) { background:#f8fafc; }
+.grade { width:100px; }
+
+.logoImage { width:58px; height:58px; object-fit:contain; display:block; flex:0 0 auto; }
+.header h1 { color:#12613d; }
+.header p { color:#65707b; }
+.logout { background:#12613d; color:#fff; font-weight:800; }
+@media (max-width:600px){ .header { flex-wrap:wrap; } .logoImage { width:50px; height:50px; } .header h1 { font-size:21px; } }

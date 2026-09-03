@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.*
+service-account*.json
+*.pem
+.vercel/
+*.log
+.DS_Store
