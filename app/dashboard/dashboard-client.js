@@ -323,7 +323,7 @@ export default function DashboardClient() {
       .filter(x => x.value !== null);
   }
 
-  async function saveGrades() {
+  async function saveGrades(skipConfirm = false) {
     const payloadGrades = filledGrades();
 
     if (!payloadGrades.length) {
