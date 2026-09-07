@@ -28,10 +28,11 @@ export async function POST(req) {
     }
 
     const cookieStore = await cookies();
+    const isHttps = req.headers.get('x-forwarded-proto') === 'https' || process.env.NODE_ENV === 'production';
     cookieStore.set(ADMIN_COOKIE_NAME, 'authenticated', {
       httpOnly: true,
-      secure: false, // compatible with localhost
-      sameSite: 'lax',
+      secure: isHttps,
+      sameSite: isHttps ? 'none' : 'lax',
       path: '/',
       maxAge: 60 * 60 * 4 // 4 jam sesi admin
     });

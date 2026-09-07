@@ -55,11 +55,11 @@ export async function POST(req) {
       schoolYear: process.env.SCHOOL_YEAR || '2026-2027'
     };
 
-    const isHttps = req.headers.get('x-forwarded-proto') === 'https';
+    const isHttps = req.headers.get('x-forwarded-proto') === 'https' || process.env.NODE_ENV === 'production';
     (await cookies()).set(SESSION_COOKIE_NAME, createSessionToken(teacher), {
       httpOnly: true,
       secure: isHttps,
-      sameSite: 'lax',
+      sameSite: isHttps ? 'none' : 'lax',
       path: '/',
       maxAge: SESSION_MAX_AGE
     });

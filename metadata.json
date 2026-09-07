@@ -1,0 +1,8 @@
+{
+  "name": "Raport Integrasi Al-Ghozali",
+  "description": "Sistem Raport Integrasi Pondok Modern Al-Ghozali",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
