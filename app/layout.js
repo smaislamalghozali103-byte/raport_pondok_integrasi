@@ -1,6 +1,10 @@
 export const metadata = {
-  title: "Raport Integrasi | Pondok Modern Al-Ghozali",
-  description: "Sistem input nilai guru Pondok Modern Al-Ghozali"
+  title: "Raport Integrasi Al-Ghozali",
+  description: "Sistem Raport Integrasi Pondok Modern Al-Ghozali",
+  openGraph: {
+    title: "Raport Integrasi Al-Ghozali",
+    description: "Sistem Raport Integrasi Pondok Modern Al-Ghozali",
+  },
 };
 
 export default function RootLayout({ children }) {
