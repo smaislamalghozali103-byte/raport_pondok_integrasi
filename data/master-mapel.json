@@ -1,0 +1,2303 @@
+{
+  "version": "1.0",
+  "source_file": "DATABASE UTAMA PTS GANJIL 26-27 - TERISI NISN(1).xlsx",
+  "jumlah_mapel": 328,
+  "mapel": [
+    {
+      "kode_mapel": "MP001",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP002",
+      "nama_mapel": "Mutholaah",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP003",
+      "nama_mapel": "Aqidah",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP004",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP005",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP006",
+      "nama_mapel": "Tarikh Islam",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP007",
+      "nama_mapel": "Tajwid",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP008",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP009",
+      "nama_mapel": "Khot",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP010",
+      "nama_mapel": "Mahfudzot",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP011",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP012",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP013",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP014",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP015",
+      "nama_mapel": "Ilmu Pengetahuan Alam",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP016",
+      "nama_mapel": "Ilmu Pengetahuan Sosial",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP017",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP018",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP019",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP020",
+      "nama_mapel": "Seni Budaya",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP021",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP022",
+      "nama_mapel": "21",
+      "kelompok_kelas": "KELAS 1",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP023",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP024",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP025",
+      "nama_mapel": "Mutholaah",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP026",
+      "nama_mapel": "Aqidah",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP027",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP028",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP029",
+      "nama_mapel": "Tarikh Islam",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP030",
+      "nama_mapel": "Tajwid",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP031",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP032",
+      "nama_mapel": "Khot",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP033",
+      "nama_mapel": "Mahfudzot",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP034",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP035",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP036",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP037",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP038",
+      "nama_mapel": "Ilmu Pengetahuan Alam",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP039",
+      "nama_mapel": "Ilmu Pengetahuan Sosial",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP040",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP041",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP042",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP043",
+      "nama_mapel": "Seni Budaya",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP044",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP045",
+      "nama_mapel": "22",
+      "kelompok_kelas": "KELAS 2",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP046",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP047",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP048",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP049",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP050",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP051",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP052",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP053",
+      "nama_mapel": "Faroid",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP054",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP055",
+      "nama_mapel": "Khot",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP056",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP057",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP058",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP059",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP060",
+      "nama_mapel": "Ilmu Pengetahuan Alam",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP061",
+      "nama_mapel": "Ilmu Pengetahuan Sosial",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP062",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP063",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP064",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP065",
+      "nama_mapel": "Seni Budaya",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP066",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP067",
+      "nama_mapel": "21",
+      "kelompok_kelas": "KELAS 3",
+      "status": "AKTIF",
+      "unit": "SMP"
+    },
+    {
+      "kode_mapel": "MP068",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP069",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP070",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP071",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP072",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP073",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP074",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP075",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP076",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP077",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP078",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP079",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP080",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP081",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP082",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP083",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP084",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP085",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP086",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP087",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP088",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP089",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP090",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP091",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP092",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP093",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP094",
+      "nama_mapel": "26",
+      "kelompok_kelas": "KELAS 4",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP095",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP096",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP097",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP098",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP099",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP100",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP101",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP102",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP103",
+      "nama_mapel": "Mustholahul Hadist",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP104",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP105",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP106",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP107",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP108",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP109",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP110",
+      "nama_mapel": "Matematika Tingkat Lanjut",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP111",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP112",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP113",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP114",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP115",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP116",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP117",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP118",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP119",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP120",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 5-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP121",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP122",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP123",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP124",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP125",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP126",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP127",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP128",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP129",
+      "nama_mapel": "Mustholahul Hadist",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP130",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP131",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP132",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP133",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP134",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP135",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP136",
+      "nama_mapel": "Antropologi",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP137",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP138",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP139",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP140",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP141",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP142",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP143",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP144",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP145",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP146",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 5-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP147",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP148",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP149",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP150",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP151",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP152",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP153",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP154",
+      "nama_mapel": "Balagoh",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP155",
+      "nama_mapel": "Ulumul Qur'an",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP156",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP157",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP158",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP159",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP160",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP161",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP162",
+      "nama_mapel": "Matematika Tingkat Lanjut",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP163",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP164",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP165",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP166",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP167",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP168",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP169",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP170",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP171",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP172",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 6-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP173",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP174",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP175",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP176",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP177",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP178",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP179",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP180",
+      "nama_mapel": "Balagoh",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP181",
+      "nama_mapel": "Ulumul Qur'an",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP182",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP183",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP184",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP185",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP186",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP187",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP188",
+      "nama_mapel": "Antropologi",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP189",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP190",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP191",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP192",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP193",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP194",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP195",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP196",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP197",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP198",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 6-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP199",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP200",
+      "nama_mapel": "Mutholaah",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP201",
+      "nama_mapel": "Aqidah",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP202",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP203",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP204",
+      "nama_mapel": "Tarikh Islam",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP205",
+      "nama_mapel": "Tajwid",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP206",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP207",
+      "nama_mapel": "Khot",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP208",
+      "nama_mapel": "Mahfudzot",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP209",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP210",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP211",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP212",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP213",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP214",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP215",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP216",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP217",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP218",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP219",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP220",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP221",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP222",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP223",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP224",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 1INT",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP225",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP226",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP227",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP228",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP229",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP230",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP231",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP232",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP233",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP234",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP235",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP236",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP237",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP238",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP239",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP240",
+      "nama_mapel": "Matematika Tingkat Lanjut",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP241",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP242",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP243",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP244",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP245",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP246",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP247",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP248",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP249",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP250",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 2INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP251",
+      "nama_mapel": "Tamrin Lughoh",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP252",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP253",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP254",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP255",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP256",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP257",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP258",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP259",
+      "nama_mapel": "Hadist",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP260",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP261",
+      "nama_mapel": "Imla",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP262",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP263",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP264",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP265",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP266",
+      "nama_mapel": "Antropologi",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP267",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP268",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP269",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP270",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP271",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP272",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP273",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP274",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP275",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP276",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 2INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP277",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP278",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP279",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP280",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP281",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP282",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP283",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP284",
+      "nama_mapel": "Mustholahul Hadist",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP285",
+      "nama_mapel": "Ulumul Qur'an",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP286",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP287",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP288",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP289",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP290",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP291",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP292",
+      "nama_mapel": "Matematika Tingkat Lanjut",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP293",
+      "nama_mapel": "Fisika",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP294",
+      "nama_mapel": "Kimia",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP295",
+      "nama_mapel": "Biologi",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP296",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP297",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP298",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP299",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP300",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP301",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP302",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 3INT-IPA",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP303",
+      "nama_mapel": "Insya",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP304",
+      "nama_mapel": "Nahwu",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP305",
+      "nama_mapel": "Shorof",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP306",
+      "nama_mapel": "Muthola'ah",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP307",
+      "nama_mapel": "Tafsir",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP308",
+      "nama_mapel": "Tarbiyah",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP309",
+      "nama_mapel": "Grammar",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP310",
+      "nama_mapel": "Mustholahul Hadist",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP311",
+      "nama_mapel": "Ulumul Qur'an",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP312",
+      "nama_mapel": "Fiqih",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP313",
+      "nama_mapel": "Ushul Fiqh",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP314",
+      "nama_mapel": "Pendidikan Agama Islam",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP315",
+      "nama_mapel": "Bahasa Indonesia",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP316",
+      "nama_mapel": "Bahasa Inggris",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP317",
+      "nama_mapel": "Matematika",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP318",
+      "nama_mapel": "Antropologi",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP319",
+      "nama_mapel": "Ekonomi",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP320",
+      "nama_mapel": "Geografi",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP321",
+      "nama_mapel": "Sosiologi",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP322",
+      "nama_mapel": "Pendidikan Kewarganegaraan",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP323",
+      "nama_mapel": "Sejarah",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP324",
+      "nama_mapel": "Pendidikan Jasmani dan Kesehatan",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP325",
+      "nama_mapel": "Informatika",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP326",
+      "nama_mapel": "Life Skill",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP327",
+      "nama_mapel": "Bahasa Sunda",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    },
+    {
+      "kode_mapel": "MP328",
+      "nama_mapel": "25",
+      "kelompok_kelas": "KELAS 3INT-IPS",
+      "status": "AKTIF",
+      "unit": "SMA"
+    }
+  ]
+}

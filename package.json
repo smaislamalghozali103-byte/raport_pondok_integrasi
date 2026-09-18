@@ -7,6 +7,8 @@
     "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
+    "lint": "next lint",
+    "import:database": "node scripts/import-user-database.mjs",
     "import:master": "node scripts/import-master.mjs",
     "import:master:firebase": "node scripts/import-master-firebase.mjs",
     "backup:config": "node scripts/backup-config.mjs",
@@ -14,14 +16,15 @@
     "preflight": "node scripts/preflight.mjs"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "googleapis": "^150.0.1",
     "next": "^16.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "xlsx": "^0.18.5",
-    "googleapis": "^150.0.1",
-    "dotenv": "^16.6.1",
-    "bcryptjs": "^3.0.2",
-    "firebase": "^12.2.1",
-    "firebase-admin": "^13.5.0"
+    "xlsx": "^0.18.5"
   }
 }

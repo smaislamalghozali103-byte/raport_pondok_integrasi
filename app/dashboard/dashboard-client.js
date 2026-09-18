@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 export default function DashboardClient() {
   const router = useRouter();
   const fileRef = useRef(null);
+  const fillRaportRef = useRef(null);
 
   const [teacher, setTeacher] = useState(null);
   const [units, setUnits] = useState([]);
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
+  const [assignments, setAssignments] = useState([]);
 
   const [jenjang, setJenjang] = useState("");
   const [classId, setClassId] = useState("");
@@ -28,6 +30,7 @@ export default function DashboardClient() {
   const [excelPreview, setExcelPreview] = useState(null);
   const [lastBatchId, setLastBatchId] = useState("");
   const [syncing, setSyncing] = useState(false);
+  const [fillingRaport, setFillingRaport] = useState(false);
 
   const selectedClass = useMemo(
     () => classes.find(c => c.id === classId),
@@ -45,9 +48,10 @@ export default function DashboardClient() {
   async function loadInitial() {
     try {
       setLoading(true);
-      const [meRes, unitsRes] = await Promise.all([
+      const [meRes, unitsRes, assignRes] = await Promise.all([
         fetch("/api/auth/me", { cache: "no-store", credentials: "include" }),
         fetch("/api/master/units", { cache: "no-store", credentials: "include" }),
+        fetch("/api/assignments", { cache: "no-store", credentials: "include" }).catch(() => null),
       ]);
       const me = await meRes.json();
       const unitsData = await unitsRes.json();
@@ -60,10 +64,53 @@ export default function DashboardClient() {
 
       setTeacher(me.teacher);
       setUnits(unitsData.units || []);
+
+      if (assignRes && assignRes.ok) {
+        const assignData = await assignRes.json();
+        if (assignData.success && Array.isArray(assignData.assignments)) {
+          setAssignments(assignData.assignments);
+        }
+      }
     } catch (err) {
       setError(err.message || "Gagal memuat dashboard.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function selectAssignment(assignment) {
+    if (!assignment) return;
+    const targetUnit = assignment.unit || "";
+    const targetClassId = assignment.classId || "";
+    const targetSubjectId = assignment.subjectId || "";
+
+    setJenjang(targetUnit);
+    setClassId(targetClassId);
+    setSubjectId(targetSubjectId);
+    setError("");
+    setMessage(`Memuat penugasan: ${assignment.className} - ${assignment.subjectName}...`);
+
+    try {
+      setLoadingClasses(true);
+      setLoadingSubjects(true);
+      setLoadingStudents(true);
+
+      const [clsRes, subjRes] = await Promise.all([
+        fetch(`/api/master/classes?jenjang=${encodeURIComponent(targetUnit)}`, { cache: "no-store" }),
+        fetch(`/api/master/subjects?jenjang=${encodeURIComponent(targetUnit)}&classId=${encodeURIComponent(targetClassId)}`, { cache: "no-store" })
+      ]);
+      const clsData = await clsRes.json();
+      const subjData = await subjRes.json();
+      if (clsData.classes) setClasses(clsData.classes);
+      if (subjData.subjects) setSubjects(subjData.subjects);
+
+      await showStudents(targetSubjectId, targetUnit, targetClassId);
+    } catch (err) {
+      setError("Gagal memilih penugasan: " + err.message);
+    } finally {
+      setLoadingClasses(false);
+      setLoadingSubjects(false);
+      setLoadingStudents(false);
     }
   }
 
@@ -122,9 +169,12 @@ export default function DashboardClient() {
     }
   }
 
-  async function showStudents(overrideSubjectId) {
+  async function showStudents(overrideSubjectId, overrideJenjang, overrideClassId) {
     const activeSubjectId = overrideSubjectId || subjectId;
-    if (!jenjang || !classId || !activeSubjectId) {
+    const activeClassId = overrideClassId || classId;
+    const activeJenjang = overrideJenjang || jenjang;
+
+    if (!activeJenjang || !activeClassId || !activeSubjectId) {
       setError("Pilih jenjang, kelas, dan mata pelajaran terlebih dahulu.");
       return;
     }
@@ -134,18 +184,39 @@ export default function DashboardClient() {
       setError("");
       setMessage("");
 
-      const res = await fetch(`/api/master/students?classId=${encodeURIComponent(classId)}`, { cache: "no-store" });
-      const data = await res.json();
+      const [studentsRes, gradesRes] = await Promise.all([
+        fetch(`/api/master/students?classId=${encodeURIComponent(activeClassId)}`, { cache: "no-store" }),
+        fetch(`/api/grades?classId=${encodeURIComponent(activeClassId)}&subjectId=${encodeURIComponent(activeSubjectId)}`, { cache: "no-store" }).catch(() => null)
+      ]);
+
+      const data = await studentsRes.json();
       if (!data.success) throw new Error(data.message);
 
       const list = data.students || [];
       setStudents(list);
 
       if (list.length === 0) {
-        setMessage("ℹ️ Belum ada data santri/siswa di kelas ini. Pastikan Admin sudah memasukkan Spreadsheet ID dan klik 'Impor Rekap' di menu Admin.");
+        setMessage("ℹ️ Belum ada data siswa di kelas ini. Buka Admin > Kelas untuk impor rekap Google Sheets atau hubungkan data master.");
       } else {
         const initial = {};
         list.forEach(s => { initial[s.id] = ""; });
+
+        if (gradesRes && gradesRes.ok) {
+          const gData = await gradesRes.json();
+          if (gData.success && Array.isArray(gData.grades) && gData.grades.length > 0) {
+            let filledCount = 0;
+            gData.grades.forEach(g => {
+              if (g.studentId && (g.value !== null && g.value !== undefined)) {
+                initial[g.studentId] = g.value;
+                filledCount++;
+              }
+            });
+            if (filledCount > 0) {
+              setMessage(`✓ Data terhubung: Ditemukan ${filledCount} nilai yang sudah tersimpan sebelumnya.`);
+            }
+          }
+        }
+
         setGrades(initial);
         setExcelPreview(null);
       }
@@ -314,6 +385,56 @@ export default function DashboardClient() {
     }
   }
 
+  async function handleFillRaportOriginal(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      setFillingRaport(true);
+      setError("");
+      setMessage(`Sedang mengisi nilai ${selectedSubject?.name} ke dalam file "${file.name}" tanpa merusak desain asli...`);
+
+      // Simpan nilai jika ada yang diinputkan
+      if (filledGrades().length > 0) {
+        await saveGrades(true);
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("classId", classId);
+      formData.append("subjectId", subjectId);
+
+      const res = await fetch("/api/raport/fill-template", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.message || "Gagal mengisi template raport.");
+      }
+
+      const updatedCells = res.headers.get("X-Updated-Cells") || "0";
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const safeClass = (selectedClass?.name || "Kelas").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const safeSubj = (selectedSubject?.name || "Mapel").replace(/[^a-zA-Z0-9_-]/g, "_");
+      a.download = `Raport_Terisi_${safeClass}_${safeSubj}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      setMessage(`✓ BERHASIL! ${updatedCells} sel nilai ${selectedSubject?.name} terisi ke dalam template raport asli Anda. Desain, kop, border, dan formula tetap 100% utuh! File terunduh otomatis.`);
+    } catch (err) {
+      setError(err.message || "Gagal mengisi file raport asli.");
+    } finally {
+      setFillingRaport(false);
+      event.target.value = "";
+    }
+  }
+
   function filledGrades() {
     return students
       .map(s => ({
@@ -448,8 +569,47 @@ export default function DashboardClient() {
 
         <h2 style={styles.sectionTitle}>INPUT NILAI RAPORT</h2>
 
+        {assignments.length > 0 && (
+          <div style={{ margin: "16px 0", padding: "16px", background: "#f8faf9", border: "1px solid #d1e7dd", borderRadius: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 6 }}>
+              <strong style={{ color: "#176b3a", fontSize: 14 }}>
+                ⭐ Penugasan Mengajar Anda ({assignments.length} Kelas & Mapel Terhubung)
+              </strong>
+              <span style={{ color: "#666", fontSize: 12 }}>Klik untuk langsung memilih kelas & mapel:</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8, maxHeight: 180, overflowY: "auto", paddingRight: 4 }}>
+              {assignments.map(a => {
+                const isActive = classId === a.classId && subjectId === a.subjectId;
+                return (
+                  <button
+                    key={a.id}
+                    onClick={() => selectAssignment(a)}
+                    style={{
+                      textAlign: "left",
+                      padding: "8px 12px",
+                      borderRadius: 8,
+                      border: isActive ? "2px solid #176b3a" : "1px solid #d0d5dd",
+                      background: isActive ? "#e8f4ec" : "#fff",
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#666" }}>
+                      <span style={{ fontWeight: 700, color: "#176b3a" }}>[{a.unit}]</span>
+                      <span>{a.className}</span>
+                    </div>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: "#222" }}>{a.subjectName}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <div style={{ background: "#e8f4ec", border: "1px solid #b7e1c6", padding: "12px 16px", borderRadius: 10, color: "#145a32", fontSize: 14, margin: "14px 0" }}>
-          💡 <strong>Petunjuk:</strong> Pilih <b>Jenjang</b>, <b>Kelas</b>, dan <b>Mata Pelajaran</b> di bawah ini. Tabel daftar siswa dan kolom input nilai akan otomatis muncul.
+          💡 <strong>Petunjuk:</strong> Pilih <b>Jenjang</b>, <b>Kelas</b>, dan <b>Mata Pelajaran</b> di bawah ini. Nilai tersimpan akan otomatis muncul dan dapat langsung diedit.
         </div>
 
         <label style={styles.label}>1. Jenjang (Unit)</label>
@@ -461,13 +621,27 @@ export default function DashboardClient() {
         <label style={styles.label}>2. Kelas</label>
         <select value={classId} onChange={e => changeClass(e.target.value)} style={styles.input} disabled={!jenjang || loadingClasses}>
           <option value="">{loadingClasses ? "Memuat kelas..." : "-- Pilih Kelas --"}</option>
-          {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          {classes.map(c => {
+            const isAssigned = assignments.some(a => a.classId === c.id);
+            return (
+              <option key={c.id} value={c.id}>
+                {isAssigned ? `⭐ [Tugas Saya] ${c.name}` : c.name}
+              </option>
+            );
+          })}
         </select>
 
         <label style={styles.label}>3. Mata Pelajaran</label>
         <select value={subjectId} onChange={e => handleSubjectChange(e.target.value)} style={styles.input} disabled={!classId || loadingSubjects}>
           <option value="">{loadingSubjects ? "Memuat mata pelajaran..." : "-- Pilih Mata Pelajaran --"}</option>
-          {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          {subjects.map(s => {
+            const isAssigned = assignments.some(a => a.subjectId === s.id && (!classId || a.classId === classId));
+            return (
+              <option key={s.id} value={s.id}>
+                {isAssigned ? `⭐ [Tugas Saya] ${s.name}` : s.name}
+              </option>
+            );
+          })}
         </select>
 
         {error && <div style={styles.error}>{error}</div>}
@@ -491,6 +665,15 @@ export default function DashboardClient() {
                 <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleExcel} style={{ display: "none" }} />
                 <button onClick={() => fileRef.current?.click()} style={styles.secondary} title="Upload file Excel nilai yang sudah diisi">
                   📤 UPLOAD NILAI EXCEL
+                </button>
+                <input ref={fillRaportRef} type="file" accept=".xlsx,.xls" onChange={handleFillRaportOriginal} style={{ display: "none" }} />
+                <button
+                  onClick={() => fillRaportRef.current?.click()}
+                  disabled={fillingRaport || students.length === 0}
+                  style={{ ...styles.downloadBtn, background: "#eff6ff", borderColor: "#3b82f6", color: "#1d4ed8" }}
+                  title="Unggah template Excel raport asli sekolah, dan sistem akan mengisi nilai santri ke dalam template tanpa merusak format/desain aslinya"
+                >
+                  📑 {fillingRaport ? "MENGISI RAPORT ASLI..." : "ISI KE RAPORT ASLI (.XLSX)"}
                 </button>
               </div>
             </div>

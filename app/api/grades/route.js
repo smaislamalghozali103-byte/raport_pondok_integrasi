@@ -4,7 +4,50 @@ import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth-session";
 import { canTeach } from "@/lib/authorization";
 import { writeAudit } from "@/lib/audit-log";
 
+export const dynamic = 'force-dynamic';
+
 const clean = (v) => String(v ?? "").trim();
+
+export async function GET(request) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    const session = verifySessionToken(token);
+
+    if (!session) {
+      return Response.json({ success: false, message: "Sesi login tidak valid." }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const classId = clean(searchParams.get("classId") || searchParams.get("class_id"));
+    const subjectId = clean(searchParams.get("subjectId") || searchParams.get("subject_id"));
+
+    if (!classId || !subjectId) {
+      return Response.json({ success: false, message: "classId dan subjectId wajib diisi." }, { status: 400 });
+    }
+
+    const snap = await db.collection("grades")
+      .where("classId", "==", classId)
+      .where("subjectId", "==", subjectId)
+      .get();
+
+    const grades = snap.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        studentId: data.studentId,
+        value: data.value,
+        updatedAt: data.updatedAt,
+        syncStatus: data.syncStatus
+      };
+    });
+
+    return Response.json({ success: true, count: grades.length, grades });
+  } catch (err) {
+    console.error("GET GRADES ERROR", err);
+    return Response.json({ success: false, message: err?.message || "Gagal mengambil nilai." }, { status: 500 });
+  }
+}
 
 function validScore(v) {
   if (v === null || v === undefined || v === "") return true;

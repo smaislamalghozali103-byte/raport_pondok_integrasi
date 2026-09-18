@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 
 const tabs = [
   ['overview', 'Ringkasan'],
+  ['raport_asli', '📊 Bedah & Isi Raport Asli'],
   ['classes', 'Kelas & Spreadsheet'],
+  ['assignments', 'Penugasan Guru'],
   ['teachers', 'Guru'],
   ['subjects', 'Mapel'],
   ['students', 'Siswa'],
@@ -14,7 +16,7 @@ const tabs = [
 export default function AdminClient() {
   const router = useRouter();
   const [tab, setTab] = useState('overview');
-  const [data, setData] = useState({ classes: [], teachers: [], subjects: [], units: [], monitoring: [] });
+  const [data, setData] = useState({ classes: [], teachers: [], subjects: [], units: [], monitoring: [], assignments: [] });
   const [selectedClass, setSelectedClass] = useState('');
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState('');
@@ -22,6 +24,14 @@ export default function AdminClient() {
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // States untuk Bedah & Isi Raport Asli
+  const [templateFile, setTemplateFile] = useState(null);
+  const [bedahResult, setBedahResult] = useState(null);
+  const [bedahLoading, setBedahLoading] = useState(false);
+  const [fillClassId, setFillClassId] = useState('');
+  const [fillLoading, setFillLoading] = useState(false);
+  const [fillResultMsg, setFillResultMsg] = useState('');
 
   // Admin password states
   const [authorized, setAuthorized] = useState(false);
@@ -82,24 +92,123 @@ export default function AdminClient() {
   async function loadData() {
     try {
       setLoading(true);
-      const [c, t, s, u, m] = await Promise.all([
+      const [c, t, s, u, m, a] = await Promise.all([
         get('/api/admin/classes'),
         get('/api/admin/teachers'),
         get('/api/admin/subjects'),
         get('/api/admin/units'),
-        get('/api/admin/monitoring')
+        get('/api/admin/monitoring'),
+        get('/api/admin/assignments').catch(() => ({ assignments: [] }))
       ]);
       setData({
         classes: c.classes || [],
         teachers: t.teachers || [],
         subjects: s.subjects || [],
         units: u.units || [],
-        monitoring: m.items || m.batches || []
+        monitoring: m.items || m.batches || [],
+        assignments: a.assignments || []
       });
     } catch (e) {
       setErr(e.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function syncAllMasterData() {
+    try {
+      setBusy('syncMaster');
+      setMsg('Sedang menghubungkan dan menyinkronkan seluruh data master...');
+      setErr('');
+      const r = await fetch('/api/admin/system', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const d = await r.json();
+      if (!d.success) throw new Error(d.message);
+      setMsg(`✓ ${d.message} (Unit: ${d.counts?.units}, Guru: ${d.counts?.teachers}, Mapel: ${d.counts?.subjects}, Kelas: ${d.counts?.classes}, Penugasan: ${d.counts?.assignments}, Siswa: ${d.counts?.students})`);
+      await loadData();
+    } catch (e) {
+      setErr(e.message || 'Gagal sinkronisasi data master.');
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function handleBedahTemplate(file) {
+    if (!file) return;
+    try {
+      setBedahLoading(true);
+      setErr('');
+      setMsg('Sedang membedah struktur file template raport asli...');
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/raport/bedah-template', {
+        method: 'POST',
+        body: formData,
+      });
+      const d = await res.json();
+      if (!d.success) throw new Error(d.message);
+      setBedahResult(d);
+      setMsg(`✓ Berhasil membedah file "${d.fileName}". Terdeteksi ${d.summary.totalSheets} sheet, baris header: ${d.summary.headerRow}, ${d.summary.totalStudentsDetected} santri, dan ${d.summary.detectedSubjectsCount} mapel.`);
+    } catch (e) {
+      setErr('Gagal membedah template: ' + (e.message || 'Error'));
+    } finally {
+      setBedahLoading(false);
+    }
+  }
+
+  async function handleFillTemplate() {
+    if (!templateFile) {
+      setErr('Silakan pilih file template Excel terlebih dahulu.');
+      return;
+    }
+    if (!fillClassId) {
+      setErr('Silakan pilih Kelas yang ingin diisikan nilainya ke raport.');
+      return;
+    }
+    try {
+      setFillLoading(true);
+      setFillResultMsg('');
+      setErr('');
+      setMsg('Sedang mengisi nilai ke dalam file raport asli secara non-destruktif (menjaga 100% desain, formula, dan border)...');
+
+      const formData = new FormData();
+      formData.append('file', templateFile);
+      formData.append('classId', fillClassId);
+
+      const res = await fetch('/api/raport/fill-template', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Gagal mengisi template.');
+      }
+
+      const updatedCells = res.headers.get('X-Updated-Cells') || '0';
+      const sheetName = res.headers.get('X-Sheet-Name') || '';
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const targetClassObj = data.classes.find(c => c.id === fillClassId);
+      const safeClassName = (targetClassObj?.name || 'Kelas').replace(/[^a-zA-Z0-9_-]/g, '_');
+      a.download = `Raport_Asli_Terisi_${safeClassName}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      const successText = `✓ BERHASIL! ${updatedCells} sel nilai berhasil diisi ke sheet "${sheetName}". Desain asli, rumus formula, dan border 100% utuh. File terunduh otomatis.`;
+      setFillResultMsg(successText);
+      setMsg(successText);
+    } catch (e) {
+      setErr('Gagal mengisi raport: ' + (e.message || 'Error'));
+    } finally {
+      setFillLoading(false);
     }
   }
 
@@ -207,6 +316,7 @@ export default function AdminClient() {
     connected: data.classes.filter(x => x.spreadsheetId).length,
     teachers: data.teachers.length,
     subjects: data.subjects.length,
+    assignments: (data.assignments || []).length,
     students: students.length,
     batches: data.monitoring.length
   };
@@ -286,6 +396,7 @@ export default function AdminClient() {
               ['Terhubung Sheets', stats.connected],
               ['Guru', stats.teachers],
               ['Mapel', stats.subjects],
+              ['Penugasan Guru', stats.assignments],
               ['Batch Nilai', stats.batches]
             ].map(([a, b]) => (
               <div style={S.card} key={a}>
@@ -293,6 +404,23 @@ export default function AdminClient() {
                 <div style={S.big}>{b}</div>
               </div>
             ))}
+            <div style={{ ...S.card, gridColumn: '1/-1', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                <div>
+                  <h2 style={{ ...S.h2, margin: '0 0 6px', color: '#166534' }}>Hubungkan & Sinkronkan Semua Data Master</h2>
+                  <p style={{ margin: 0, color: '#15803d', fontSize: 14 }}>
+                    Menghubungkan seluruh Unit ({data.units.length}), Guru ({stats.teachers}), Mapel ({stats.subjects}), Kelas ({stats.classes}), dan Penugasan Guru ({stats.assignments}) dari Master Excel ke database.
+                  </p>
+                </div>
+                <button
+                  style={{ ...S.btn, background: '#166534', padding: '12px 20px', fontSize: 14 }}
+                  disabled={busy === 'syncMaster'}
+                  onClick={syncAllMasterData}
+                >
+                  {busy === 'syncMaster' ? 'SEDANG MENYINKRONKAN…' : '🔄 SINKRONKAN SEMUA DATA MASTER'}
+                </button>
+              </div>
+            </div>
             <div style={{ ...S.card, gridColumn: '1/-1' }}>
               <h2 style={S.h2}>Checklist Pengaturan Spreadsheet</h2>
               <p>1. Buka tab <b>Kelas & Spreadsheet</b> di atas.</p>
@@ -301,6 +429,277 @@ export default function AdminClient() {
               <p>4. Klik <b>Impor Rekap</b> untuk mengambil daftar siswa kelas tersebut ke database.</p>
             </div>
           </div>
+        )}
+
+        {tab === 'raport_asli' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <div style={{ ...S.card, background: 'linear-gradient(135deg, #1e293b, #0f172a)', color: '#fff', border: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+                <div>
+                  <span style={{ background: '#3b82f6', color: '#fff', padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 700 }}>
+                    STANDAR FINAL • NON-DESTRUCTIVE FILLER
+                  </span>
+                  <h2 style={{ fontSize: 24, margin: '12px 0 8px', color: '#fff' }}>
+                    Bedah Struktur & Pengisian Raport Asli (.xlsx)
+                  </h2>
+                  <p style={{ margin: 0, color: '#94a3b8', fontSize: 14, maxWidth: 820, lineHeight: 1.6 }}>
+                    Engine ini membaca struktur file Excel raport asli Anda secara biner, memetakan letak baris siswa dan kolom mata pelajaran, serta menginjeksi nilai dari database <b>hanya pada sel-sel nilai</b>. Seluruh kop sekolah/pondok, logo, border tabel, warna sel, format font, dan formula rekap (SUM, AVERAGE, RANK, dsb.) <b>dijamin 100% utuh tanpa rusak</b>.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bagian 1: Upload & Bedah File Template */}
+            <div style={S.card}>
+              <h3 style={{ ...S.h2, margin: '0 0 10px' }}>1. Upload & Bedah Struktur File Raport Asli</h3>
+              <p style={{ ...S.muted, margin: '0 0 16px', fontSize: 14 }}>
+                Pilih file template raport asli yang telah Anda siapkan (format <code>.xlsx</code>).
+              </p>
+
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center', marginBottom: 16 }}>
+                <input
+                  type="file"
+                  id="templateUploadInput"
+                  accept=".xlsx,.xls"
+                  onChange={e => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                      setTemplateFile(f);
+                      handleBedahTemplate(f);
+                    }
+                  }}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('templateUploadInput')?.click()}
+                  style={{ ...S.btn, background: '#2563eb', padding: '12px 20px', fontSize: 14, display: 'flex', alignItems: 'center', gap: 8 }}
+                >
+                  📁 {templateFile ? 'GANTI FILE TEMPLATE EXCEL' : 'PILIH FILE RAPORT ASLI (.XLSX)'}
+                </button>
+                {templateFile && (
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>
+                    File Terpilih: {templateFile.name} ({(templateFile.size / 1024).toFixed(1)} KB)
+                  </span>
+                )}
+                {bedahLoading && (
+                  <span style={{ fontSize: 14, color: '#2563eb', fontWeight: 600 }}>
+                    ⏳ Sedang membedah struktur file...
+                  </span>
+                )}
+              </div>
+
+              {/* Hasil Bedah Struktur */}
+              {bedahResult && (
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: 18, marginTop: 14 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 10 }}>
+                    <h4 style={{ margin: 0, fontSize: 16, color: '#0f172a' }}>
+                      Hasil Pembedahan Struktur: <b>{bedahResult.fileName}</b>
+                    </h4>
+                    <span style={{ background: '#dcfce7', color: '#166534', padding: '4px 10px', borderRadius: 6, fontSize: 13, fontWeight: 700 }}>
+                      ✓ Struktur Siap Diisi
+                    </span>
+                  </div>
+
+                  {/* Ringkasan Matriks */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 18 }}>
+                    <div style={{ background: '#fff', padding: 14, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>TOTAL SHEET</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#0f172a' }}>
+                        {bedahResult.summary.totalSheets} Sheet
+                      </div>
+                      <div style={{ fontSize: 12, color: '#334155', marginTop: 4 }}>
+                        {bedahResult.summary.sheetNames.join(', ')}
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#fff', padding: 14, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>BARIS HEADER & SISWA</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#0f172a' }}>
+                        Baris {bedahResult.summary.headerRow || '-'}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#16a34a', marginTop: 4 }}>
+                        {bedahResult.summary.totalStudentsDetected} santri teridentifikasi
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#fff', padding: 14, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>KOLOM MAPEL COCOK</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#2563eb' }}>
+                        {bedahResult.summary.detectedSubjectsCount} Mapel
+                      </div>
+                      <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                        Cocok dengan Master Pondok
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#fff', padding: 14, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>KEAMANAN FORMULA</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#166534' }}>
+                        {bedahResult.summary.formulaCount} Formula
+                      </div>
+                      <div style={{ fontSize: 12, color: '#16a34a', marginTop: 4 }}>
+                        ✓ Terlindungi & Tidak Akan Rusak
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#fff', padding: 14, borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>MERGED CELLS</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#0f172a' }}>
+                        {bedahResult.summary.mergedCellsCount} Sel Gabungan
+                      </div>
+                      <div style={{ fontSize: 12, color: '#16a34a', marginTop: 4 }}>
+                        ✓ 100% Desain Asli Terjaga
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Detail Kolom Mata Pelajaran yang Terdeteksi */}
+                  {bedahResult.primaryAnalysis?.subjectColumns?.length > 0 && (
+                    <div style={{ marginBottom: 18 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 8, color: '#0f172a' }}>
+                        Daftar Kolom Mata Pelajaran yang Terdeteksi di Sheet "{bedahResult.summary.primarySheet}":
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                        {bedahResult.primaryAnalysis.subjectColumns.map((col, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              background: '#eff6ff',
+                              border: '1px solid #bfdbfe',
+                              color: '#1e40af',
+                              padding: '5px 10px',
+                              borderRadius: 6,
+                              fontSize: 12,
+                              fontWeight: 600,
+                            }}
+                          >
+                            Kolom <b>{col.colLetter}</b>: {col.rawHeader}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sample Santri yang Terdeteksi */}
+                  {bedahResult.primaryAnalysis?.sampleStudents?.length > 0 && (
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 8, color: '#0f172a' }}>
+                        Contoh Santri yang Terdeteksi (5 Baris Pertama):
+                      </div>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
+                          <thead>
+                            <tr style={{ background: '#f1f5f9', textAlign: 'left' }}>
+                              <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>Baris Excel</th>
+                              <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>Nama Santri</th>
+                              <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>NISN</th>
+                              <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>NIS</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {bedahResult.primaryAnalysis.sampleStudents.map((st, i) => (
+                              <tr key={i}>
+                                <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.row}</td>
+                                <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1', fontWeight: 600 }}>{st.name}</td>
+                                <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.nisn || '-'}</td>
+                                <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.nis || '-'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Bagian 2: Pengisian Nilai & Unduh Raport Terisi */}
+            <div style={{ ...S.card, border: '2px solid #3b82f6' }}>
+              <h3 style={{ ...S.h2, margin: '0 0 10px', color: '#1d4ed8' }}>
+                2. Eksekusi Pengisian Nilai & Unduh Raport Terisi
+              </h3>
+              <p style={{ ...S.muted, margin: '0 0 16px', fontSize: 14 }}>
+                Pilih Kelas target untuk mengambil seluruh nilai santri yang ada di database Firestore, lalu klik tombol untuk mengisinya ke template raport asli Anda.
+              </p>
+
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{ minWidth: 320 }}>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#475569', marginBottom: 6 }}>
+                    PILIH KELAS TARGET:
+                  </label>
+                  <select
+                    value={fillClassId}
+                    onChange={e => setFillClassId(e.target.value)}
+                    style={{ ...S.input, width: '100%', boxSizing: 'border-box' }}
+                  >
+                    <option value="">-- Pilih Kelas --</option>
+                    {data.classes.map(c => (
+                      <option key={c.id} value={c.id}>
+                        [{c.jenjang || c.unit || 'UMUM'}] {c.name} {c.spreadsheetId ? '✓ (Sheets)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ alignSelf: 'flex-end' }}>
+                  <button
+                    type="button"
+                    disabled={fillLoading || !templateFile || !fillClassId}
+                    onClick={handleFillTemplate}
+                    style={{
+                      ...S.btn,
+                      background: fillLoading || !templateFile || !fillClassId ? '#94a3b8' : '#16a34a',
+                      padding: '12px 24px',
+                      fontSize: 15,
+                      fontWeight: 800,
+                    }}
+                  >
+                    {fillLoading ? '⏳ MENGISI RAPORT ASLI…' : '⚡ ISI NILAI SANTRI & UNDUH RAPORT (.XLSX)'}
+                  </button>
+                </div>
+              </div>
+
+              {fillResultMsg && (
+                <div style={{ ...S.success, marginTop: 16, fontWeight: 600 }}>
+                  {fillResultMsg}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === 'assignments' && (
+          <Section title={`Penugasan Guru (${data.assignments?.length || 0} Data)`}>
+            <Toolbar search={search} setSearch={setSearch} />
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Guru</th>
+                    <th>Unit</th>
+                    <th>Kelas</th>
+                    <th>Mata Pelajaran</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered(data.assignments || [], ['teacherName', 'teacherId', 'className', 'subjectName', 'unit']).map((x, i) => (
+                    <tr key={x.id || i}>
+                      <td>{i + 1}</td>
+                      <td><b>{x.teacherName}</b><br /><small style={{ color: '#888' }}>{x.teacherId}</small></td>
+                      <td><span style={{ padding: '2px 8px', borderRadius: 6, background: '#e2e8f0', fontSize: 12, fontWeight: 700 }}>{x.unit}</span></td>
+                      <td><b>{x.className}</b></td>
+                      <td>{x.subjectName}</td>
+                      <td><span style={{ color: x.status === 'AKTIF' ? '#166534' : '#888', fontWeight: 700 }}>{x.status || 'AKTIF'}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Section>
         )}
 
         {tab === 'classes' && (
