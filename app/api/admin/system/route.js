@@ -36,8 +36,42 @@ export async function POST() {
     if (!auth.ok) return Response.json({ success: false, message: auth.message }, { status: auth.status, headers: noStore() });
 
     const xlsxPath = process.env.MASTER_XLSX || path.join(process.cwd(), 'data', 'MASTER_GURU_MAPEL_PER_UNIT_HASIL_REKAP(1).xlsx');
+
+    // Production/Vercel tidak bergantung pada file XLSX lokal.
+    // Jika file legacy tersedia, tetap dukung kompatibilitas. Jika tidak,
+    // gunakan data master yang sudah tersinkron di Firestore melalui
+    // Google Sheets / Master Data AI.
     if (!fs.existsSync(xlsxPath)) {
-      return Response.json({ success: false, message: `File master data tidak ditemukan di: ${xlsxPath}` }, { status: 404 });
+      const collections = ['units', 'teachers', 'subjects', 'classes', 'teacher_assignments', 'students'];
+      const counts = {};
+      for (const name of collections) {
+        try {
+          const snap = await db.collection(name).count().get();
+          counts[name] = snap.data().count;
+        } catch {
+          counts[name] = 0;
+        }
+      }
+
+      const state = await db.collection('master_sync').doc('state').get();
+      const sync = state.exists ? state.data() : null;
+
+      return Response.json({
+        success: true,
+        mode: 'firestore',
+        message: sync?.status === 'SYNCED'
+          ? 'Data master sudah menggunakan sumber Google Sheets dan tersimpan di Firestore. File XLSX lokal tidak diperlukan di Vercel.'
+          : 'File XLSX lokal tidak tersedia di server. Gunakan fitur Master Data AI untuk mengambil master langsung dari Google Sheets.',
+        counts: {
+          units: counts.units || 0,
+          teachers: counts.teachers || 0,
+          subjects: counts.subjects || 0,
+          classes: counts.classes || 0,
+          assignments: counts.teacher_assignments || 0,
+          students: counts.students || 0
+        },
+        sync
+      }, { headers: noStore() });
     }
 
     const wb = XLSX.readFile(xlsxPath, { cellDates: false });
