@@ -47,8 +47,6 @@ export default function AdminClient() {
   const [fillClassId, setFillClassId] = useState('');
   const [fillLoading, setFillLoading] = useState(false);
   const [fillResultMsg, setFillResultMsg] = useState('');
-  const [spreadsheetUploadFile, setSpreadsheetUploadFile] = useState(null);
-  const [spreadsheetUploadLoading, setSpreadsheetUploadLoading] = useState(false);
   const [spreadsheetUploadResult, setSpreadsheetUploadResult] = useState(null);
   const [jsonMappingFile, setJsonMappingFile] = useState(null);
   const [jsonMappingText, setJsonMappingText] = useState('');
@@ -235,45 +233,6 @@ export default function AdminClient() {
     }
   }
 
-  async function handleBulkSpreadsheetUpload() {
-    if (!spreadsheetUploadFile) {
-      setErr('Silakan pilih file mapping Spreadsheet terlebih dahulu.');
-      return;
-    }
-
-    try {
-      setSpreadsheetUploadLoading(true);
-      setSpreadsheetUploadResult(null);
-      setErr('');
-      setMsg('Sedang membaca mapping Spreadsheet dan menghubungkan semua kelas...');
-
-      const formData = new FormData();
-      formData.append('file', spreadsheetUploadFile);
-
-      const r = await fetch('/api/admin/classes/bulk-spreadsheets', {
-        method: 'POST',
-        body: formData
-      });
-      const d = await readJsonResponse(r);
-
-      if (!r.ok || !d.success) {
-        throw new Error(d.message || 'Gagal mengimpor mapping Spreadsheet.');
-      }
-
-      setSpreadsheetUploadResult(d);
-      setMsg(d.message || 'Mapping Spreadsheet berhasil diperbarui.');
-      setSpreadsheetUploadFile(null);
-
-      const input = document.getElementById('bulkSpreadsheetMappingInput');
-      if (input) input.value = '';
-
-      await loadData();
-    } catch (e) {
-      setErr(e.message || 'Gagal mengimpor mapping Spreadsheet.');
-    } finally {
-      setSpreadsheetUploadLoading(false);
-    }
-  }
 
   async function submitJsonMapping(payload, sourceLabel = 'JSON') {
     try {
@@ -932,44 +891,81 @@ export default function AdminClient() {
         )}
 
         {tab === 'classes' && (
-          <Section title="Kelas & Koneksi Google Spreadsheet">
-            <div style={{ ...S.card, background: '#f8fafc', border: '1px solid #cbd5e1', boxShadow: 'none' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
-                <div style={{ maxWidth: 820 }}>
-                  <h3 style={{ ...S.h2, margin: '0 0 8px', fontSize: 18 }}>📤 Hubungkan Spreadsheet Sekaligus</h3>
-                  <p style={{ ...S.muted, margin: '0 0 8px', fontSize: 13, lineHeight: 1.6 }}>
-                    Tidak perlu memasukkan ID satu per satu. Upload satu file <b>Markdown (.md)</b> dengan tabel:
-                    <b> KELAS</b>, <b>SPREADSHEET ID/URL</b>, dan opsional <b>SHEET</b>.
-                    Sistem akan mencocokkan nama/ID kelas dengan Master Kelas dan menyimpan semua koneksi sekaligus.
+          <Section title="Kelas & Koneksi Google Spreadsheet — JSON">
+            <div style={{ ...S.card, background: '#eff6ff', border: '1px solid #bfdbfe', boxShadow: 'none', marginBottom: 18 }}>
+              <h3 style={{ ...S.h2, margin: '0 0 8px', color: '#1e3a8a' }}>🔗 Koneksi Spreadsheet per Kelas — JSON</h3>
+              <p style={{ ...S.muted, margin: '0 0 14px', fontSize: 13, lineHeight: 1.6 }}>
+                Format koneksi sekarang menggunakan <b>JSON saja</b>. Tidak ada lagi upload Markdown.
+                Admin dapat upload file <code>.json</code> atau langsung <b>copy/paste JSON</b>. Sistem akan mencocokkan kelas dengan Master Kelas dan menyimpan Spreadsheet ID/URL beserta nama sheet.
+              </p>
+
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                <button type="button" style={S.sm} onClick={useJsonTemplate}>📝 ISI CONTOH JSON</button>
+                <button type="button" style={S.sm} onClick={downloadJsonTemplate}>⬇️ DOWNLOAD TEMPLATE JSON</button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', gap: 14 }}>
+                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
+                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📁 Upload JSON</b>
+                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
+                    Upload satu file JSON berisi seluruh kelas. Bisa menggunakan format lengkap <code>classes: []</code> atau format singkat <code>{'{ "1A": "SPREADSHEET_ID" }'}</code>.
                   </p>
-                  <div style={{ fontSize: 12, color: '#475569' }}>
-                    Contoh Markdown: <code>| KELAS | SPREADSHEET ID/URL | SHEET |</code> → <code>| 1A | https://docs.google.com/spreadsheets/d/xxxxx/edit | Rekap |</code>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                   <input
-                    id="bulkSpreadsheetMappingInput"
+                    id="jsonMappingUploadInput"
                     type="file"
-                    accept=".md,text/markdown"
-                    onChange={e => setSpreadsheetUploadFile(e.target.files?.[0] || null)}
-                    style={{ maxWidth: 260 }}
+                    accept=".json,application/json"
+                    onChange={e => setJsonMappingFile(e.target.files?.[0] || null)}
+                  />
+                  {jsonMappingFile && (
+                    <div style={{ marginTop: 8, fontSize: 12, color: '#475569' }}>
+                      File JSON: <b>{jsonMappingFile.name}</b> ({(jsonMappingFile.size / 1024).toFixed(1)} KB)
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#1d4ed8' }}
+                    disabled={jsonMappingLoading || !jsonMappingFile}
+                    onClick={handleJsonMappingFile}
+                  >
+                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '📥 UPLOAD & TERAPKAN JSON'}
+                  </button>
+                </div>
+
+                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
+                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📋 Copy / Paste JSON</b>
+                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
+                    Tempel seluruh mapping langsung ke kotak di bawah. Tidak perlu membuat file.
+                  </p>
+                  <textarea
+                    value={jsonMappingText}
+                    onChange={e => setJsonMappingText(e.target.value)}
+                    placeholder={'{
+  "createMissingClasses": true,
+  "classes": [
+    {
+      "classId": "1A",
+      "spreadsheetId": "SPREADSHEET_ID",
+      "spreadsheetSheet": "Rekap"
+    }
+  ]
+}'}
+                    style={{ width: '100%', minHeight: 170, boxSizing: 'border-box', padding: 10, border: '1px solid #d0d5dd', borderRadius: 8, fontFamily: 'monospace', fontSize: 12 }}
                   />
                   <button
                     type="button"
-                    style={{ ...S.btn, background: spreadsheetUploadLoading ? '#94a3b8' : '#166534' }}
-                    disabled={spreadsheetUploadLoading || !spreadsheetUploadFile}
-                    onClick={handleBulkSpreadsheetUpload}
+                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#166534' }}
+                    disabled={jsonMappingLoading || !jsonMappingText.trim()}
+                    onClick={() => submitJsonMapping(jsonMappingText, 'Copy/Paste')}
                   >
-                    {spreadsheetUploadLoading ? '⏳ MEMPROSES…' : '📥 UPLOAD & HUBUNGKAN SEMUA'}
+                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '✅ VALIDASI & TERAPKAN JSON'}
                   </button>
                 </div>
               </div>
 
-              {spreadsheetUploadFile && (
-                <div style={{ marginTop: 10, fontSize: 13, color: '#334155' }}>
-                  File Markdown: <b>{spreadsheetUploadFile.name}</b> ({(spreadsheetUploadFile.size / 1024).toFixed(1)} KB)
-                </div>
-              )}
+              <div style={{ marginTop: 12, padding: 10, borderRadius: 8, background: '#fff', fontSize: 12, color: '#475569' }}>
+                <b>createMissingClasses: true</b> = jika classId belum ada, sistem membuat master kelas baru.
+                Jika <b>false</b>, kelas yang belum terdaftar hanya dilaporkan sebagai dilewati.
+              </div>
 
               {spreadsheetUploadResult && (
                 <div style={{ marginTop: 14, background: '#fff', border: '1px solid #d1fae5', borderRadius: 10, padding: 12, fontSize: 13 }}>
@@ -982,7 +978,7 @@ export default function AdminClient() {
                   )}
                   {(spreadsheetUploadResult.skipped?.length || spreadsheetUploadResult.errors?.length) > 0 && (
                     <details style={{ marginTop: 8 }}>
-                      <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Lihat detail baris yang tidak terhubung</summary>
+                      <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Lihat detail mapping yang tidak terhubung</summary>
                       <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, marginTop: 8 }}>
                         {JSON.stringify([...(spreadsheetUploadResult.skipped || []), ...(spreadsheetUploadResult.errors || [])], null, 2)}
                       </pre>
@@ -990,65 +986,6 @@ export default function AdminClient() {
                   )}
                 </div>
               )}
-            </div>
-
-            <div style={{ ...S.card, background: '#eff6ff', border: '1px solid #bfdbfe', boxShadow: 'none', marginBottom: 18 }}>
-              <h3 style={{ ...S.h2, margin: '0 0 8px', color: '#1e3a8a' }}>🧩 Master Kelas Dinamis</h3>
-              <p style={{ ...S.muted, margin: '0 0 14px', fontSize: 13, lineHeight: 1.6 }}>
-                Mulai sekarang struktur kelas tidak dikunci di kode aplikasi. Admin dapat menambah kelas baru, mengubah Spreadsheet, unit/jenjang, dan sheet melalui JSON tanpa mengubah source code.
-              </p>
-
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-                <button type="button" style={S.sm} onClick={useJsonTemplate}>📝 ISI CONTOH JSON</button>
-                <button type="button" style={S.sm} onClick={downloadJsonTemplate}>⬇️ DOWNLOAD TEMPLATE JSON</button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', gap: 14 }}>
-                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
-                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📁 Upload JSON</b>
-                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
-                    Bisa memakai format lengkap <code>classes: []</code> atau format singkat <code>{'{ "1A": "SPREADSHEET_ID" }'}</code>.
-                  </p>
-                  <input
-                    type="file"
-                    accept=".json,application/json"
-                    onChange={e => setJsonMappingFile(e.target.files?.[0] || null)}
-                  />
-                  <button
-                    type="button"
-                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#1d4ed8' }}
-                    disabled={jsonMappingLoading || !jsonMappingFile}
-                    onClick={handleJsonMappingFile}
-                  >
-                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '📥 TERAPKAN JSON'}
-                  </button>
-                </div>
-
-                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
-                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📋 Copy / Paste JSON</b>
-                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
-                    Tempel mapping langsung. Tidak perlu membuat file.
-                  </p>
-                  <textarea
-                    value={jsonMappingText}
-                    onChange={e => setJsonMappingText(e.target.value)}
-                    placeholder={'{\n  "createMissingClasses": true,\n  "classes": [ ... ]\n}'}
-                    style={{ width: '100%', minHeight: 150, boxSizing: 'border-box', padding: 10, border: '1px solid #d0d5dd', borderRadius: 8, fontFamily: 'monospace', fontSize: 12 }}
-                  />
-                  <button
-                    type="button"
-                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#166534' }}
-                    disabled={jsonMappingLoading || !jsonMappingText.trim()}
-                    onClick={() => submitJsonMapping(jsonMappingText, 'Copy/Paste')}
-                  >
-                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '✅ VALIDASI & TERAPKAN'}
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ marginTop: 12, padding: 10, borderRadius: 8, background: '#fff', fontSize: 12, color: '#475569' }}>
-                <b>createMissingClasses: true</b> = jika classId belum ada, sistem membuat master kelas baru. Jika <b>false</b>, kelas yang belum terdaftar hanya dilaporkan sebagai dilewati.
-              </div>
             </div>
 
             <Toolbar search={search} setSearch={setSearch} />
