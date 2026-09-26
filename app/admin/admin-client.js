@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import MasterDataAI from './master-data-ai';
 
 const tabs = [
   ['overview', 'Ringkasan'],
+  ['master_ai', '🤖 Master Data AI'],
   ['raport_asli', '📊 Bedah & Isi Raport Asli'],
   ['classes', 'Kelas & Spreadsheet'],
   ['assignments', 'Penugasan Guru'],
@@ -483,6 +485,10 @@ export default function AdminClient() {
             </button>
           ))}
         </nav>
+
+        {tab === 'master_ai' && (
+          <MasterDataAI />
+        )}
 
         {tab === 'print' && (
           <Section title="Ruang Cetak Raport">
