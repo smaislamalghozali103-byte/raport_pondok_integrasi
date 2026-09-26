@@ -65,6 +65,10 @@ function scoreMeta(item) {
   };
 }
 
+function rowsSubjectIsConfigured(subjectName) {
+  return SUBJECTS.some(([en]) => en === subjectName);
+}
+
 export default function ReportPrintPage() {
   const router = useRouter();
   const [role, setRole] = useState("");
@@ -142,7 +146,10 @@ export default function ReportPrintPage() {
     window.print();
   }
 
-  const rows = SUBJECTS.map(([en, ar]) => ({ en, ar, score: grades[en] ?? "" }));
+  const dynamicRows = Object.keys(grades).length
+    ? SUBJECTS.map(([en, ar]) => ({ en, ar, score: grades[en] ?? "" })).filter(r => r.score !== "" || rowsSubjectIsConfigured(r.en))
+    : SUBJECTS.map(([en, ar]) => ({ en, ar, score: "" }));
+  const rows = dynamicRows;
   const filled = rows.map(r => Number(r.score)).filter(Number.isFinite);
   const total = filled.reduce((a,b) => a+b, 0);
   const average = filled.length ? total / filled.length : 0;
