@@ -30,7 +30,7 @@ export async function POST(request){
     for(const s of layout.students){
       const no=clean(s.no), nisn=clean(s.nisn), name=clean(s.name);
       if(!name) continue;
-      const key=nisn?`nisn__${normalize(nisn)}`:(nis?`nis__${normalize(nis)}`:`name__${normalize(name)}`);
+      const key=nisn?`nisn__${normalize(nisn)}`:`name__${normalize(name)}`;
       const ref=db.collection('students').doc(`${classId}__${key}`.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,140));
       writes.push({ref,data:{classId,schoolYear,no:no||null,name,fullName:name,nisn:nisn||null,status:'AKTIF',rekapRow:s.row+1,updatedAt:new Date()}});
     }
