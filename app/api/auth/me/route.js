@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
+import { getTeacherRole } from '@/lib/authorization';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export async function GET() {
     return Response.json({ success: false, authenticated: false });
   }
 
-  const role = session.role === 'wali_kelas' ? 'wali_kelas' : 'guru';
+  const role = await getTeacherRole(session.teacherId);
 
   return Response.json({
     success: true,
