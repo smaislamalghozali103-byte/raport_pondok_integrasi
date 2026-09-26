@@ -27,7 +27,7 @@ function pick(row, names) {
 function parseJsonMappings(text) {
   const parsed = JSON.parse(String(text || ''));
   const root = Array.isArray(parsed) ? { classes: parsed } : (parsed || {});
-  const createMissingClasses = root.createMissingClasses === true;
+  const createMissingClasses = root.createMissingClasses !== false;
   const source = Array.isArray(root.classes)
     ? root.classes
     : Object.entries(root.classes || root).filter(([key]) =>
@@ -237,13 +237,18 @@ export async function POST(request) {
         extra.unit = clean(row.unit || row.jenjang || row.level);
         extra.jenjang = clean(row.jenjang || row.level || row.unit);
       }
-      await db.collection('classes').doc(target.id).set({
-        spreadsheetId,
-        spreadsheetSheet: sheetName,
-        ...extra,
-        updatedAt: new Date(),
-        updatedBy: auth.session.teacherId
-      }, { merge: true });
+      pendingWrites.push({
+        ref: db.collection('classes').doc(target.id),
+        data: {
+          spreadsheetId,
+          spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit`,
+          spreadsheetSheet: sheetName,
+          ...extra,
+          updatedAt: new Date(),
+          updatedBy: auth.session.teacherId
+        },
+        options: { merge: true }
+      });
 
       updated.push({
         classId: target.id,
@@ -279,7 +284,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('BULK SPREADSHEET IMPORT ERROR', error);
     const rawMessage = error?.message || 'Gagal mengimpor mapping Spreadsheet.';
-    const isQuota = /RESOURCE_EXHAUSTED|quota exceeded|quota/i.test(rawMessage);
+    const rawMessage = error?.message || 'Gagal mengimpor mapping Spreadsheet.';
     return Response.json({
       success: false,
       code: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'BULK_SPREADSHEET_IMPORT_ERROR',
