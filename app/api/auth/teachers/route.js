@@ -19,12 +19,16 @@ export async function GET() {
       .map(d => ({ id: d.id, ...d.data() }))
       .filter(t => String(t.status || '').trim().toUpperCase() === 'AKTIF')
       .filter(t => !adminIds.has(String(t.id)))
+      .filter(t => String(t.role || '').trim().toLowerCase() !== 'admin')
+      .filter(t => String(t.role || '').trim().toLowerCase() !== 'administrator')
+      .filter(t => t.isAdmin !== true)
       .map(t => ({
         id: t.id,
         teacherCode: t.teacherCode || t.id,
         name: t.name || '',
         unit: t.unit || '',
-        pinConfigured: t.pinConfigured === true
+        pinConfigured: t.pinConfigured === true,
+        role: ['wali_kelas', 'wali kelas', 'wali'].includes(String(t.role || '').trim().toLowerCase()) ? 'wali_kelas' : 'guru'
       }));
 
     return Response.json(
