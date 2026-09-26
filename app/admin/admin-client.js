@@ -835,7 +835,7 @@ export default function AdminClient() {
                   <input
                     id="bulkSpreadsheetMappingInput"
                     type="file"
-                    accept=".xlsx,.xls,.csv"
+                    accept=".md,text/markdown"
                     onChange={e => setSpreadsheetUploadFile(e.target.files?.[0] || null)}
                     style={{ maxWidth: 260 }}
                   />
@@ -852,7 +852,7 @@ export default function AdminClient() {
 
               {spreadsheetUploadFile && (
                 <div style={{ marginTop: 10, fontSize: 13, color: '#334155' }}>
-                  File: <b>{spreadsheetUploadFile.name}</b> ({(spreadsheetUploadFile.size / 1024).toFixed(1)} KB)
+                  File Markdown: <b>{spreadsheetUploadFile.name}</b> ({(spreadsheetUploadFile.size / 1024).toFixed(1)} KB)
                 </div>
               )}
 
