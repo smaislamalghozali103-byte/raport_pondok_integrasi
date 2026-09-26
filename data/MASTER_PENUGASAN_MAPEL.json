@@ -1,0 +1,14 @@
+{
+  "tahun_ajaran": "2026/2027",
+  "sumber": "REKAPITULASI KELOMPOK MATA PELAJARAN",
+  "struktur": {
+    "kode_mapel": "Kode Mata Pelajaran",
+    "nama_mapel": "Nama Mata Pelajaran",
+    "guru_pengampu": "Guru Pengampu",
+    "unit": "Unit",
+    "kelas": "Daftar Kelas",
+    "jumlah_kelas": "Jumlah Kelas",
+    "total_jam_mengajar": "Total Jam Mengajar"
+  },
+  "catatan": "Data ditranskripsi dari sumber yang diberikan. Nama guru, nama mapel, kelas, jumlah kelas, dan total jam dipertahankan sesuai sumber."
+}
