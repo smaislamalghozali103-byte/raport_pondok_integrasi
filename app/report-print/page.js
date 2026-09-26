@@ -211,7 +211,7 @@ export default function ReportPrintPage() {
                   <div>
                     <h2 style={styles.h2}>Preview Raport Asli</h2>
                     <p style={styles.muted}>
-                      Menampilkan sheet {selectedClass.spreadsheetSheet || "Rapot"} dari Spreadsheet asli.
+                      Menampilkan template Rapot/Raport asli (area cetak A1:H60) dari Spreadsheet terhubung.
                     </p>
                   </div>
                   {activeStudent && (
@@ -323,8 +323,8 @@ export default function ReportPrintPage() {
                 <div style={styles.panelHint}>
                   <b>{activeStudent ? activeStudent.name : "Belum ada siswa"}</b>
                   <span>
-                    Gunakan tombol ▲ / ▼ untuk berpindah siswa. Preview mengambil PDF dari sheet
-                    raport asli sehingga layout dan tulisan Arab tetap mengikuti Spreadsheet.
+                    Gunakan tombol ▲ / ▼ untuk berpindah siswa. Preview mengaktifkan nomor siswa pada Rapot!I18, lalu mengambil PDF
+                    dari template raport asli.
                   </span>
                 </div>
               </aside>
