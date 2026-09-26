@@ -622,7 +622,19 @@ export default function DashboardClient() {
               </button>
             </div>
 
-            {homeroomMonitoring?.classes?.length > 0 ? (
+            {teacher?.role === "wali_kelas" && (
+          <div style={{ marginTop: 18, padding: 16, background: "#fff", borderRadius: 14, border: "1px solid #dbe7df", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+            <div>
+              <strong style={{ color: "#176b3a" }}>🖨️ Ruang Cetak Raport Wali Kelas</strong>
+              <div style={{ color: "#777", fontSize: 13, marginTop: 4 }}>Cetak raport asli dari Spreadsheet: per siswa, satu kelas, atau Export PDF.</div>
+            </div>
+            <button onClick={() => router.push("/report-print")} style={{ ...styles.primary, padding: "10px 16px" }}>
+              BUKA RUANG CETAK
+            </button>
+          </div>
+        )}
+
+        {homeroomMonitoring?.classes?.length > 0 ? (
               <div style={{ overflowX: "auto", marginTop: 12 }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                   <thead>
