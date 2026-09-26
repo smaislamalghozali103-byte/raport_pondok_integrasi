@@ -15,6 +15,7 @@ export const dynamic = 'force-dynamic';
 
 const clean = value => String(value ?? '').trim();
 const safeId = value => clean(value).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 140);
+const norm = value => clean(value).toLowerCase().normalize('NFKC').replace(/[^\\p{L}\\p{N}]+/gu, ' ').trim().replace(/\\s+/g, ' ');
 
 async function writeCollection(name, items) {
   for (let i = 0; i < items.length; i += 300) {
@@ -60,6 +61,9 @@ export async function POST() {
     const students = getStudentMasterRecords();
     const subjects = getSubjectMasterRecords();
     const wali = getWaliMasterRecords();
+    const teacherByName = new Map(teachers.map(x => [norm(x.name), x]));
+    const classByName = new Map(classes.map(x => [norm(x.name), x]));
+    const subjectByName = new Map(subjects.map(x => [norm(x.name), x]));
 
     const unitNames = new Set();
     for (const x of teachers) for (const u of x.units || []) unitNames.add(u);
@@ -89,7 +93,11 @@ export async function POST() {
       return {
         id: safeId('ASSIGN_' + teacherKey + '__' + classKey + '__' + subjectKey + '__' + (x.unit || '') + '__' + (x.no ?? i)),
         data: {
-          teacherName: clean(x.teacherName), unit: clean(x.unit), subjectName: clean(x.subjectName),
+          teacherId: teacherByName.get(norm(x.teacherName))?.id || null,
+          teacherName: clean(x.teacherName), unit: clean(x.unit),
+          subjectId: subjectByName.get(norm(x.subjectName))?.id || null,
+          subjectName: clean(x.subjectName),
+          classId: classByName.get(norm(x.className))?.id || null,
           className: clean(x.className), hours: Number(x.hours) || 0, no: x.no ?? null,
           schoolYear, status: 'AKTIF', source: 'TEACHER_ASSIGNMENTS_REKAP_2026_2027'
         }
