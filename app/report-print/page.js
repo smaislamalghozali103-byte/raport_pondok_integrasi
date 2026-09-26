@@ -3,30 +3,101 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+const SUBJECTS = [
+  ["Tamrin Lughoh", "تمرين اللغة"],
+  ["Mutholaah", "المطالعة"],
+  ["Aqidah", "العقيدة"],
+  ["Hadist", "الحديث"],
+  ["Fiqih", "الفقه"],
+  ["Tarikh Islam", "التاريخ الإسلامي"],
+  ["Tajwid", "التجويد"],
+  ["Imla", "الإملاء"],
+  ["Khot", "الخطّ"],
+  ["Mahfudzot", "المحفوظات"],
+  ["Pendidikan Agama Islam", "التربية الدينية الإسلامية"],
+  ["Bahasa Indonesia", "اللغة الإندونيسية"],
+  ["Bahasa Inggris", "اللغة الإنجليزية"],
+  ["Matematika", "الرياضيات"],
+  ["Ilmu Pengetahuan Alam", "علم الطبيعة"],
+  ["Ilmu Pengetahuan Sosial", "علم الإجتماع"],
+  ["Pendidikan Kewarganegaraan", "التربية الوطنية"],
+  ["Informatika", "علم الحاسوب الأليكتروني"],
+  ["Pendidikan Jasmani dan Kesehatan", "الرياضة الجسمية"],
+  ["Seni Budaya", "الفنون الجميلة"],
+  ["Bahasa Sunda", "اللغة السوندية"],
+];
+
+const LOGO = "/assets/logo-ypi-al-ghozali.png";
+
+function clean(v) {
+  return String(v ?? "").trim();
+}
+
+function formatNumber(value, digits = 2) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "-";
+  return n.toFixed(digits).replace(/\.00$/, "");
+}
+
+function numberToArabicWords(n) {
+  const units = ["nol","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh","sebelas"];
+  n = Math.round(Number(n));
+  if (!Number.isFinite(n)) return "";
+  if (n < 12) return units[n];
+  if (n < 20) return units[n-10] + " belas";
+  if (n < 100) return units[Math.floor(n/10)] + " puluh" + (n%10 ? " " + units[n%10] : "");
+  if (n < 200) return "seratus" + (n%100 ? " " + numberToArabicWords(n%100) : "");
+  if (n < 1000) return units[Math.floor(n/100)] + " ratus" + (n%100 ? " " + numberToArabicWords(n%100) : "");
+  if (n < 2000) return "seribu" + (n%1000 ? " " + numberToArabicWords(n%1000) : "");
+  if (n < 1000000) return numberToArabicWords(Math.floor(n/1000)) + " ribu" + (n%1000 ? " " + numberToArabicWords(n%1000) : "");
+  return String(n);
+}
+
+function scoreMeta(item) {
+  return {
+    name: item.name || item.fullName || "",
+    nisn: item.nisn || item.nis || "",
+    className: item.className || item.kelas || item.class?.name || "",
+    unit: item.unit || item.jenjang || item.class?.unit || "",
+    schoolYear: item.schoolYear || "2026/2027",
+    waliKelas: item.waliKelas || item.homeroomTeacher || "",
+    director: item.director || "M. Ya'qub Unang, S.Ag",
+  };
+}
+
 export default function ReportPrintPage() {
   const router = useRouter();
   const [role, setRole] = useState("");
   const [classes, setClasses] = useState([]);
   const [classId, setClassId] = useState("");
   const [studentId, setStudentId] = useState("");
+  const [grades, setGrades] = useState({});
+  const [ranking, setRanking] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [printing, setPrinting] = useState("");
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [studentPage, setStudentPage] = useState(0);
-  const [previewKey, setPreviewKey] = useState(0);
 
-  const selectedClass = useMemo(
-    () => classes.find(c => c.id === classId),
-    [classes, classId]
-  );
-
+  const selectedClass = useMemo(() => classes.find(c => c.id === classId), [classes, classId]);
   const students = selectedClass?.students || [];
-  const activeStudent = students[studentPage] || null;
+  const student = useMemo(() => students.find(s => s.id === studentId) || students[0] || null, [students, studentId]);
+  const meta = scoreMeta({
+    ...student,
+    className: selectedClass?.name,
+    unit: selectedClass?.unit,
+    waliKelas: selectedClass?.waliKelas || selectedClass?.homeroomTeacher,
+    schoolYear: selectedClass?.schoolYear || "2026/2027",
+  });
+
+  useEffect(() => { load(); }, []);
 
   useEffect(() => {
-    load();
-  }, []);
+    if (!studentId && students[0]) setStudentId(students[0].id);
+  }, [students, studentId]);
+
+  useEffect(() => {
+    if (classId && studentId) loadGrades(classId, studentId);
+  }, [classId, studentId]);
 
   async function load() {
     try {
@@ -34,11 +105,8 @@ export default function ReportPrintPage() {
       const r = await fetch("/api/report/print/classes", { cache: "no-store", credentials: "include" });
       const d = await r.json();
       if (!r.ok || !d.success) {
-        if (r.status === 401) {
-          window.location.href = "/login";
-          return;
-        }
-        throw new Error(d.message || "Gagal memuat ruang cetak raport.");
+        if (r.status === 401) { window.location.href = "/login"; return; }
+        throw new Error(d.message || "Gagal memuat kelas.");
       }
       setRole(d.role || "");
       setClasses(d.classes || []);
@@ -50,326 +118,198 @@ export default function ReportPrintPage() {
     }
   }
 
-  function openPrint(mode, sid = "") {
-    if (!classId) {
-      setError("Pilih kelas terlebih dahulu.");
-      return;
-    }
-    if (mode === "student" && !sid) {
-      setError("Pilih siswa terlebih dahulu.");
-      return;
-    }
-
-    const params = new URLSearchParams({
-      classId,
-      mode,
-      ...(sid ? { studentId: sid } : {})
-    });
-
-    const url = "/api/report/print?" + params.toString();
-    window.open(url, "_blank", "noopener,noreferrer");
-    setMessage(
-      mode === "student"
-        ? "PDF raport siswa sedang dibuka di tab baru."
-        : "PDF raport satu kelas sedang dibuat."
-    );
-  }
-
-  async function exportPdfClass() {
-    if (!classId) {
-      setError("Pilih kelas terlebih dahulu.");
-      return;
-    }
-
-    setPrinting("pdf");
-    setError("");
+  async function loadGrades(cid, sid) {
     try {
-      const params = new URLSearchParams({ classId, mode: "class" });
-      const r = await fetch("/api/report/print?" + params.toString(), {
-        cache: "no-store",
-        credentials: "include"
+      setError("");
+      const r = await fetch(`/api/report/preview?classId=${encodeURIComponent(cid)}&studentId=${encodeURIComponent(sid)}`, {
+        cache: "no-store", credentials: "include"
       });
-
-      if (!r.ok) {
-        const d = await r.json().catch(() => ({}));
-        throw new Error(d.message || "Gagal export PDF.");
-      }
-
-      const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Raport_${(selectedClass?.name || "Kelas").replace(/[^a-zA-Z0-9_-]+/g, "_")}_1_Kelas.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setMessage("✓ PDF satu kelas berhasil diekspor.");
-    } catch (e) {
-      setError(e.message || "Gagal export PDF.");
-    } finally {
-      setPrinting("");
-    }
+      if (!r.ok) return;
+      const d = await r.json();
+      if (!d.success) return;
+      const map = {};
+      (d.grades || []).forEach(g => { map[clean(g.subjectName || g.subjectId)] = g.value; });
+      setGrades(map);
+      setRanking(d.ranking || null);
+    } catch {}
   }
 
-  function selectStudent(index) {
-    if (!students[index]) return;
-    setStudentPage(index);
-    setStudentId(students[index].id);
-    setError("");
-    setMessage("");
-    setPreviewKey(k => k + 1);
+  function printReport() {
+    window.print();
   }
 
-  function printStudent(sid = activeStudent?.id) {
-    if (!sid) {
-      setError("Belum ada siswa yang dipilih.");
-      return;
-    }
-    setPrinting("student-" + sid);
-    setError("");
-    openPrint("student", sid);
-    setTimeout(() => setPrinting(""), 800);
+  function downloadPdfViaBrowser() {
+    window.print();
   }
 
-  function moveStudent(delta) {
-    const next = Math.min(
-      Math.max(studentPage + delta, 0),
-      Math.max(students.length - 1, 0)
-    );
-    selectStudent(next);
-  }
+  const rows = SUBJECTS.map(([en, ar]) => ({ en, ar, score: grades[en] ?? "" }));
+  const filled = rows.map(r => Number(r.score)).filter(Number.isFinite);
+  const total = filled.reduce((a,b) => a+b, 0);
+  const average = filled.length ? total / filled.length : 0;
+  const rank = ranking?.rank ?? ranking?.position ?? "";
 
-  if (loading) {
-    return <main style={styles.page}><div style={styles.card}>Memuat ruang cetak raport…</div></main>;
-  }
+  if (loading) return <main className="web-report-shell"><div className="loading-card">Memuat raport…</div></main>;
 
   return (
-    <main style={styles.page}>
-      <section style={styles.card}>
-        <header style={styles.header}>
-          <img src="/assets/logo-ypi-al-ghozali.png" alt="Logo YPI Al-Ghozali" style={styles.logo} />
-          <div>
-            <h1 style={styles.title}>RUANG CETAK RAPORT</h1>
-            <p style={styles.school}>Pondok Modern Al-Ghozali</p>
-            <span style={styles.role}>{role === "admin" ? "ADMIN" : "WALI KELAS"}</span>
-          </div>
-          <button onClick={() => router.push(role === "admin" ? "/admin" : "/dashboard")} style={styles.back}>
-            ← Kembali
-          </button>
-        </header>
+    <main className="web-report-shell">
+      <style jsx global>{`
+        * { box-sizing: border-box; }
+        body { margin:0; background:#edf2ed; color:#111; font-family:Arial, Helvetica, sans-serif; }
+        button, select { font: inherit; }
+        .web-report-shell { min-height:100vh; padding:18px; }
+        .topbar { max-width:1200px; margin:0 auto 14px; background:#ffffff; border:1px solid #d8dfd9; border-radius:14px; padding:10px 14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; box-shadow:0 8px 30px rgba(0,0,0,.06); }
+        .topbar .grow { flex:1; }
+        .topbar select { min-width:240px; padding:9px 11px; border:1px solid #cbd5cf; border-radius:9px; background:#fff; }
+        .btn { border:0; border-radius:9px; padding:9px 14px; cursor:pointer; font-weight:800; }
+        .btn-green { background:#176b3a; color:#fff; }
+        .btn-light { background:#f3f6f4; border:1px solid #d1dbd4; }
+        .report-page { width:210mm; min-height:297mm; margin:0 auto; background:#fff; position:relative; padding:12mm 11mm 11mm; border:2px solid #d71920; box-shadow:0 10px 35px rgba(0,0,0,.16); overflow:hidden; }
+        .ornament { position:absolute; inset:2mm; border:8px solid transparent; pointer-events:none; background:repeating-linear-gradient(45deg,#0b5a35 0 5px,#136d41 5px 10px,#0b5a35 10px 15px) border-box; -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; }
+        .inner { position:relative; z-index:1; }
+        .head { display:grid; grid-template-columns:28mm 1fr 28mm; align-items:center; gap:5mm; }
+        .logo { width:24mm; height:24mm; object-fit:contain; justify-self:center; }
+        .arabic-title { font-family:"Times New Roman",serif; font-size:30px; font-weight:700; text-align:center; direction:rtl; margin:0 0 2mm; }
+        .sub-title { text-align:center; font-size:13px; font-weight:800; margin:0; }
+        .identity { display:grid; grid-template-columns:1fr 1fr; gap:2mm 10mm; margin:6mm 4mm 3mm; font-size:12px; }
+        .id-row { display:grid; grid-template-columns:30mm 1fr; gap:2mm; }
+        .id-row .label { font-weight:700; direction:rtl; text-align:right; }
+        .id-row .value { font-weight:700; border-bottom:1px dotted #777; padding-bottom:1mm; }
+        table.report-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:10px; }
+        .report-table th,.report-table td { border:1px solid #111; padding:1.5mm 1mm; vertical-align:middle; }
+        .report-table th { background:#f5e9c5; font-weight:800; }
+        .c-no { width:8mm; text-align:center; }
+        .c-ar { width:44mm; direction:rtl; text-align:right; }
+        .c-en { width:50mm; }
+        .c-score { width:20mm; text-align:center; }
+        .c-pred { width:18mm; text-align:center; }
+        .c-word { width:48mm; direction:rtl; text-align:center; font-family:"Times New Roman",serif; }
+        .summary td { font-weight:800; background:#fafafa; }
+        .summary-label { direction:rtl; text-align:right; }
+        .footer-note { margin-top:4mm; text-align:center; font-family:"Times New Roman",serif; direction:rtl; font-size:11px; }
+        .sign-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5mm; margin-top:7mm; align-items:end; }
+        .sign { text-align:center; font-size:11px; }
+        .sign .role { font-weight:800; margin-bottom:18mm; }
+        .sign .line { border-bottom:1px solid #333; height:1px; margin:0 10mm 2mm; }
+        .seal-space { min-height:34mm; display:flex; align-items:center; justify-content:center; }
+        .seal-space img { width:28mm; height:28mm; object-fit:contain; }
+        .muted { color:#666; font-size:11px; }
+        @media print {
+          body { background:#fff; }
+          .web-report-shell { padding:0; }
+          .topbar { display:none !important; }
+          .report-page { width:210mm; min-height:297mm; margin:0; box-shadow:none; }
+          @page { size:A4 portrait; margin:0; }
+        }
+      `}</style>
 
-        <div style={styles.info}>
-          <b>Raport asli dari Google Spreadsheet</b>
-          <span>
-            PDF dibuat langsung dari Spreadsheet yang terhubung ke kelas sehingga layout, border,
-            formula, dan desain raport tetap mengikuti dokumen asli.
-          </span>
-        </div>
-
-        {error && <div style={styles.error}>{error}</div>}
-        {message && <div style={styles.success}>{message}</div>}
-
-        <label style={styles.label}>Pilih Kelas</label>
-        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setStudentPage(0); setPreviewKey(k => k + 1); setError(""); }} style={styles.select}>
-          <option value="">Pilih kelas…</option>
-          {classes.map(c => (
-            <option key={c.id} value={c.id}>
-              {c.name}{c.unit ? " — " + c.unit : ""}
-            </option>
-          ))}
+      <div className="topbar">
+        <strong>RAPORT PONDOK MODERN AL-GHOZALI</strong>
+        <div className="grow" />
+        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setGrades({}); }}>
+          {classes.map(c => <option key={c.id} value={c.id}>{c.name}{c.unit ? ` — ${c.unit}` : ""}</option>)}
         </select>
+        <select value={student?.id || ""} onChange={e => setStudentId(e.target.value)}>
+          {students.map((s, i) => <option key={s.id} value={s.id}>{i + 1}. {s.name}</option>)}
+        </select>
+        <button className="btn btn-light" onClick={() => router.push(role === "admin" ? "/admin" : "/dashboard")}>← Kembali</button>
+        <button className="btn btn-green" onClick={printReport}>🖨️ Cetak A4 / PDF</button>
+      </div>
 
-        {selectedClass && (
-          <>
-            <div style={styles.summary}>
-              <div style={styles.summaryItem}><b>{selectedClass.name}</b><span>{selectedClass.unit || "—"}</span></div>
-              <div style={styles.summaryItem}><b>{selectedClass.students.length}</b><span>Siswa</span></div>
-              <div style={styles.summaryItem}><b>{selectedClass.spreadsheetId ? "✓ Terhubung" : "—"}</b><span>Spreadsheet</span></div>
+      {error && <div className="topbar" style={{color:"#a21d1d"}}>{error}</div>}
+
+      <section className="report-page">
+        <div className="ornament" />
+        <div className="inner">
+          <header className="head">
+            <img src={LOGO} className="logo" alt="Logo kiri" />
+            <div>
+              <h1 className="arabic-title">كشف الدرجات</h1>
+              <p className="sub-title">للامتحان التّحريري لمنتصف الفصل الدّراسي الأوّل</p>
+            </div>
+            <img src={LOGO} className="logo" alt="Logo kanan" />
+          </header>
+
+          <div className="identity">
+            <div className="id-row"><div className="label">الاسم كامل :</div><div className="value">{meta.name || "—"}</div></div>
+            <div className="id-row"><div className="label">الصّفّ :</div><div className="value">{meta.className || "—"}</div></div>
+            <div className="id-row"><div className="label">الرقم :</div><div className="value">{meta.nisn || "—"}</div></div>
+            <div className="id-row"><div className="label">العام الدّراسي :</div><div className="value">{meta.schoolYear || "2026/2027"}</div></div>
+          </div>
+
+          <table className="report-table">
+            <thead>
+              <tr>
+                <th className="c-no">الرقم</th>
+                <th className="c-ar">المواد الدّراسيّة</th>
+                <th className="c-en">Mata Pelajaran</th>
+                <th className="c-score">أرقام</th>
+                <th className="c-pred">حروف</th>
+                <th className="c-word">الدرجة الّتي حصلت عليها</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => {
+                const s = Number(r.score);
+                const pred = Number.isFinite(s) ? (s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : "D") : "";
+                const words = Number.isFinite(s) ? numberToArabicWords(s) : "";
+                return (
+                  <tr key={r.en}>
+                    <td className="c-no">{i + 1}</td>
+                    <td className="c-ar">{r.ar}</td>
+                    <td className="c-en">{r.en}</td>
+                    <td className="c-score">{Number.isFinite(s) ? formatNumber(s, 0) : ""}</td>
+                    <td className="c-pred">{pred}</td>
+                    <td className="c-word">{words}</td>
+                  </tr>
+                );
+              })}
+              <tr className="summary">
+                <td colSpan={3} className="summary-label">المجـموع / Jumlah</td>
+                <td className="c-score">{filled.length ? formatNumber(total, 0) : ""}</td>
+                <td colSpan={2}></td>
+              </tr>
+              <tr className="summary">
+                <td colSpan={3} className="summary-label">النّتيجـة المـعدّلة / Nilai Rata Rata</td>
+                <td className="c-score">{filled.length ? formatNumber(average, 2) : ""}</td>
+                <td colSpan={2}></td>
+              </tr>
+              <tr className="summary">
+                <td colSpan={3} className="summary-label">المقـام / Peringkat</td>
+                <td className="c-score">{rank}</td>
+                <td colSpan={2}></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="footer-note">
+            تحريراً بغونونج سندور، 10 اكتوبر 2026 / 27 ربيع الآخر 1448
+          </div>
+
+          <div className="sign-grid">
+            <div className="sign">
+              <div className="role">ولي الأمر</div>
+              <div className="seal-space" />
+              <div className="line" />
             </div>
 
-            <div style={styles.actions}>
-              <button
-                onClick={() => openPrint("class")}
-                disabled={printing === "class" || !selectedClass.spreadsheetId}
-                style={styles.primary}
-              >
-                {printing === "class" ? "MEMBUAT PDF…" : "🖨️ CETAK 1 KELAS"}
-              </button>
-              <button
-                onClick={exportPdfClass}
-                disabled={printing === "pdf" || !selectedClass.spreadsheetId}
-                style={styles.pdf}
-              >
-                📄 EXPORT TO PDF
-              </button>
-            </div>
-
-            <div style={styles.previewLayout}>
-              <div style={styles.previewPane}>
-                <div style={styles.previewHeader}>
-                  <div>
-                    <h2 style={styles.h2}>Preview Raport Asli</h2>
-                    <p style={styles.muted}>
-                      Menampilkan template Rapot/Raport asli (area cetak A1:H60) dari Spreadsheet terhubung.
-                    </p>
-                  </div>
-                  {activeStudent && (
-                    <div style={styles.previewStudent}>
-                      <b>{activeStudent.name}</b>
-                      <span>NISN: {activeStudent.nisn || "-"}</span>
-                    </div>
-                  )}
-                </div>
-
-                {activeStudent && selectedClass.spreadsheetId ? (
-                  <iframe
-                    key={`${classId}-${activeStudent.id}-${previewKey}`}
-                    title={`Preview raport ${activeStudent.name}`}
-                    src={`/api/report/print?classId=${encodeURIComponent(classId)}&mode=student&studentId=${encodeURIComponent(activeStudent.id)}`}
-                    style={styles.pdfFrame}
-                  />
-                ) : (
-                  <div style={styles.previewEmpty}>
-                    Pilih kelas yang memiliki Spreadsheet Raport untuk melihat preview.
-                  </div>
-                )}
+            <div className="sign">
+              <div className="role">ولي الفصل</div>
+              <div className="seal-space">
+                <img src={LOGO} alt="Stempel" />
               </div>
-
-              <aside style={styles.controlPanel}>
-                <div style={styles.navButtons}>
-                  <button
-                    type="button"
-                    onClick={() => moveStudent(-1)}
-                    disabled={!activeStudent || studentPage === 0}
-                    style={{ ...styles.arrowBtn, ...(studentPage === 0 ? styles.navBtnDisabled : {}) }}
-                    aria-label="Siswa sebelumnya"
-                    title="Siswa sebelumnya"
-                  >
-                    ▲
-                  </button>
-                  <div style={styles.studentPosition}>
-                    <b>{activeStudent ? `SISWA ${studentPage + 1}` : "SISWA"}</b>
-                    <span>{students.length ? `dari ${students.length}` : "—"}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => moveStudent(1)}
-                    disabled={!activeStudent || studentPage >= students.length - 1}
-                    style={{ ...styles.arrowBtn, ...(studentPage >= students.length - 1 ? styles.navBtnDisabled : {}) }}
-                    aria-label="Siswa berikutnya"
-                    title="Siswa berikutnya"
-                  >
-                    ▼
-                  </button>
-                </div>
-
-                <label style={styles.panelLabel}>SISWA</label>
-                <select
-                  value={activeStudent?.id || ""}
-                  onChange={e => {
-                    const index = students.findIndex(s => s.id === e.target.value);
-                    if (index >= 0) selectStudent(index);
-                  }}
-                  style={styles.panelSelect}
-                  disabled={!students.length}
-                >
-                  <option value="">Pilih siswa…</option>
-                  {students.map((s, i) => (
-                    <option key={s.id} value={s.id}>
-                      {i + 1}. {s.name}
-                    </option>
-                  ))}
-                </select>
-
-                <label style={styles.panelLabel}>KELAS</label>
-                <select value={classId} onChange={e => {
-                  setClassId(e.target.value);
-                  setStudentId("");
-                  setStudentPage(0);
-                  setPreviewKey(k => k + 1);
-                  setError("");
-                }} style={styles.panelSelect}>
-                  {classes.map(c => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}{c.unit ? ` — ${c.unit}` : ""}
-                    </option>
-                  ))}
-                </select>
-
-                <label style={styles.panelLabel}>JENJANG</label>
-                <select value={selectedClass?.unit || ""} readOnly style={styles.panelSelect}>
-                  <option value={selectedClass?.unit || ""}>{selectedClass?.unit || "—"}</option>
-                </select>
-
-                <button
-                  type="button"
-                  onClick={() => printStudent()}
-                  disabled={!activeStudent || !selectedClass.spreadsheetId || !!printing}
-                  style={styles.printBtn}
-                >
-                  {printing ? "MEMBUKA…" : "PRINT"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => openPrint("class")}
-                  disabled={!selectedClass.spreadsheetId}
-                  style={styles.printAllBtn}
-                >
-                  PRINT ALL
-                </button>
-
-                <div style={styles.panelHint}>
-                  <b>{activeStudent ? activeStudent.name : "Belum ada siswa"}</b>
-                  <span>
-                    Gunakan tombol ▲ / ▼ untuk berpindah siswa. Preview mengaktifkan nomor siswa pada Rapot!I18, lalu mengambil PDF
-                    dari template raport asli.
-                  </span>
-                </div>
-              </aside>
+              <div className="line" />
+              <strong>{meta.waliKelas || "Amalia Nur Fariha, S.Pd"}</strong>
             </div>
-          </>
-        )}
+
+            <div className="sign">
+              <div className="role">مـدير المـعهد</div>
+              <div className="seal-space" />
+              <div className="line" />
+              <strong>{meta.director}</strong>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );
 }
-
-const styles = {
-  page: { minHeight: "100vh", background: "#f4f7f4", padding: 28, boxSizing: "border-box" },
-  card: { maxWidth: 1180, margin: "0 auto", background: "#fff", borderRadius: 20, padding: 28, boxShadow: "0 12px 40px rgba(0,0,0,.08)" },
-  header: { display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid #eee", paddingBottom: 20 },
-  logo: { width: 62, height: 62, objectFit: "contain" },
-  title: { margin: 0, fontSize: 25 },
-  school: { margin: "5px 0", color: "#777" },
-  role: { display: "inline-block", marginTop: 4, padding: "4px 9px", borderRadius: 999, background: "#eff6ff", color: "#1d4ed8", fontSize: 11, fontWeight: 800 },
-  back: { marginLeft: "auto", border: 0, borderRadius: 9, padding: "10px 14px", background: "#eee", cursor: "pointer", fontWeight: 700 },
-  info: { marginTop: 20, padding: 15, borderRadius: 12, background: "#f0f7f2", color: "#176b3a", display: "flex", flexDirection: "column", gap: 5, fontSize: 13, lineHeight: 1.5 },
-  label: { display: "block", fontWeight: 700, fontSize: 14, margin: "20px 0 7px" },
-  select: { width: "100%", boxSizing: "border-box", padding: "12px 13px", border: "1px solid #d5d5d5", borderRadius: 10, background: "#fff", fontSize: 15 },
-  summary: { marginTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 10 },
-  summaryItem: { padding: 12, borderRadius: 10, background: "#f8faf9", border: "1px solid #e2e8e4", display: "flex", flexDirection: "column", gap: 3 },
-  actions: { marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" },
-  primary: { border: 0, borderRadius: 10, padding: "12px 18px", background: "#176b3a", color: "#fff", fontWeight: 800, cursor: "pointer" },
-  pdf: { border: "1px solid #176b3a", borderRadius: 10, padding: "12px 18px", background: "#f0fdf4", color: "#176b3a", fontWeight: 800, cursor: "pointer" },
-  previewLayout: { marginTop: 24, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 245px", gap: 16, alignItems: "stretch" },
-  previewPane: { minWidth: 0, background: "#f2f2f2", border: "1px solid #d9dedb", borderRadius: 14, overflow: "hidden" },
-  previewHeader: { padding: 14, background: "#fff", borderBottom: "1px solid #e2e5e3", display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" },
-  h2: { margin: 0, color: "#176b3a", fontSize: 18 },
-  muted: { margin: "5px 0 0", color: "#777", fontSize: 13 },
-  previewStudent: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3, fontSize: 12 },
-  pdfFrame: { display: "block", width: "100%", height: "760px", border: 0, background: "#fff" },
-  previewEmpty: { minHeight: 760, display: "grid", placeItems: "center", padding: 30, color: "#777", background: "#fff", textAlign: "center" },
-  controlPanel: { background: "#fff", border: "1px solid #d9dedb", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 10, boxShadow: "0 8px 25px rgba(0,0,0,.05)" },
-  navButtons: { display: "flex", flexDirection: "column", alignItems: "center", gap: 8, paddingBottom: 8 },
-  arrowBtn: { width: 72, height: 42, border: "1px solid #cbd5cf", borderRadius: 8, background: "#f7faf8", color: "#111", fontSize: 20, fontWeight: 900, cursor: "pointer" },
-  studentPosition: { display: "flex", flexDirection: "column", alignItems: "center", gap: 2, fontSize: 12, color: "#176b3a" },
-  panelLabel: { marginTop: 7, fontSize: 11, fontWeight: 900, color: "#555", letterSpacing: ".05em" },
-  panelSelect: { width: "100%", boxSizing: "border-box", padding: "10px 11px", border: "1px solid #cfd8d2", borderRadius: 8, background: "#fff", fontSize: 13 },
-  printBtn: { marginTop: 12, width: "100%", border: 0, borderRadius: 8, padding: "11px 14px", background: "#4f79c9", color: "#fff", fontSize: 16, fontWeight: 900, cursor: "pointer" },
-  printAllBtn: { width: "100%", border: "1px solid #bbb", borderRadius: 8, padding: "11px 14px", background: "#f5f5f5", color: "#222", fontSize: 12, fontWeight: 900, cursor: "pointer" },
-  panelHint: { marginTop: "auto", padding: 10, borderRadius: 9, background: "#f5f8f6", color: "#555", display: "flex", flexDirection: "column", gap: 5, fontSize: 11, lineHeight: 1.45 },
-  error: { marginTop: 15, padding: 12, borderRadius: 9, background: "#fff0f0", color: "#a21d1d", fontSize: 14 },
-  success: { marginTop: 15, padding: 12, borderRadius: 9, background: "#edf9f0", color: "#176b3a", fontSize: 14 }
-};
