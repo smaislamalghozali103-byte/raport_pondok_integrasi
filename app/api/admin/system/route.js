@@ -43,15 +43,15 @@ export async function POST() {
     // Google Sheets / Master Data AI.
     if (!fs.existsSync(xlsxPath)) {
       const collections = ['units', 'teachers', 'subjects', 'classes', 'teacher_assignments', 'students'];
-      const counts = {};
-      for (const name of collections) {
+      const countResults = await Promise.all(collections.map(async name => {
         try {
           const snap = await db.collection(name).count().get();
-          counts[name] = snap.data().count;
+          return [name, snap.data().count];
         } catch {
-          counts[name] = 0;
+          return [name, 0];
         }
-      }
+      }));
+      const counts = Object.fromEntries(countResults);
 
       const state = await db.collection('master_sync').doc('state').get();
       const sync = state.exists ? state.data() : null;
