@@ -3,7 +3,13 @@ import { db } from '@/lib/firebase-admin';
 import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
 import { requireAdmin } from '@/lib/admin-auth';
 import { getHomeroomClassIds } from '@/lib/authorization';
-import { readSheet, spreadsheetMeta, exportSheetPdf } from '@/lib/google-sheets';
+import {
+  readSheet,
+  readSheetCell,
+  writeSheetCell,
+  spreadsheetMeta,
+  exportSheetPdf
+} from '@/lib/google-sheets';
 
 export const dynamic = 'force-dynamic';
 
@@ -379,6 +385,83 @@ async function findBestReportSheet(meta, spreadsheetId, configuredSheetName, stu
   return candidates[0];
 }
 
+async function sleep(ms) {
+  await new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function sameStudentName(a, b) {
+  return normalizePersonName(a) === normalizePersonName(b);
+}
+
+function findSelectorValueInRekap(values, student) {
+  const wantedNisn = normDigits(student.nisn);
+  const wantedNis = normDigits(student.nis);
+  const wantedName = normalizePersonName(student.name || student.fullName);
+
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i] || [];
+    const rowName = normalizePersonName(rowText(row));
+
+    const numberMatch =
+      (wantedNisn && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNisn))) ||
+      (wantedNis && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNis)));
+
+    const nameMatch = wantedName && (
+      sameStudentName(rowName, wantedName) ||
+      row.some(cell => sameStudentName(cell, wantedName))
+    );
+
+    if (!numberMatch && !nameMatch) continue;
+
+    const selector = row[0];
+    const numericSelector = Number(selector);
+    if (Number.isFinite(numericSelector) && numericSelector > 0) {
+      return numericSelector;
+    }
+
+    // Rekap!A7 adalah siswa nomor 1, sehingga fallback memakai
+    // posisi baris data ketika kolom A tidak dikembalikan sebagai angka.
+    if (i >= 6) return i - 5;
+  }
+
+  return null;
+}
+
+async function selectReportStudent(spreadsheetId, reportSheet, student) {
+  const rekap = await readSheet(spreadsheetId, 'Rekap', 'A:AH');
+  const selectorValue = findSelectorValueInRekap(rekap.values || [], student);
+
+  if (selectorValue == null) {
+    throw new Error(
+      `Siswa "${clean(student.name || student.fullName)}" tidak ditemukan pada sheet Rekap untuk menentukan nomor siswa.`
+    );
+  }
+
+  const previousValue = await readSheetCell(spreadsheetId, reportSheet, 'I18');
+  await writeSheetCell(spreadsheetId, reportSheet, 'I18', selectorValue);
+
+  const wantedName = normalizePersonName(student.name || student.fullName);
+
+  // Google Sheets API menulis nilai secara langsung; beri waktu formula
+  // VLOOKUP/ARRAYFORMULA pada template menghitung ulang sebelum export.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await sleep(attempt === 0 ? 800 : 500);
+    const check = await readSheet(spreadsheetId, reportSheet, 'A1:H60');
+    const displayed = (check.values || []).flat().map(clean).find(cell => {
+      const n = normalizePersonName(cell);
+      return n && (n === wantedName || n.includes(wantedName));
+    });
+
+    if (displayed) {
+      return { previousValue, selectorValue };
+    }
+  }
+
+  throw new Error(
+    `Template Rapot belum menampilkan siswa "${clean(student.name || student.fullName)}" setelah selector I18=${selectorValue} diubah.`
+  );
+}
+
 function studentBlock(values, rowIndex) {
   if (rowIndex < 0) return null;
 
@@ -503,90 +586,85 @@ export async function GET(request) {
         return Response.json({ success: false, message: 'Siswa bukan anggota kelas yang dipilih.' }, { status: 400 });
       }
 
-      const match = findStudentRow(valuesResult.values, student);
-      if (!match) {
-        return Response.json({
-          success: false,
-          message: 'Nama/NIS/NISN siswa tidak ditemukan pada Spreadsheet Raport. Cetak kelas tetap dapat digunakan.',
-          debug: {
-            namaDicari: clean(student.name || student.fullName),
-            nisDicari: clean(student.nis),
-            nisnDicari: clean(student.nisn),
-            spreadsheetId,
-            sheet: targetSheet.title,
-            configuredSheet: sheetName,
-            rowsChecked: valuesResult.values.length,
-            detectedColumns: detectStudentColumns(valuesResult.values)
-          }
-        }, { status: 404 });
-      }
-
-      const block = studentBlock(valuesResult.values, match.rowIndex);
-      rowStart = block.start;
-      rowEnd = block.end;
       fileLabel = student.name || student.fullName || 'Siswa';
     }
 
-    // Jangan mengirim seluruh columnCount sheet ke exporter.
-    // Template Rapot sering mempunyai banyak kolom kosong di sebelah kanan,
-    // yang membuat Google Sheets mengecilkan raport saat fit-to-width.
-    // Gunakan lebar area yang benar-benar berisi data/form raport.
-    const usedColumnCount = Math.max(
-      1,
-      ...valuesResult.values.map(row => {
-        const cells = row || [];
-        let last = -1;
-        for (let i = cells.length - 1; i >= 0; i--) {
-          if (clean(cells[i])) {
-            last = i;
-            break;
-          }
+    // Template Rapot resmi memakai area cetak A1:H60.
+    // I18 adalah selector tersembunyi dan tidak boleh ikut dicetak;
+    // memasukkannya ke range membuat raport mengecil dan menyisakan area kosong.
+    const exportRowStart = 0;
+    const exportRowEnd = 60;
+    const exportColStart = 0;
+    const exportColEnd = 8;
+
+    let previousSelectorValue = null;
+    let selectorChanged = false;
+
+    try {
+      if (mode === 'student') {
+        const selectedStudentSnap = await db.collection('students').doc(studentId).get();
+        if (!selectedStudentSnap.exists) {
+          throw new Error('Siswa tidak ditemukan.');
         }
-        return last + 1;
-      })
-    );
 
-    // Sheet Rapot adalah template raport satu siswa. Jangan memotongnya
-    // mulai dari baris tempat nama ditemukan karena bagian kop, identitas,
-    // tanda tangan, wali kelas, dan mudir dapat berada sebelum/sesudah baris itu.
-    // Validasi siswa tetap dilakukan, tetapi PDF memakai seluruh area terisi.
-    const usedRowCount = Math.max(
-      valuesResult.values.length,
-      ...valuesResult.values.map((row, index) => row && row.some(cell => clean(cell)) ? index + 1 : 0),
-      1
-    );
+        const selectedStudent = {
+          id: selectedStudentSnap.id,
+          ...selectedStudentSnap.data()
+        };
 
-    const exportRowStart = mode === "student" ? 0 : rowStart;
-    const exportRowEnd = mode === "student" ? usedRowCount : rowEnd;
+        const state = await selectReportStudent(
+          spreadsheetId,
+          targetSheet.title,
+          selectedStudent
+        );
 
-    const pdf = await exportSheetPdf(spreadsheetId, {
-      sheetName: targetSheet.title,
-      rowStart: exportRowStart,
-      rowEnd: exportRowEnd,
-      colStart: 0,
-      colEnd: Math.min(
-        Number(targetSheet.gridProperties?.columnCount || usedColumnCount),
-        usedColumnCount
-      ),
-      portrait: true
-    });
-
-    const safe = String(fileLabel).replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Raport';
-    const filename = mode === 'student'
-      ? `Raport_${safe}.pdf`
-      : `Raport_${safe}_1_Kelas.pdf`;
-
-    return new Response(pdf.buffer, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${filename}"`,
-        'Cache-Control': 'no-store',
-        'X-Raport-Spreadsheet-Id': spreadsheetId,
-        'X-Raport-Sheet': targetSheet.title,
-        'X-Raport-Mode': mode
+        previousSelectorValue = state.previousValue;
+        selectorChanged = true;
       }
-    });
+
+      const pdf = await exportSheetPdf(spreadsheetId, {
+        sheetName: targetSheet.title,
+        rowStart: exportRowStart,
+        rowEnd: exportRowEnd,
+        colStart: exportColStart,
+        colEnd: exportColEnd,
+        portrait: true
+      });
+
+      const safe = String(fileLabel)
+        .replace(/[^a-zA-Z0-9_-]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'Raport';
+
+      const filename = mode === 'student'
+        ? `Raport_${safe}.pdf`
+        : `Raport_${safe}_1_Kelas.pdf`;
+
+      return new Response(pdf.buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `inline; filename="${filename}"`,
+          'Cache-Control': 'no-store',
+          'X-Raport-Spreadsheet-Id': spreadsheetId,
+          'X-Raport-Sheet': targetSheet.title,
+          'X-Raport-Mode': mode
+        }
+      });
+    } finally {
+      if (mode === 'student' && selectorChanged) {
+        try {
+          await writeSheetCell(
+            spreadsheetId,
+            targetSheet.title,
+            'I18',
+            previousSelectorValue ?? ''
+          );
+        } catch (restoreError) {
+          console.error('[REPORT PRINT RESTORE SELECTOR ERROR]', restoreError);
+        }
+      }
+    }
+
   } catch (error) {
     console.error('[REPORT PRINT ERROR]', error);
     return Response.json({
