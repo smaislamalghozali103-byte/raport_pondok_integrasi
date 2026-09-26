@@ -113,22 +113,32 @@ export default function AdminClient() {
   async function loadData() {
     try {
       setLoading(true);
-      const [c, t, s, u, m, a] = await Promise.all([
+      const results = await Promise.allSettled([
         get('/api/admin/classes'),
         get('/api/admin/teachers'),
         get('/api/admin/subjects'),
         get('/api/admin/units'),
         get('/api/admin/monitoring'),
-        get('/api/admin/assignments').catch(() => ({ assignments: [] }))
+        get('/api/admin/assignments')
       ]);
+
+      const [c, t, s, u, m, a] = results.map(result =>
+        result.status === 'fulfilled' ? result.value : null
+      );
+
       setData({
-        classes: c.classes || [],
-        teachers: t.teachers || [],
-        subjects: s.subjects || [],
-        units: u.units || [],
-        monitoring: m.items || m.batches || [],
-        assignments: a.assignments || []
+        classes: c?.classes || [],
+        teachers: t?.teachers || [],
+        subjects: s?.subjects || [],
+        units: u?.units || [],
+        monitoring: m?.items || m?.batches || [],
+        assignments: a?.assignments || []
       });
+
+      const failed = results.find(result => result.status === 'rejected');
+      if (failed) {
+        throw failed.reason || new Error('Sebagian data admin gagal dimuat.');
+      }
     } catch (e) {
       setErr(e.message);
     } finally {
