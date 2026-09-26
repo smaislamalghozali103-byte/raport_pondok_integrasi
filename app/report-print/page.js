@@ -190,51 +190,60 @@ export default function ReportPrintPage() {
 
             <div style={styles.sectionHead}>
               <div>
-                <h2 style={styles.h2}>Daftar Siswa</h2>
-                <p style={styles.muted}>Tombol cetak mengambil bagian raport siswa dari Spreadsheet asli.</p>
+                <h2 style={styles.h2}>Pilih Siswa</h2>
+                <p style={styles.muted}>Pilih salah satu dari 4 siswa yang tampil, lalu cetak raportnya.</p>
               </div>
-              <input
-                value={studentId}
-                onChange={e => setStudentId(e.target.value)}
-                style={styles.studentSearch}
-                placeholder="Pilih siswa di bawah…"
-                type="hidden"
-              />
+              <div style={styles.pageInfo}>
+                {students.length
+                  ? `Siswa ${studentPage * STUDENTS_PER_PAGE + 1}–${Math.min((studentPage + 1) * STUDENTS_PER_PAGE, students.length)} dari ${students.length}`
+                  : "Belum ada siswa"}
+              </div>
             </div>
 
-            <div style={styles.tableWrap}>
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>No</th>
-                    <th style={styles.th}>NISN</th>
-                    <th style={styles.th}>Nama Siswa</th>
-                    <th style={{ ...styles.th, textAlign: "center" }}>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedClass.students.map((s, i) => (
-                    <tr key={s.id}>
-                      <td style={styles.td}>{i + 1}</td>
-                      <td style={styles.td}>{s.nisn || "-"}</td>
-                      <td style={{ ...styles.td, fontWeight: 700 }}>{s.name}</td>
-                      <td style={{ ...styles.td, textAlign: "center" }}>
-                        <button
-                          onClick={() => printStudent(s.id)}
-                          disabled={!selectedClass.spreadsheetId || printing === "student-" + s.id}
-                          style={styles.smallBtn}
-                        >
-                          {printing === "student-" + s.id ? "…" : "🖨️ CETAK SISWA"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {selectedClass.students.length === 0 && (
-                    <tr><td colSpan="4" style={{ ...styles.td, textAlign: "center" }}>Belum ada siswa.</td></tr>
-                  )}
-                </tbody>
-              </table>
+            <div style={styles.studentGrid}>
+              {visibleStudents.map((s, localIndex) => {
+                const number = studentPage * STUDENTS_PER_PAGE + localIndex + 1;
+                const isPrinting = printing === "student-" + s.id;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => printStudent(s.id)}
+                    disabled={!selectedClass.spreadsheetId || isPrinting}
+                    style={styles.studentBtn}
+                  >
+                    <span style={styles.studentNumber}>SISWA {number}</span>
+                    <strong style={styles.studentName}>{s.name || "Nama siswa"}</strong>
+                    <span style={styles.studentNisn}>NISN: {s.nisn || "-"}</span>
+                    <span style={styles.studentAction}>
+                      {isPrinting ? "MEMBUKA PDF…" : "🖨️ CETAK RAPORT"}
+                    </span>
+                  </button>
+                );
+              })}
+              {!students.length && <div style={styles.emptyStudent}>Belum ada siswa pada kelas ini.</div>}
             </div>
+
+            {students.length > STUDENTS_PER_PAGE && (
+              <div style={styles.pagination}>
+                <button
+                  type="button"
+                  onClick={() => setStudentPage(p => Math.max(0, p - 1))}
+                  disabled={studentPage === 0}
+                  style={{ ...styles.navBtn, ...(studentPage === 0 ? styles.navBtnDisabled : {}) }}
+                >
+                  ← SEBELUMNYA
+                </button>
+                <div style={styles.pageCounter}>HALAMAN {studentPage + 1} / {totalStudentPages}</div>
+                <button
+                  type="button"
+                  onClick={() => setStudentPage(p => Math.min(totalStudentPages - 1, p + 1))}
+                  disabled={studentPage >= totalStudentPages - 1}
+                  style={{ ...styles.navBtn, ...(studentPage >= totalStudentPages - 1 ? styles.navBtnDisabled : {}) }}
+                >
+                  SESUDAHNYA →
+                </button>
+              </div>
+            )}
           </>
         )}
       </section>
