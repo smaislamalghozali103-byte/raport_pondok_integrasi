@@ -891,7 +891,7 @@ export default function AdminClient() {
         )}
 
         {tab === 'classes' && (
-          <Section title="Kelas & Koneksi Google Spreadsheet — JSON">
+          <Section title="Kelas & Koneksi Google Spreadsheet — JSON SAJA">
             <div style={{ ...S.card, background: '#eff6ff', border: '1px solid #bfdbfe', boxShadow: 'none', marginBottom: 18 }}>
               <h3 style={{ ...S.h2, margin: '0 0 8px', color: '#1e3a8a' }}>🔗 Koneksi Spreadsheet per Kelas — JSON</h3>
               <p style={{ ...S.muted, margin: '0 0 14px', fontSize: 13, lineHeight: 1.6 }}>
@@ -939,16 +939,7 @@ export default function AdminClient() {
                   <textarea
                     value={jsonMappingText}
                     onChange={e => setJsonMappingText(e.target.value)}
-                    placeholder={'{
-  "createMissingClasses": true,
-  "classes": [
-    {
-      "classId": "1A",
-      "spreadsheetId": "SPREADSHEET_ID",
-      "spreadsheetSheet": "Rekap"
-    }
-  ]
-}'}
+                    placeholder={`{\n  "createMissingClasses": true,\n  "classes": [\n    {\n      "classId": "1A",\n      "spreadsheetId": "SPREADSHEET_ID",\n      "spreadsheetSheet": "Rekap"\n    }\n  ]\n}`}
                     style={{ width: '100%', minHeight: 170, boxSizing: 'border-box', padding: 10, border: '1px solid #d0d5dd', borderRadius: 8, fontFamily: 'monospace', fontSize: 12 }}
                   />
                   <button
