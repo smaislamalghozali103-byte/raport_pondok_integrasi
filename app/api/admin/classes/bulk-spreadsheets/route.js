@@ -87,7 +87,7 @@ export async function POST(request) {
 
     if (!lowerName.endsWith('.json')) {
       return Response.json(
-        { success: false, message: 'Format harus .json atau .md (Markdown).' },
+        { success: false, message: 'Format harus .json.' },
         { status: 400 }
       );
     }
