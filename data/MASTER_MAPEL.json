@@ -10,8 +10,7 @@
         "Matematika", "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
         "Pendidikan Kewarganegaraan", "Informatika",
         "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
-      ],
-      "kelas": ["1A","1B","1D","1E"]
+      ]
     },
     "KELAS_2_VIII_SMP": {
       "nama_kelompok": "KELAS 2 (VIII SMP)",
@@ -23,8 +22,7 @@
         "Matematika", "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
         "Pendidikan Kewarganegaraan", "Informatika",
         "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
-      ],
-      "kelas": ["2A","2B","2C","2D","2E","2F"]
+      ]
     },
     "KELAS_3_IX_SMP": {
       "nama_kelompok": "KELAS 3 (IX SMP)",
@@ -36,8 +34,7 @@
         "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
         "Pendidikan Kewarganegaraan", "Informatika",
         "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
-      ],
-      "kelas": ["3A","3B","3C","3D","3E","3F"]
+      ]
     },
     "KELAS_4_10_SMA": {
       "nama_kelompok": "KELAS 4 (10 SMA)",
