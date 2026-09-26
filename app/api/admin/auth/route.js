@@ -13,41 +13,41 @@ export const dynamic = 'force-dynamic';
 
 function getAdminPinConfig() {
   const hash = String(process.env.ADMIN_PIN_HASH || '').trim();
-
-  // Mode utama: bcrypt hash di environment server.
-  if (hash) {
-    return {
-      type: 'hash',
-      value: hash
-    };
-  }
-
-  // Fallback setup: PIN mentah tetap hanya berada di server environment.
-  // Tidak pernah dikirim ke browser atau disimpan di localStorage/sessionStorage.
   const pin = String(process.env.ADMIN_PIN || '').trim();
 
-  if (pin) {
-    if (!/^\d{6,}$/.test(pin)) {
-      throw new Error('ADMIN_PIN harus berupa minimal 6 digit angka.');
-    }
-
-    return {
-      type: 'pin',
-      value: pin
-    };
+  if (!hash && !pin) {
+    throw new Error('ADMIN_PIN_HASH atau ADMIN_PIN belum dikonfigurasi.');
   }
 
-  throw new Error('ADMIN_PIN_HASH atau ADMIN_PIN belum dikonfigurasi.');
+  if (pin && !/^\d{6,}$/.test(pin)) {
+    throw new Error('ADMIN_PIN harus berupa minimal 6 digit angka.');
+  }
+
+  return { hash, pin };
 }
 
-async function verifyAdminPin(pin) {
+async function verifyAdminPin(inputPin) {
   const config = getAdminPinConfig();
 
-  if (config.type === 'hash') {
-    return bcrypt.compare(pin, config.value);
+  // Utamakan bcrypt hash jika tersedia.
+  if (config.hash) {
+    try {
+      if (await bcrypt.compare(inputPin, config.hash)) {
+        return true;
+      }
+    } catch (err) {
+      // Jika hash di deployment lama/keliru, lanjutkan ke fallback ADMIN_PIN.
+      console.error('[ADMIN AUTH] ADMIN_PIN_HASH tidak valid, mencoba ADMIN_PIN fallback.');
+    }
   }
 
-  return safeEqual(pin, config.value);
+  // Fallback server-side untuk memudahkan setup awal.
+  // Nilai ini tidak pernah dikirim ke browser atau disimpan di browser.
+  if (config.pin) {
+    return safeEqual(inputPin, config.pin);
+  }
+
+  return false;
 }
 
 export async function GET() {
