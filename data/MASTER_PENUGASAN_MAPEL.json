@@ -1,14 +1,1902 @@
 {
   "tahun_ajaran": "2026/2027",
   "sumber": "REKAPITULASI KELOMPOK MATA PELAJARAN",
-  "struktur": {
-    "kode_mapel": "Kode Mata Pelajaran",
-    "nama_mapel": "Nama Mata Pelajaran",
-    "guru_pengampu": "Guru Pengampu",
-    "unit": "Unit",
-    "kelas": "Daftar Kelas",
-    "jumlah_kelas": "Jumlah Kelas",
-    "total_jam_mengajar": "Total Jam Mengajar"
-  },
-  "catatan": "Data ditranskripsi dari sumber yang diberikan. Nama guru, nama mapel, kelas, jumlah kelas, dan total jam dipertahankan sesuai sumber."
+  "struktur": [
+    "kode_mapel",
+    "nama_mapel",
+    "guru_pengampu",
+    "unit",
+    "kelas",
+    "jumlah_kelas",
+    "total_jam_mengajar"
+  ],
+  "data": [
+    {
+      "kode_mapel": "SMA01",
+      "nama_mapel": "ALQUR'AN SMA",
+      "guru_pengampu": [
+        "MURSYID ANWAR, S.Pd., M.Pd.",
+        "NAMIN, S.Pd.I."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMA02",
+      "nama_mapel": "ANTROPOLOGI SMA",
+      "guru_pengampu": [
+        "M. HIDAYATU RUSYDI, SH",
+        "SALEHA MUFIDA, S.Sos., M.Han."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "2 INT IPS",
+        "3 INT IPS",
+        "5 B IPS Putri",
+        "5 D IPS Putra",
+        "6 B IPS Putri",
+        "6 D IPS Putra",
+        "XI IPS Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 8,
+      "total_jam_mengajar": 16
+    },
+    {
+      "kode_mapel": "SMA03",
+      "nama_mapel": "B. INDONESIA SMA",
+      "guru_pengampu": [
+        "BARIROTUL CHOIRIYAH, S.E.I.",
+        "EDI SANJAYA, S.Pd.",
+        "FADILLAH ABIDANA, S.S., M.Pd.,",
+        "H. ASEP SAEPUDIN, M.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 54
+    },
+    {
+      "kode_mapel": "SMA04",
+      "nama_mapel": "B. INGGRIS SMA",
+      "guru_pengampu": [
+        "AHMAD FIRDAUS, S.Ag.",
+        "FADILLAH ABIDANA, S.S., M.Pd.,",
+        "LULU ZAHROTUN NISA, S.Pd.",
+        "MUSLICH ANWAR, M.Pd.",
+        "ZAINI FIKRI, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 48
+    },
+    {
+      "kode_mapel": "SMA05",
+      "nama_mapel": "B. SUNDA SMA",
+      "guru_pengampu": [
+        "DIDAH ROSIDAH, S.Pd.",
+        "SITI NURZULFIAH, S.Pd.I"
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 18,
+      "total_jam_mengajar": 24
+    },
+    {
+      "kode_mapel": "SMA06",
+      "nama_mapel": "BAHASA ARAB SMA",
+      "guru_pengampu": [
+        "M. ALIEF NUGRAHA ATFA, S.H.",
+        "SOPIAN HADI, S.Pd.I."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMA07",
+      "nama_mapel": "BIOLOGI SMA",
+      "guru_pengampu": [
+        "KHAIRIL FAHMI, S.Pd.",
+        "PADLIN, M.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "3 INT IPA",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 C IPA Putra",
+        "6 A IPA Putri",
+        "6 C IPA Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XII IPA Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA08",
+      "nama_mapel": "EKONOMI SMA",
+      "guru_pengampu": [
+        "BARIROTUL CHOIRIYAH, S.E.I.",
+        "DONI SUBIYANTO, S.E."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPS",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 B IPS Putri",
+        "5 D IPS Putra",
+        "6 B IPS Putri",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPS Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA09",
+      "nama_mapel": "FIQIH SMA",
+      "guru_pengampu": [
+        "MUHAMMAD SUHAIL, S.Pd.I.",
+        "NURLAILA, S.Ag."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMA10",
+      "nama_mapel": "FISIKA SMA",
+      "guru_pengampu": [
+        "RIZKI KAROMAH, S.Si."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "3 INT IPA",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 C IPA Putra",
+        "6 A IPA Putri",
+        "6 C IPA Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XII IPA Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA11",
+      "nama_mapel": "GEOGRAFI SMA",
+      "guru_pengampu": [
+        "BARIROTUL CHOIRIYAH, S.E.I.",
+        "DONI SUBIYANTO, S.E.",
+        "KHAIRIL FAHMI, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPS",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 B IPS Putri",
+        "5 D IPS Putra",
+        "6 B IPS Putri",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPS Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA12",
+      "nama_mapel": "HADIS SMA",
+      "guru_pengampu": [
+        "SARONI"
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMA13",
+      "nama_mapel": "INFORMATIKA SMA",
+      "guru_pengampu": [
+        "AHMAD LUJAENILMA, S.Kom.",
+        "FADHILLAH, S.Pd.",
+        "MUHAMAD RAHUL SAYYID, S.Kom."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 44
+    },
+    {
+      "kode_mapel": "SMA14",
+      "nama_mapel": "KIMIA SMA",
+      "guru_pengampu": [
+        "Ir. RAHMAWATI, M.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "3 INT IPA",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 C IPA Putra",
+        "6 A IPA Putri",
+        "6 C IPA Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XII IPA Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA15",
+      "nama_mapel": "LIFE SKILL SMA",
+      "guru_pengampu": [
+        "FADHILLAH, S.Pd.",
+        "HAFIZD HIDAYAT, S.Pd., Gr."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 18,
+      "total_jam_mengajar": 30
+    },
+    {
+      "kode_mapel": "SMA16",
+      "nama_mapel": "MATEMATIKA SMA",
+      "guru_pengampu": [
+        "ISNAN APRIZAL HAFIZH",
+        "ISWAHYUDIN, S.E.",
+        "NURACHMAN, M.Pd.",
+        "PADLIN, M.Pd.",
+        "PUTRI DINAH OKTAVIA, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 64
+    },
+    {
+      "kode_mapel": "SMA17",
+      "nama_mapel": "MTK TINGKAT LANJUT SMA",
+      "guru_pengampu": [
+        "PUTRI DINAH OKTAVIA, S.Pd.",
+        "RIZKI KAROMAH, S.Si."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "2 INT IPA",
+        "3 INT IPA",
+        "5 A IPA Putri",
+        "5 C IPA Putra",
+        "6 A IPA Putri",
+        "6 C IPA Putra",
+        "XI IPA Non Mukim",
+        "XII IPA Non Mukim"
+      ],
+      "jumlah_kelas": 8,
+      "total_jam_mengajar": 16
+    },
+    {
+      "kode_mapel": "SMA18",
+      "nama_mapel": "P A I SMA",
+      "guru_pengampu": [
+        "MUHAMMAD SUHAIL, S.Pd.I.",
+        "NURLAILA, S.Ag.",
+        "SADAM HAMZAH, S.H.I."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA19",
+      "nama_mapel": "PEND. PANCASILA SMA",
+      "guru_pengampu": [
+        "ANTONI FIRDAUS, S.H.I., M.Pd.",
+        "RENDI RAMADHAN, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 44
+    },
+    {
+      "kode_mapel": "SMA20",
+      "nama_mapel": "PENJAS SMA",
+      "guru_pengampu": [
+        "AHMAD FATHURACHMAN, S.Pd.",
+        "WINTARSA, S.Pd.I."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 44
+    },
+    {
+      "kode_mapel": "SMA21",
+      "nama_mapel": "SEJARAH SMA",
+      "guru_pengampu": [
+        "M. HIDAYATU RUSYDI, SH",
+        "RISMAWATI, S.Sos.",
+        "SALEHA MUFIDA, S.Sos., M.Han.",
+        "SUBHAN, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA22",
+      "nama_mapel": "SOSIOLOGI SMA",
+      "guru_pengampu": [
+        "LIYAS SYARIFUDIN, M.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "1 Intensif",
+        "2 INT IPS",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 B IPS Putri",
+        "5 D IPS Putra",
+        "6 B IPS Putri",
+        "6 D IPS Putra",
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPS Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 14,
+      "total_jam_mengajar": 28
+    },
+    {
+      "kode_mapel": "SMA23",
+      "nama_mapel": "TAHFIZ SMA",
+      "guru_pengampu": [
+        "FADHILLAH, S.Pd.",
+        "KHAIRIL FAHMI, S.Pd.",
+        "LULU ZAHROTUN NISA, S.Pd."
+      ],
+      "unit": "SMA",
+      "kelas": [
+        "X A Non Mukim Putri",
+        "X B Non Mukim Putra",
+        "XI IPA Non Mukim",
+        "XI IPS Non Mukim",
+        "XII IPA Non Mukim",
+        "XII IPS Non Mukim"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMP01",
+      "nama_mapel": "B. INDONESIA SMP",
+      "guru_pengampu": [
+        "AINI SYIFA, S.S.",
+        "EDI SANJAYA, S.Pd.",
+        "YAYAT FITRIYAH, M.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 57
+    },
+    {
+      "kode_mapel": "SMP02",
+      "nama_mapel": "B. INGGRIS SMP",
+      "guru_pengampu": [
+        "ASEP SAEPUL MILLAH, M.Pd.",
+        "HAFIZD HIDAYAT, S.Pd., Gr.",
+        "LULU ZAHROTUN NISA, S.Pd.",
+        "MARIA ULFA, S.S",
+        "MURSYID ANWAR, S.Pd., M.Pd.",
+        "PRITA FATHIMAH ASRA",
+        "RAHMATI KURRATA'AINI, S.S."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 57
+    },
+    {
+      "kode_mapel": "SMP03",
+      "nama_mapel": "B. SUNDA SMP",
+      "guru_pengampu": [
+        "DIDAH ROSIDAH, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 B Putri",
+        "1 E Putra",
+        "2 B Putri",
+        "2 C Putri",
+        "2 E Putra",
+        "2 F Putra",
+        "3 B Putri",
+        "3 C Putri",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 20
+    },
+    {
+      "kode_mapel": "SMP04",
+      "nama_mapel": "BAHASA ARAB SMP",
+      "guru_pengampu": [
+        "BAYU NIRPANA, M.H.",
+        "ICHSANUL AFIEF, S.Sos."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "SMP05",
+      "nama_mapel": "BTQ SMP",
+      "guru_pengampu": [
+        "M. ALIEF NUGRAHA ATFA, S.H.",
+        "SATRIA NUR OKTAVIANTO",
+        "SOPIAN HADI, S.Pd.I."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "SMP06",
+      "nama_mapel": "FIQIH SMP",
+      "guru_pengampu": [
+        "AHMAD SUKANTA, S.Pd.I.",
+        "PUTRI ENJELIKAL FALAH, S.E.",
+        "SATRIA NUR OKTAVIANTO",
+        "SOPIAN HADI, S.Pd.I."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "SMP07",
+      "nama_mapel": "HADIS SMP",
+      "guru_pengampu": [
+        "AHMAD SUKANTA, S.Pd.I.",
+        "DINDA NAAFIDA ARIFIN, S.S."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "SMP08",
+      "nama_mapel": "I P A SMP",
+      "guru_pengampu": [
+        "FIQIH KARTIKA MURNI, S.Pd.",
+        "ROMLI RIAN, M.Pd.",
+        "SITI HALIMAH, S.Si., S.Pd.",
+        "SUMARTIN, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 62
+    },
+    {
+      "kode_mapel": "SMP09",
+      "nama_mapel": "I P S SMP",
+      "guru_pengampu": [
+        "AHAMD YANI, S.Pd.",
+        "ISWAHYUDIN, S.E.",
+        "SUBHAN, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 52
+    },
+    {
+      "kode_mapel": "SMP10",
+      "nama_mapel": "INFORMATIKA SMP",
+      "guru_pengampu": [
+        "AHMAD LUJAENILMA, S.Kom.",
+        "AHMAD SUKANTA, S.Pd.I.",
+        "MUHAMAD JAELANI BASRI, S.Pd.",
+        "RIFQI RAHMATULOH"
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 42
+    },
+    {
+      "kode_mapel": "SMP11",
+      "nama_mapel": "METEMATIKA SMP",
+      "guru_pengampu": [
+        "ALFI NURFADILAH",
+        "IRMAYANTI, M.Pd.",
+        "LULU ZAHROTUN NISA, S.Pd.",
+        "PUTRI DINAH OKTAVIA, S.Pd.",
+        "SITI HALIMAH, S.Si., S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 72
+    },
+    {
+      "kode_mapel": "SMP12",
+      "nama_mapel": "P A I SMP",
+      "guru_pengampu": [
+        "NAMIN, S.Pd.I.",
+        "NUR AZIZAH, S.Pd.I.",
+        "SOPIAN HADI, S.Pd.I.",
+        "ZAINI FIKRI, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 36
+    },
+    {
+      "kode_mapel": "SMP13",
+      "nama_mapel": "PEND. PANCASILA SMP",
+      "guru_pengampu": [
+        "ANISA SITI NABILAH, S.Pd.",
+        "VENTI RAKHMAWATI, M.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 36
+    },
+    {
+      "kode_mapel": "SMP14",
+      "nama_mapel": "PENJAS SMP",
+      "guru_pengampu": [
+        "M. WILDAN MAULANA, S.Pd.",
+        "MUHAMMAD MASYHUR",
+        "TONI, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 B Putri",
+        "1 E Putra",
+        "2 B Putri",
+        "2 C Putri",
+        "2 E Putra",
+        "2 F Putra",
+        "3 B Putri",
+        "3 C Putri",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 30
+    },
+    {
+      "kode_mapel": "SMP15",
+      "nama_mapel": "PENJAS TAHFIZ SMP",
+      "guru_pengampu": [
+        "M. WILDAN MAULANA, S.Pd.",
+        "TONI, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 D Tahfiz Putra",
+        "2 A Tahfiz Putri",
+        "2 D Tahfiz Putra",
+        "3 A Tahfiz Putri",
+        "3 D Tahfiz Putra"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "SMP16",
+      "nama_mapel": "S K I SMP",
+      "guru_pengampu": [
+        "NURLELA, S.Ag., M.M.",
+        "PUTRI ENJELIKAL FALAH, S.E.",
+        "SATRIA NUR OKTAVIANTO"
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "SMP17",
+      "nama_mapel": "SENI BUDAYA SMP",
+      "guru_pengampu": [
+        "MUHAMMAD JAUHAR HAECKAL, S.HI.",
+        "RIZKA SYAFFITRI AMENDA, S.Hum"
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "1 B Putri",
+        "1 E Putra",
+        "2 B Putri",
+        "2 C Putri",
+        "2 E Putra",
+        "2 F Putra",
+        "3 B Putri",
+        "3 C Putri",
+        "3 E Putra",
+        "3 F Putra",
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 20
+    },
+    {
+      "kode_mapel": "SMP18",
+      "nama_mapel": "TAHFIZ SMP",
+      "guru_pengampu": [
+        "SATRIA NUR OKTAVIANTO",
+        "SUBHAN, S.Pd."
+      ],
+      "unit": "SMP",
+      "kelas": [
+        "IX.4 Non Mukim Putri",
+        "IX.8 Non Mukim Putra",
+        "VII.3 Non Mukim Putri",
+        "VII.6 Non Mukim Putra",
+        "VIII.4 Non Mukim"
+      ],
+      "jumlah_kelas": 5,
+      "total_jam_mengajar": 10
+    },
+    {
+      "kode_mapel": "TMMIA01",
+      "nama_mapel": "AQIDAH TMMIA",
+      "guru_pengampu": [
+        "ABDUL HARIZ NAUFAL, S.Ag.",
+        "ADE IHSAN FIRDAUS",
+        "ALMAAS JHOUNG ASRI, S.Sos.",
+        "NADRA, S.Ag.",
+        "NURIZAL MUZAKI",
+        "PUTRA NAHDI ABIYYU, Lc., S.Pd.",
+        "SITI FATIMAH ZAHRA",
+        "WALDA FAUZIAH"
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra"
+      ],
+      "jumlah_kelas": 11,
+      "total_jam_mengajar": 22
+    },
+    {
+      "kode_mapel": "TMMIA02",
+      "nama_mapel": "BALAGHAH TMMIA",
+      "guru_pengampu": [
+        "MUHAMMAD HANIF FAUZI, S.Ag., M.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 4,
+      "total_jam_mengajar": 8
+    },
+    {
+      "kode_mapel": "TMMIA03",
+      "nama_mapel": "FAROID TMMIA",
+      "guru_pengampu": [
+        "PUTRA NAHDI ABIYYU, Lc., S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 6
+    },
+    {
+      "kode_mapel": "TMMIA04",
+      "nama_mapel": "FIQIH TMMIA",
+      "guru_pengampu": [
+        "ABDUL HARIZ NAUFAL, S.Ag.",
+        "ANTONI FIRDAUS, S.H.I., M.Pd.",
+        "FADHILLAH, S.Pd.",
+        "HAMZAH ROBBANI",
+        "MUHAMMAD ANWAR ALIF",
+        "MUHAMMAD IHSAN",
+        "NADRA, S.Ag.",
+        "NAZWA YUNITA",
+        "NURLAILA, S.Ag.",
+        "PUTRI ENJELIKAL FALAH, S.E.",
+        "RIZAL FIRDAUS",
+        "RIZKI ABDUL KHOTIB, S.Pd.I.",
+        "SISKA INDRIYANI, S.Sos.",
+        "SISKA YUNITA DEWI",
+        "SUMARTIN, S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 32,
+      "total_jam_mengajar": 62
+    },
+    {
+      "kode_mapel": "TMMIA05",
+      "nama_mapel": "HADIS TMMIA",
+      "guru_pengampu": [
+        "AHDINI RAHMATILLAH, Lc., S.S.I.",
+        "AHMAD FAUZI RAHMAN",
+        "DINDA NAAFIDA ARIFIN, S.S.",
+        "FAHRU ROJI MALIK, S.M.",
+        "ILMI MIFTAHUL JANNAH",
+        "MUHAMMAD SUHAIL, S.Pd.I.",
+        "QASIM IKHSAN, S.Ag.",
+        "SILMI SABILA",
+        "SYAFON OKTAVIA RAHMA",
+        "YUSUP KURNIAWAN, S.Ag."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra"
+      ],
+      "jumlah_kelas": 26,
+      "total_jam_mengajar": 37
+    },
+    {
+      "kode_mapel": "TMMIA06",
+      "nama_mapel": "IMLA TMMIA",
+      "guru_pengampu": [
+        "ABDUL FATTAH AZZAM",
+        "ALMAAS JHOUNG ASRI, S.Sos.",
+        "ILMI MIFTAHUL JANNAH",
+        "M. WILDAN MAULANA, S.Pd.",
+        "MUHAMAD JAELANI BASRI, S.Pd.",
+        "MUHAMMAD AKBAR AL-GHIFARI",
+        "MUHAMMAD FIKRI AL ANSHORY",
+        "RIDWAN YULIANTO",
+        "SILMI SABILA",
+        "SYAFON OKTAVIA RAHMA",
+        "TIA RAHMAWATI, S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra"
+      ],
+      "jumlah_kelas": 19,
+      "total_jam_mengajar": 38
+    },
+    {
+      "kode_mapel": "TMMIA07",
+      "nama_mapel": "INSYA TMMIA",
+      "guru_pengampu": [
+        "AHDINI RAHMATILLAH, Lc., S.S.I.",
+        "BAYU NIRPANA, M.H.",
+        "DAVA NUR PEBRIANTO, S.Pd.",
+        "HAMZAH ROBBANI",
+        "MUHAMMAD HANIF FAUZI, S.Ag., M.Pd.",
+        "SATRIA NUR OKTAVIANTO"
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 42
+    },
+    {
+      "kode_mapel": "TMMIA08",
+      "nama_mapel": "KHOT TMMIA",
+      "guru_pengampu": [
+        "NOOR FAIZ, S.Pd.",
+        "RIZKI ABDUL KHOTIB, S.Pd.I."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra"
+      ],
+      "jumlah_kelas": 17,
+      "total_jam_mengajar": 22
+    },
+    {
+      "kode_mapel": "TMMIA09",
+      "nama_mapel": "MAHFUDZAT TMMIA",
+      "guru_pengampu": [
+        "ADE IHSAN FIRDAUS",
+        "ASEP TARUNA JAYA",
+        "AULIA SABILA MUFIDA",
+        "HILDA MAULIDA NUR HIDAYATI",
+        "MUHAMMAD FIKRI AL ANSHORY",
+        "MUHAMMAD ZAKI",
+        "NAZWA YUNITA",
+        "RIDWAN YULIANTO",
+        "SALWA BINTA TSANIA",
+        "SOFIYAH AL WIDAD"
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra"
+      ],
+      "jumlah_kelas": 11,
+      "total_jam_mengajar": 11
+    },
+    {
+      "kode_mapel": "TMMIA10",
+      "nama_mapel": "MUSTHOLAH HADIS TMMIA",
+      "guru_pengampu": [
+        "QASIM IKHSAN, S.Ag."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "3 INT IPA",
+        "3 INT IPS",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "TMMIA11",
+      "nama_mapel": "MUTHOLA'AH TMMIA",
+      "guru_pengampu": [
+        "ABDUL FATTAH AZZAM",
+        "AHMAD HASAN MUNJAJI",
+        "ALFI NURFADILAH",
+        "DAVA NUR PEBRIANTO, S.Pd.",
+        "ICHSANUL AFIEF, S.Sos.",
+        "M. IRHAM AL-BAIHAQI",
+        "MUHAMMAD FIKRI AMRULLAH",
+        "MUHAMMAD HANIF FAUZI, S.Ag., M.Pd.",
+        "MUHAMMAD ZUHDI FAUZI, S.Ag.",
+        "RISMAWATI, S.Sos.",
+        "ROMLI RIAN, M.Pd.",
+        "SALWA BINTA TSANIA",
+        "SOPIAN HADI, S.Pd.I.",
+        "TONI, S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 32,
+      "total_jam_mengajar": 64
+    },
+    {
+      "kode_mapel": "TMMIA12",
+      "nama_mapel": "NAHWU TMMIA",
+      "guru_pengampu": [
+        "AHMAD HASAN MUNJAJI",
+        "AHMAD SATIBI, S.Pd.",
+        "AINI SYIFA, S.S.",
+        "DAVA NUR PEBRIANTO, S.Pd.",
+        "ENDANG DARMAWAN PANDAWA AGUNG, S.Pd.",
+        "M. IRHAM AL-BAIHAQI",
+        "MUHAMMAD AKBAR AL-GHIFARI",
+        "SADAM HAMZAH, S.H.I."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 27,
+      "total_jam_mengajar": 54
+    },
+    {
+      "kode_mapel": "TMMIA13",
+      "nama_mapel": "READING & GRAMMAR TMMIA",
+      "guru_pengampu": [
+        "AHMAD FIRDAUS, S.Ag.",
+        "FADILLAH ABIDANA, S.S., M.Pd.,",
+        "MURSYID ANWAR, S.Pd., M.Pd.",
+        "ZAINI FIKRI, S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 15
+    },
+    {
+      "kode_mapel": "TMMIA14",
+      "nama_mapel": "SHOROF TMMIA",
+      "guru_pengampu": [
+        "ADE HOLIDIN, S.Ag.",
+        "ASEP SAEPUL MILLAH, M.Pd.",
+        "ICHSANUL AFIEF, S.Sos.",
+        "MUSLICH ANWAR, M.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 21,
+      "total_jam_mengajar": 27
+    },
+    {
+      "kode_mapel": "TMMIA15",
+      "nama_mapel": "TAFSIR TMMIA",
+      "guru_pengampu": [
+        "AHDINI RAHMATILLAH, Lc., S.S.I.",
+        "DAVA NUR PEBRIANTO, S.Pd.",
+        "HAMZAH ROBBANI",
+        "MUHAMMAD YAQUB UNANG, S.Ag.",
+        "PUTRA NAHDI ABIYYU, Lc., S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 30
+    },
+    {
+      "kode_mapel": "TMMIA16",
+      "nama_mapel": "TAHFIZ TMMIA",
+      "guru_pengampu": [
+        "AHMAD HASAN MUNJAJI",
+        "AMALIA NUR FARIHA, S.Pd.",
+        "HAMMAD IYAD FAIJI",
+        "NADRA, S.Ag.",
+        "PUTRA NAHDI ABIYYU, Lc., S.Pd.",
+        "SITI FATIMAH ZAHRA"
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 D Tahfiz Putra",
+        "2 A Tahfiz Putri",
+        "2 D Tahfiz Putra",
+        "3 A Tahfiz Putri",
+        "3 D Tahfiz Putra"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 72
+    },
+    {
+      "kode_mapel": "TMMIA17",
+      "nama_mapel": "TAJWID TMMIA",
+      "guru_pengampu": [
+        "ABDUL HARIZ NAUFAL, S.Ag.",
+        "AHMAD HASAN MUNJAJI",
+        "MUHAMMAD IHSAN",
+        "NADRA, S.Ag.",
+        "RIDWAN YULIANTO",
+        "SISKA YUNITA DEWI",
+        "SITI FATIMAH ZAHRA",
+        "TIA RAHMAWATI, S.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra"
+      ],
+      "jumlah_kelas": 11,
+      "total_jam_mengajar": 17
+    },
+    {
+      "kode_mapel": "TMMIA18",
+      "nama_mapel": "TAMRIN LUGHOH TMMIA",
+      "guru_pengampu": [
+        "ABDUL FATTAH AZZAM",
+        "AHDINI RAHMATILLAH, Lc., S.S.I.",
+        "DAVA NUR PEBRIANTO, S.Pd.",
+        "ENDANG DARMAWAN PANDAWA AGUNG, S.Pd.",
+        "HAMMAD IYAD FAIJI",
+        "M. ALIEF NUGRAHA ATFA, S.H.",
+        "M. IRHAM AL-BAIHAQI",
+        "MOHAMAD FARID, S.Pd.I.",
+        "MUHAMMAD HANIF FAUZI, S.Ag., M.Pd.",
+        "MUHAMMAD HASBY PUTRA",
+        "MUHAMMAD ZUHDI FAUZI, S.Ag.",
+        "RIDWAN YULIANTO",
+        "RISMAWATI, S.Sos.",
+        "SALEHA MUFIDA, S.Sos., M.Han.",
+        "SATRIA NUR OKTAVIANTO",
+        "SOPIAN HADI, S.Pd.I.",
+        "VERARY PRATAMA PUTRI, S.E."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra",
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 A Tahfiz Putri",
+        "3 B Putri",
+        "3 C Putri",
+        "3 D Tahfiz Putra",
+        "3 E Putra",
+        "3 F Putra",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra"
+      ],
+      "jumlah_kelas": 22,
+      "total_jam_mengajar": 83
+    },
+    {
+      "kode_mapel": "TMMIA19",
+      "nama_mapel": "TARBIYAH TMMIA",
+      "guru_pengampu": [
+        "MUHAMMAD ZUHDI FAUZI, S.Ag.",
+        "NAILUL KUNNI FUROIDA, S.Gz.",
+        "VERARY PRATAMA PUTRI, S.E."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "2 INT IPA",
+        "2 INT IPS",
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 15,
+      "total_jam_mengajar": 30
+    },
+    {
+      "kode_mapel": "TMMIA20",
+      "nama_mapel": "TARIKH ISLAM TMMIA",
+      "guru_pengampu": [
+        "ANISA SITI NABILAH, S.Pd.",
+        "DEA AMANDA PUTRI",
+        "KHAIRIL FAHMI, S.Pd.",
+        "MOH AFRIZA TRIWARDANA",
+        "PUTRI ENJELIKAL FALAH, S.E.",
+        "VENTI RAKHMAWATI, M.Pd."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "1 A Tahfiz Putri",
+        "1 B Putri",
+        "1 D Tahfiz Putra",
+        "1 E Putra",
+        "1 Intensif",
+        "2 A Tahfiz Putri",
+        "2 B Putri",
+        "2 C Putri",
+        "2 D Tahfiz Putra",
+        "2 E Putra",
+        "2 F Putra"
+      ],
+      "jumlah_kelas": 11,
+      "total_jam_mengajar": 20
+    },
+    {
+      "kode_mapel": "TMMIA21",
+      "nama_mapel": "ULUMUL QUR'AN TMMIA",
+      "guru_pengampu": [
+        "PUTRA NAHDI ABIYYU, Lc., S.Pd.",
+        "QASIM IKHSAN, S.Ag."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "3 INT IPA",
+        "3 INT IPS",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 6,
+      "total_jam_mengajar": 12
+    },
+    {
+      "kode_mapel": "TMMIA22",
+      "nama_mapel": "USHUL FIQH TMMIA",
+      "guru_pengampu": [
+        "BAYU NIRPANA, M.H.",
+        "SADAM HAMZAH, S.H.I."
+      ],
+      "unit": "TMMIA",
+      "kelas": [
+        "3 INT IPA",
+        "3 INT IPS",
+        "4 A Putri",
+        "4 B Putra",
+        "4 C Putra",
+        "5 A IPA Putri",
+        "5 B IPS Putri",
+        "5 C IPA Putra",
+        "5 D IPS Putra",
+        "6 A IPA Putri",
+        "6 B IPS Putri",
+        "6 C IPA Putra",
+        "6 D IPS Putra"
+      ],
+      "jumlah_kelas": 13,
+      "total_jam_mengajar": 26
+    }
+  ]
 }
