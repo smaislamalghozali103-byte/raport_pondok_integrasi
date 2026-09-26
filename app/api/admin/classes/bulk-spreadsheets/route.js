@@ -141,7 +141,7 @@ export async function POST(request) {
         'CLASS', 'CLASS ID', 'CLASS NAME', 'KODE KELAS'
       ]);
       const spreadsheetValue = pick(row, [
-        'SPREADSHEET ID', 'SPREADSHEET_ID', 'SPREADSHEET',
+        'SPREADSHEET URL', 'URL SPREADSHEET', 'SPREADSHEET ID', 'SPREADSHEET_ID', 'SPREADSHEET',
         'SPREADSHEET URL', 'URL SPREADSHEET', 'GOOGLE SHEET',
         'GOOGLE SHEETS', 'SHEET URL', 'LINK'
       ]);
