@@ -1,7 +1,6 @@
 import { requireAdmin } from '@/lib/admin-auth';
 import { db } from '@/lib/firebase-admin';
 import { spreadsheetIdFromUrl } from '@/lib/google-sheets';
-import XLSX from 'xlsx';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,8 +8,8 @@ const clean = (v) => String(v ?? '').trim();
 const norm = (v) => clean(v)
   .toLowerCase()
   .normalize('NFKC')
-  .replace(/[^\\p{L}\\p{N}]+/gu, ' ')
-  .replace(/\\s+/g, ' ')
+  .replace(/[^\p{L}\p{N}]+/gu, ' ')
+  .replace(/\s+/g, ' ')
   .trim();
 
 function pick(row, names) {
@@ -23,56 +22,6 @@ function pick(row, names) {
     if (wanted.includes(norm(key)) && clean(row[key])) return clean(row[key]);
   }
   return '';
-}
-
-function parseMarkdownRows(text) {
-  const lines = String(text || '').replace(/\\r/g, '').split('\\n');
-  const rows = [];
-  let headers = null;
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line || !line.includes('|')) continue;
-
-    const cells = line
-      .replace(/^\\|/, '')
-      .replace(/\\|$/, '')
-      .split('|')
-      .map(v => v.trim());
-
-    if (cells.length < 2) continue;
-    if (cells.every(v => /^:?-{3,}:?$/.test(v))) continue;
-
-    if (!headers) {
-      headers = cells;
-      continue;
-    }
-
-    const row = {};
-    headers.forEach((header, i) => {
-      row[header] = cells[i] || '';
-    });
-    rows.push(row);
-  }
-
-  // Format Markdown alternatif:
-  // KELAS: 1A
-  // SPREADSHEET ID: xxxxx
-  // SHEET: Rekap
-  if (!rows.length) {
-    let current = {};
-    for (const rawLine of lines) {
-      const m = rawLine.match(/^\\s*[-*]?\\s*(KELAS|SPREADSHEET(?:\\s+ID|_ID)?|SPREADSHEET|SHEET)\\s*:\\s*(.+?)\\s*$/i);
-      if (!m) continue;
-      current[m[1]] = m[2];
-      if (current.KELAS && (current['SPREADSHEET ID'] || current.SPREADSHEET || current.SPREADSHEET_ID)) {
-        rows.push({ ...current });
-        current = {};
-      }
-    }
-  }
-
-  return rows;
 }
 
 function parseJsonMappings(text) {
@@ -100,63 +49,6 @@ function parseJsonMappings(text) {
   }));
 
   return { rows, createMissingClasses };
-}
-
-function parseMarkdownRows(text) {
-  const lines = String(text || '').replace(/\r/g, '').split('\n');
-  const rows = [];
-  let headers = null;
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line || !line.includes('|')) continue;
-
-    const cells = line
-      .replace(/^\|/, '')
-      .replace(/\|$/, '')
-      .split('|')
-      .map(v => v.trim());
-
-    if (cells.length < 2) continue;
-    if (cells.every(v => /^:?-{3,}:?$/.test(v))) continue;
-
-    if (!headers) {
-      headers = cells;
-      continue;
-    }
-
-    const row = {};
-    headers.forEach((header, i) => {
-      row[header] = cells[i] || '';
-    });
-    rows.push(row);
-  }
-
-  if (!rows.length) {
-    let current = {};
-    for (const rawLine of lines) {
-      const m = rawLine.match(/^\s*[-*]?\s*(KELAS|SPREADSHEET(?:\s+ID|_ID)?|SPREADSHEET|SHEET)\s*:\s*(.+?)\s*$/i);
-      if (!m) continue;
-      current[m[1]] = m[2];
-      if (current.KELAS && (current['SPREADSHEET ID'] || current.SPREADSHEET || current.SPREADSHEET_ID)) {
-        rows.push({ ...current });
-        current = {};
-      }
-    }
-  }
-
-  return rows;
-}
-
-function extractRows(buffer, fileName) {
-  const lower = String(fileName || '').toLowerCase();
-  if (lower.endsWith('.json')) {
-    return { workbook: null, ...parseJsonMappings(buffer.toString('utf8')) };
-  }
-  if (lower.endsWith('.md')) {
-    return { workbook: null, rows: parseMarkdownRows(buffer.toString('utf8')), createMissingClasses: false };
-  }
-  throw new Error('Format harus .json atau .md.');
 }
 
 export async function POST(request) {
@@ -193,7 +85,7 @@ export async function POST(request) {
 
     const lowerName = fileName.toLowerCase();
 
-    if (!(lowerName.endsWith('.md') || lowerName.endsWith('.json'))) {
+    if (!lowerName.endsWith('.json')) {
       return Response.json(
         { success: false, message: 'Format harus .json atau .md (Markdown).' },
         { status: 400 }
@@ -209,9 +101,12 @@ export async function POST(request) {
 
     let extracted;
     try {
-      extracted = extractRows(buffer, fileName);
+      extracted = parseJsonMappings(buffer.toString('utf8'));
     } catch (parseError) {
-      return Response.json({ success: false, message: `Format mapping tidak valid: ${parseError.message}` }, { status: 400 });
+      return Response.json(
+        { success: false, message: `JSON mapping tidak valid: ${parseError.message}` },
+        { status: 400 }
+      );
     }
     const { rows, createMissingClasses } = extracted;
 
@@ -363,7 +258,7 @@ export async function POST(request) {
       updated,
       skipped,
       errors,
-      mode: lowerName.endsWith('.json') ? 'json' : 'markdown',
+      mode: 'json',
       message: updated.length
         ? `${updated.length} kelas berhasil dihubungkan dengan Spreadsheet.`
         : 'Tidak ada kelas yang berhasil diperbarui.'
