@@ -33,7 +33,7 @@ export default function AdminClient() {
   const [fillLoading, setFillLoading] = useState(false);
   const [fillResultMsg, setFillResultMsg] = useState('');
 
-  // Admin password states
+  // Admin PIN states
   const [authorized, setAuthorized] = useState(false);
   const [adminPin, setAdminPin] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
@@ -78,7 +78,7 @@ export default function AdminClient() {
         body: JSON.stringify({ pin: adminPin })
       });
       const d = await r.json();
-      if (!r.ok || !d.success) throw new Error(d.message || 'Password salah.');
+      if (!r.ok || !d.success) throw new Error(d.message || 'PIN administrator salah.');
       setAuthorized(true);
       setAdminPin('');
       await loadData();
@@ -325,7 +325,7 @@ export default function AdminClient() {
     return <main style={S.page}><div style={S.card}>Memeriksa status admin…</div></main>;
   }
 
-  // Tampilan Login Password Admin
+  // Tampilan Login PIN Administrator
   if (!authorized) {
     return (
       <main style={S.page}>
@@ -333,13 +333,13 @@ export default function AdminClient() {
           <div style={{ fontSize: 44, marginBottom: 12 }}>🔒</div>
           <h1 style={{ fontSize: 24, margin: '0 0 8px' }}>Verifikasi Akses Admin</h1>
           <p style={{ color: '#667085', fontSize: 14, marginBottom: 20 }}>
-            Masukkan Password Admin untuk mengelola koneksi Spreadsheet ID, Impor Rekap, dan Master Data.
+            Masukkan PIN Administrator untuk mengelola koneksi Spreadsheet ID, Impor Rekap, dan Master Data.
           </p>
           {authErr && <div style={{ ...S.error, textAlign: 'left', marginBottom: 16 }}>{authErr}</div>}
           <form onSubmit={verifyAdminPass}>
             <input
               type="password"
-              placeholder="Masukkan Password Admin…"
+              placeholder="Masukkan PIN Administrator…"
               value={adminPin}
               onChange={e => setAdminPin(e.target.value)}
               style={{ ...S.input, width: '100%', boxSizing: 'border-box', marginBottom: 16, fontSize: 16 }}
