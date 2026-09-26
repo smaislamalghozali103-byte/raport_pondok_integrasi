@@ -133,6 +133,7 @@ export async function POST(request) {
     const skipped = [];
     const errors = [];
     const seenClassIds = new Set();
+    const pendingWrites = [];
 
     for (let index = 0; index < rows.length; index++) {
       const row = rows[index];
@@ -200,7 +201,11 @@ export async function POST(request) {
           updatedAt: new Date(),
           updatedBy: auth.session.teacherId
         };
-        await newRef.set(newData, { merge: true });
+        pendingWrites.push({
+          ref: newRef,
+          data: newData,
+          options: { merge: true }
+        });
         target = { id: classId, ...newData };
         byId.set(norm(classId), target);
         byName.set(norm(className), target);
@@ -248,6 +253,14 @@ export async function POST(request) {
       });
     }
 
+    if (pendingWrites.length) {
+      const batch = db.batch();
+      for (const write of pendingWrites) {
+        batch.set(write.ref, write.data, write.options);
+      }
+      await batch.commit();
+    }
+
     return Response.json({
       success: true,
       fileName,
@@ -265,9 +278,14 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('BULK SPREADSHEET IMPORT ERROR', error);
+    const rawMessage = error?.message || 'Gagal mengimpor mapping Spreadsheet.';
+    const isQuota = /RESOURCE_EXHAUSTED|quota exceeded|quota/i.test(rawMessage);
     return Response.json({
       success: false,
-      message: error?.message || 'Gagal mengimpor mapping Spreadsheet.'
-    }, { status: 500 });
+      code: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'BULK_SPREADSHEET_IMPORT_ERROR',
+      message: isQuota
+        ? 'Firestore sedang kehabisan kuota. Mapping JSON sudah terbaca, tetapi database tidak dapat menerima perubahan sekarang. Cek Firebase Console → Firestore → Usage/Quotas, lalu coba lagi setelah kuota tersedia.'
+        : rawMessage
+    }, { status: isQuota ? 429 : 500 });
   }
 }
