@@ -527,12 +527,34 @@ export async function GET(request) {
       fileLabel = student.name || student.fullName || 'Siswa';
     }
 
+    // Jangan mengirim seluruh columnCount sheet ke exporter.
+    // Template Rapot sering mempunyai banyak kolom kosong di sebelah kanan,
+    // yang membuat Google Sheets mengecilkan raport saat fit-to-width.
+    // Gunakan lebar area yang benar-benar berisi data/form raport.
+    const usedColumnCount = Math.max(
+      1,
+      ...valuesResult.values.map(row => {
+        const cells = row || [];
+        let last = -1;
+        for (let i = cells.length - 1; i >= 0; i--) {
+          if (clean(cells[i])) {
+            last = i;
+            break;
+          }
+        }
+        return last + 1;
+      })
+    );
+
     const pdf = await exportSheetPdf(spreadsheetId, {
       sheetName: targetSheet.title,
       rowStart,
       rowEnd,
       colStart: 0,
-      colEnd: Number(targetSheet.gridProperties?.columnCount || 26),
+      colEnd: Math.min(
+        Number(targetSheet.gridProperties?.columnCount || usedColumnCount),
+        usedColumnCount
+      ),
       portrait: true
     });
 
