@@ -130,9 +130,9 @@ export default function ReportPrintPage() {
         {selectedClass && (
           <>
             <div style={styles.summary}>
-              <div><b>{selectedClass.name}</b><span>{selectedClass.unit || "—"}</span></div>
-              <div><b>{selectedClass.students.length}</b><span>Siswa</span></div>
-              <div><b>{selectedClass.spreadsheetId ? "✓ Terhubung" : "—"}</b><span>Spreadsheet</span></div>
+              <div style={styles.summaryItem}><b>{selectedClass.name}</b><span>{selectedClass.unit || "—"}</span></div>
+              <div style={styles.summaryItem}><b>{selectedClass.students.length}</b><span>Siswa</span></div>
+              <div style={styles.summaryItem}><b>{selectedClass.spreadsheetId ? "✓ Terhubung" : "—"}</b><span>Spreadsheet</span></div>
             </div>
 
             <div style={styles.actions}>
@@ -219,9 +219,7 @@ const styles = {
   label: { display: "block", fontWeight: 700, fontSize: 14, margin: "20px 0 7px" },
   select: { width: "100%", boxSizing: "border-box", padding: "12px 13px", border: "1px solid #d5d5d5", borderRadius: 10, background: "#fff", fontSize: 15 },
   summary: { marginTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 10 },
-  summaryItem: {},
-  summary: { marginTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 10 },
-  summary: { marginTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 10 },
+  summaryItem: { padding: 12, borderRadius: 10, background: "#f8faf9", border: "1px solid #e2e8e4", display: "flex", flexDirection: "column", gap: 3 },
   actions: { marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" },
   primary: { border: 0, borderRadius: 10, padding: "12px 18px", background: "#176b3a", color: "#fff", fontWeight: 800, cursor: "pointer" },
   pdf: { border: "1px solid #176b3a", borderRadius: 10, padding: "12px 18px", background: "#f0fdf4", color: "#176b3a", fontWeight: 800, cursor: "pointer" },
