@@ -29,6 +29,25 @@ export async function POST(req) {
 
     const teacher = snap.data();
 
+    const configuredAdminIds = String(process.env.ADMIN_TEACHER_IDS || '')
+      .split(',')
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    const rawRole = String(teacher.role || '').trim().toLowerCase();
+    const isAdminAccount =
+      configuredAdminIds.includes(id) ||
+      rawRole === 'admin' ||
+      rawRole === 'administrator' ||
+      teacher.isAdmin === true;
+
+    if (isAdminAccount) {
+      return Response.json({
+        success: false,
+        message: 'Akun administrator tidak dapat membuat PIN melalui login Guru. Gunakan /admin.'
+      }, { status: 403 });
+    }
+
     if (String(teacher.status || '').trim().toUpperCase() !== 'AKTIF') {
       return Response.json({ success: false, message: 'Akun guru tidak aktif.' }, { status: 403 });
     }
@@ -51,7 +70,6 @@ export async function POST(req) {
       updatedAt: new Date()
     });
 
-    const rawRole = String(teacher.role || 'guru').trim().toLowerCase();
     const role = ['wali_kelas', 'wali kelas', 'wali'].includes(rawRole) ? 'wali_kelas' : 'guru';
 
     const teacherSession = {
