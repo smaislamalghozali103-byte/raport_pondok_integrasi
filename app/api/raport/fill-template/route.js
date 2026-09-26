@@ -3,6 +3,8 @@ import { db } from "@/lib/firebase-admin";
 import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth-session";
 import { fillExcelTemplateNonDestructive } from "@/lib/excel-raport-filler";
 import { writeAudit } from "@/lib/audit-log";
+import { canTeach } from "@/lib/authorization";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +14,10 @@ export async function POST(request) {
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     const session = verifySessionToken(token);
 
-    if (!session) {
+    const adminAuth = await requireAdmin();
+    const hasAdminAccess = adminAuth.ok;
+
+    if (!session && !hasAdminAccess) {
       return Response.json({ success: false, message: "Sesi login tidak valid." }, { status: 401 });
     }
 
@@ -36,6 +41,22 @@ export async function POST(request) {
       return Response.json({ success: false, message: "Kelas tidak ditemukan di database." }, { status: 404 });
     }
     const classData = classSnap.data();
+
+    if (!hasAdminAccess) {
+      if (!subjectId) {
+        return Response.json({
+          success: false,
+          message: "Mata pelajaran wajib dipilih untuk pengisian oleh guru."
+        }, { status: 400 });
+      }
+
+      if (!(await canTeach(session, classId, subjectId))) {
+        return Response.json({
+          success: false,
+          message: "Anda tidak memiliki akses ke kelas dan mata pelajaran ini."
+        }, { status: 403 });
+      }
+    }
 
     // Ambil daftar santri di kelas ini
     const studentsSnap = await db.collection("students").where("classId", "==", classId).get();
