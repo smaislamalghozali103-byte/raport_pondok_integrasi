@@ -196,7 +196,7 @@ function scoreReportSheet(title, values, student) {
   let score = 0;
   const reasons = [];
 
-  if (/raport|rapor/.test(sheetNorm)) {
+  if (/raport|rapor|raport|rapor|rapot/.test(sheetNorm)) {
     score += 100;
     reasons.push('nama-sheet-raport');
   }
@@ -287,7 +287,7 @@ async function findBestReportSheet(meta, spreadsheetId, configuredSheetName, stu
   if (!candidates.length) return null;
 
   const best = candidates[0];
-  const namedReport = candidates.find(c => /raport|rapor/i.test(c.sheet.title));
+  const namedReport = candidates.find(c => /raport|rapor|raport|rapor|rapot/i.test(c.sheet.title));
 
   if (namedReport && namedReport.score >= best.score - 20) {
     return namedReport;
