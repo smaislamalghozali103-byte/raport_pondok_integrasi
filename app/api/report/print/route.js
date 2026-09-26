@@ -104,119 +104,156 @@ function cellMatchesNis(cell, wanted) {
   return a.replace(/^0+/, '') === b.replace(/^0+/, '');
 }
 
+function normalizePersonName(value) {
+  return norm(value)
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .replace(/\b(الاسم|كامل|nama|siswa|peserta|didik)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cellMatchesFlexibleNumber(cell, wanted) {
+  const target = normDigits(wanted);
+  if (!target) return false;
+
+  const raw = clean(cell).normalize('NFKC');
+  const direct = normDigits(raw);
+  if (direct === target || direct.replace(/^0+/, '') === target.replace(/^0+/, '')) {
+    return true;
+  }
+
+  // Google Sheets dapat mengembalikan angka panjang sebagai scientific notation.
+  const scientific = raw.replace(/,/g, '.').match(/^[-+]?\d+(?:\.\d+)?[eE][+-]?\d+$/);
+  if (scientific) {
+    const numeric = Number(raw.replace(/,/g, '.'));
+    if (Number.isFinite(numeric)) {
+      const rounded = String(Math.round(numeric));
+      if (rounded === target || rounded.replace(/^0+/, '') === target.replace(/^0+/, '')) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function findStudentRow(values, student) {
   const wantedNisn = normDigits(student.nisn);
   const wantedNis = normDigits(student.nis);
-  const wantedName = norm(student.name || student.fullName);
+  const wantedName = normalizePersonName(student.name || student.fullName);
   const columns = detectStudentColumns(values);
 
-  // 1. Prioritas tertinggi: NISN pada kolom yang terdeteksi.
-  if (wantedNisn) {
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i] || [];
-      if (columns.nisn.some(col => cellMatchesNis(row[col], wantedNisn))) {
-        return { rowIndex: i, matchedBy: 'NISN' };
-      }
+  // 1. NISN/NIS pada kolom yang terdeteksi.
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i] || [];
+    if (wantedNisn && columns.nisn.some(col => cellMatchesFlexibleNumber(row[col], wantedNisn))) {
+      return { rowIndex: i, matchedBy: 'NISN' };
+    }
+    if (wantedNis && columns.nis.some(col => cellMatchesFlexibleNumber(row[col], wantedNis))) {
+      return { rowIndex: i, matchedBy: 'NIS' };
     }
   }
 
-  // 2. Fallback: NIS pada kolom yang terdeteksi.
-  if (wantedNis) {
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i] || [];
-      if (columns.nis.some(col => cellMatchesNis(row[col], wantedNis))) {
-        return { rowIndex: i, matchedBy: 'NIS' };
-      }
-    }
-  }
-
-  // 3. Nama exact pada kolom nama.
+  // 2. Nama exact pada kolom yang terdeteksi.
   if (wantedName) {
     for (let i = 0; i < values.length; i++) {
       const row = values[i] || [];
-      if (columns.name.some(col => norm(row[col]) === wantedName)) {
+      if (columns.name.some(col => normalizePersonName(row[col]) === wantedName)) {
         return { rowIndex: i, matchedBy: 'NAMA_EXACT' };
       }
     }
   }
 
-  // 4. Jika header tidak terdeteksi, tetap coba semua sel untuk NIS/NISN.
-  if (wantedNisn || wantedNis) {
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i] || [];
-      if ((wantedNisn && row.some(cell => cellMatchesNis(cell, wantedNisn))) ||
-          (wantedNis && row.some(cell => cellMatchesNis(cell, wantedNis)))) {
-        return { rowIndex: i, matchedBy: wantedNisn ? 'NISN_FALLBACK' : 'NIS_FALLBACK' };
+  // 3. Fallback angka: scan SEMUA sel, termasuk scientific notation.
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i] || [];
+    if (wantedNisn && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNisn))) {
+      return { rowIndex: i, matchedBy: 'NISN_FALLBACK' };
+    }
+    if (wantedNis && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNis))) {
+      return { rowIndex: i, matchedBy: 'NIS_FALLBACK' };
+    }
+  }
+
+  if (!wantedName) return null;
+
+  const wantedTokens = wantedName.split(' ').filter(token => token.length >= 2);
+
+  // 4. Nama dalam satu baris / label "الاسم كامل : NAMA".
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i] || [];
+    const normalizedCells = row.map(normalizePersonName).filter(Boolean);
+    const rowNorm = normalizePersonName(rowText(row));
+
+    if (rowNorm.includes(wantedName)) {
+      return { rowIndex: i, matchedBy: 'NAMA_IN_CONTENT' };
+    }
+
+    for (const cell of row) {
+      const raw = clean(cell);
+      if (!raw) continue;
+      const parts = raw.split(/[:：=|]/).map(part => normalizePersonName(part)).filter(Boolean);
+      if (parts.some(part => part === wantedName || part.includes(wantedName))) {
+        return { rowIndex: i, matchedBy: 'NAMA_LABEL_VALUE' };
+      }
+    }
+
+    if (wantedTokens.length >= 2 && wantedTokens.every(token => rowNorm.includes(token))) {
+      return { rowIndex: i, matchedBy: 'NAMA_TOKENS_ROW' };
+    }
+
+    // Beberapa template membagi nama ke beberapa sel tanpa header.
+    if (wantedTokens.length >= 2) {
+      const joined = normalizedCells.join(' ');
+      if (joined.includes(wantedName)) {
+        return { rowIndex: i, matchedBy: 'NAMA_TOKENS_CELLS' };
       }
     }
   }
 
-  // 5. Template RAPORT/RAPOT sering tidak memiliki header NAMA/NISN.
-  // Cari nama langsung di seluruh isi sheet, termasuk jika nama berada
-  // setelah label seperti "الاسم كامل :" atau terpecah di beberapa sel.
-  if (wantedName) {
-    const wantedTokens = wantedName.split(' ').filter(token => token.length >= 2);
-
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i] || [];
-      const rowNorm = norm(rowText(row));
-
-      // Nama lengkap muncul sebagai bagian dari satu sel/baris.
-      if (rowNorm.includes(wantedName)) {
-        return { rowIndex: i, matchedBy: 'NAMA_IN_CONTENT' };
-      }
-
-      // Nama bisa terpecah menjadi beberapa sel pada baris yang sama.
-      if (wantedTokens.length >= 2 && wantedTokens.every(token => rowNorm.includes(token))) {
-        return { rowIndex: i, matchedBy: 'NAMA_TOKENS_ROW' };
-      }
-
-      // Beberapa template menulis "label : nama". Ambil bagian setelah
-      // pemisah agar label Arab/Indonesia tidak menurunkan skor similarity.
-      for (const cell of row) {
-        const raw = clean(cell);
-        if (!raw) continue;
-
-        const parts = raw.split(/[:：=|]/).map(part => clean(part)).filter(Boolean);
-        for (const part of parts) {
-          const value = norm(part);
-          if (value === wantedName || value.includes(wantedName)) {
-            return { rowIndex: i, matchedBy: 'NAMA_LABEL_VALUE' };
-          }
-        }
+  // 5. Nama dapat terpecah ke dua/tiga baris berurutan.
+  for (let i = 0; i < values.length; i++) {
+    const windowRows = [];
+    for (let j = i; j < Math.min(values.length, i + 3); j++) {
+      windowRows.push(normalizePersonName(rowText(values[j] || [])));
+    }
+    const windowText = windowRows.join(' ');
+    if (windowText.includes(wantedName)) {
+      return { rowIndex: i, matchedBy: 'NAMA_MULTIROW' };
+    }
+    if (wantedTokens.length >= 2) {
+      const hits = wantedTokens.filter(token => windowText.includes(token));
+      if (hits.length >= Math.max(2, Math.ceil(wantedTokens.length * 0.75))) {
+        return { rowIndex: i, matchedBy: 'NAMA_MULTIROW_TOKENS' };
       }
     }
   }
 
-  // 6. Fallback nama: toleransi tanda baca, spasi, dan typo kecil.
-  if (wantedName) {
-    let best = { rowIndex: -1, score: 0 };
-    const candidateColumns = columns.name.length ? columns.name : null;
+  // 6. Fuzzy matching sebagai jalan terakhir.
+  let best = { rowIndex: -1, score: 0 };
+  const candidateColumns = columns.name.length ? columns.name : null;
 
-    for (let i = 0; i < values.length; i++) {
-      const row = values[i] || [];
-      const cells = candidateColumns
-        ? candidateColumns.map(col => row[col])
-        : row;
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i] || [];
+    const cells = candidateColumns ? candidateColumns.map(col => row[col]) : row;
 
-      for (const cell of cells) {
-        const value = norm(cell);
-        if (!value || value.length < 3) continue;
+    for (const cell of cells) {
+      const value = normalizePersonName(cell);
+      if (!value || value.length < 3) continue;
 
-        const score = similarity(value, wantedName);
-        if (score > best.score) {
-          best = { rowIndex: i, score };
-        }
+      const score = similarity(value, wantedName);
+      if (score > best.score) {
+        best = { rowIndex: i, score };
       }
     }
+  }
 
-    if (best.rowIndex >= 0 && best.score >= 0.82) {
-      return {
-        rowIndex: best.rowIndex,
-        matchedBy: 'NAMA_FUZZY',
-        score: Number(best.score.toFixed(3))
-      };
-    }
+  if (best.rowIndex >= 0 && best.score >= 0.72) {
+    return {
+      rowIndex: best.rowIndex,
+      matchedBy: 'NAMA_FUZZY',
+      score: Number(best.score.toFixed(3))
+    };
   }
 
   return null;
