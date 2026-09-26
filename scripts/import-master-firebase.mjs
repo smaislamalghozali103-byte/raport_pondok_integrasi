@@ -3,7 +3,7 @@ dotenv.config({ path: ['.env.local', '.env'] });
 import fs from 'node:fs';
 import path from 'node:path';
 import XLSX from 'xlsx';
-import { db } from '../lib/firebase-admin.js';
+import { db } from '../lib/sheets-db.js';
 
 const root = process.cwd();
 const file = process.env.MASTER_XLSX || path.join(root, 'data', 'MASTER_GURU_MAPEL_PER_UNIT_HASIL_REKAP(1).xlsx');
@@ -34,13 +34,10 @@ async function writeCollection(name, items) {
     try {
       await b.commit();
     } catch (err) {
-      if (err.code === 5 || String(err.message).includes('NOT_FOUND')) {
-        console.error('\n❌ ERROR 5 NOT_FOUND: Database Cloud Firestore belum dibuat atau belum aktif!');
-        console.error(`👉 Buka browser ke: https://console.firebase.google.com/project/${process.env.FIREBASE_PROJECT_ID || 'raport-integrasi-pondok'}/firestore`);
-        console.error('👉 Klik tombol "Create database" (Pilih Database ID: (default) dan lokasi misal: asia-southeast2).\n');
+      if (String(err?.message || '').includes('APP_DATA_SPREADSHEET_ID')) {
+        console.error('\n❌ APP_DATA_SPREADSHEET_ID belum diatur. Buat Spreadsheet khusus data aplikasi, lalu masukkan ID-nya ke Vercel Environment Variables.\n');
       }
       throw err;
-    }
   }
 }
 
@@ -189,4 +186,4 @@ for (const cls of classes) {
 if (students.length) await writeCollection('students', students);
 
 console.log(`Unit: ${units.length} | Guru: ${teachers.length} | Mapel: ${subjects.length} | Kelas: ${classes.length} | Penugasan: ${assignments.length} | Siswa: ${students.length}`);
-console.log('✅ IMPORT MASTER DATA KE DATABASE SELESAI & SEMUA DATA TERHUBUNG.');
+console.log('✅ IMPORT MASTER DATA KE GOOGLE SHEETS APP_DB SELESAI & SEMUA DATA TERHUBUNG.');
