@@ -32,6 +32,26 @@ export async function POST(req) {
     }
 
     const t = s.data();
+
+    const configuredAdminIds = String(process.env.ADMIN_TEACHER_IDS || '')
+      .split(',')
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    const rawRole = String(t.role || '').trim().toLowerCase();
+    const isAdminAccount =
+      configuredAdminIds.includes(id) ||
+      rawRole === 'admin' ||
+      rawRole === 'administrator' ||
+      t.isAdmin === true;
+
+    if (isAdminAccount) {
+      return Response.json({
+        success: false,
+        message: 'Akun administrator tidak dapat login melalui halaman Guru. Gunakan /admin.'
+      }, { status: 403 });
+    }
+
     if (String(t.status || '').trim().toUpperCase() !== 'AKTIF') {
       return Response.json({ success: false, message: 'Akun guru tidak aktif.' }, { status: 403 });
     }
@@ -48,7 +68,6 @@ export async function POST(req) {
       return Response.json({ success: false, message: 'PIN salah.' }, { status: 401 });
     }
 
-    const rawRole = String(t.role || 'guru').trim().toLowerCase();
     const role = ['wali_kelas', 'wali kelas', 'wali'].includes(rawRole) ? 'wali_kelas' : 'guru';
 
     const teacher = {
