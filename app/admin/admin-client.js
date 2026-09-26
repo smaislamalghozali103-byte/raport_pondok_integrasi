@@ -901,65 +901,6 @@ export default function AdminClient() {
 
         {tab === 'assignments' && (
           <Section title={`Penugasan Guru (${data.assignments?.length || 0} Data)`}>
-            <div style={{ ...S.card, background: '#eff6ff', border: '1px solid #bfdbfe', boxShadow: 'none', marginBottom: 18 }}>
-              <h3 style={{ ...S.h2, margin: '0 0 8px', color: '#1e3a8a' }}>🧩 Master Kelas Dinamis</h3>
-              <p style={{ ...S.muted, margin: '0 0 14px', fontSize: 13, lineHeight: 1.6 }}>
-                Mulai sekarang struktur kelas tidak dikunci di kode aplikasi. Admin dapat menambah kelas baru, mengubah Spreadsheet, unit/jenjang, dan sheet melalui JSON tanpa mengubah source code.
-              </p>
-
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-                <button type="button" style={S.sm} onClick={useJsonTemplate}>📝 ISI CONTOH JSON</button>
-                <button type="button" style={S.sm} onClick={downloadJsonTemplate}>⬇️ DOWNLOAD TEMPLATE JSON</button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', gap: 14 }}>
-                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
-                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📁 Upload JSON</b>
-                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
-                    Bisa memakai format lengkap <code>classes: []</code> atau format singkat <code>{"{ "1A": "SPREADSHEET_ID" }"}</code>.
-                  </p>
-                  <input
-                    type="file"
-                    accept=".json,application/json"
-                    onChange={e => setJsonMappingFile(e.target.files?.[0] || null)}
-                  />
-                  <button
-                    type="button"
-                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#1d4ed8' }}
-                    disabled={jsonMappingLoading || !jsonMappingFile}
-                    onClick={handleJsonMappingFile}
-                  >
-                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '📥 TERAPKAN JSON'}
-                  </button>
-                </div>
-
-                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
-                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📋 Copy / Paste JSON</b>
-                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
-                    Tempel mapping langsung. Tidak perlu membuat file.
-                  </p>
-                  <textarea
-                    value={jsonMappingText}
-                    onChange={e => setJsonMappingText(e.target.value)}
-                    placeholder={'{\n  "createMissingClasses": true,\n  "classes": [ ... ]\n}'}
-                    style={{ width: '100%', minHeight: 150, boxSizing: 'border-box', padding: 10, border: '1px solid #d0d5dd', borderRadius: 8, fontFamily: 'monospace', fontSize: 12 }}
-                  />
-                  <button
-                    type="button"
-                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#166534' }}
-                    disabled={jsonMappingLoading || !jsonMappingText.trim()}
-                    onClick={() => submitJsonMapping(jsonMappingText, 'Copy/Paste')}
-                  >
-                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '✅ VALIDASI & TERAPKAN'}
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ marginTop: 12, padding: 10, borderRadius: 8, background: '#fff', fontSize: 12, color: '#475569' }}>
-                <b>createMissingClasses: true</b> = jika classId belum ada, sistem membuat master kelas baru. Jika <b>false</b>, kelas yang belum terdaftar hanya dilaporkan sebagai dilewati.
-              </div>
-            </div>
-
             <Toolbar search={search} setSearch={setSearch} />
             <div style={{ overflowX: 'auto' }}>
               <table>
@@ -1049,6 +990,65 @@ export default function AdminClient() {
                   )}
                 </div>
               )}
+            </div>
+
+            <div style={{ ...S.card, background: '#eff6ff', border: '1px solid #bfdbfe', boxShadow: 'none', marginBottom: 18 }}>
+              <h3 style={{ ...S.h2, margin: '0 0 8px', color: '#1e3a8a' }}>🧩 Master Kelas Dinamis</h3>
+              <p style={{ ...S.muted, margin: '0 0 14px', fontSize: 13, lineHeight: 1.6 }}>
+                Mulai sekarang struktur kelas tidak dikunci di kode aplikasi. Admin dapat menambah kelas baru, mengubah Spreadsheet, unit/jenjang, dan sheet melalui JSON tanpa mengubah source code.
+              </p>
+
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                <button type="button" style={S.sm} onClick={useJsonTemplate}>📝 ISI CONTOH JSON</button>
+                <button type="button" style={S.sm} onClick={downloadJsonTemplate}>⬇️ DOWNLOAD TEMPLATE JSON</button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', gap: 14 }}>
+                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
+                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📁 Upload JSON</b>
+                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
+                    Bisa memakai format lengkap <code>classes: []</code> atau format singkat <code>{"{ "1A": "SPREADSHEET_ID" }"}</code>.
+                  </p>
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={e => setJsonMappingFile(e.target.files?.[0] || null)}
+                  />
+                  <button
+                    type="button"
+                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#1d4ed8' }}
+                    disabled={jsonMappingLoading || !jsonMappingFile}
+                    onClick={handleJsonMappingFile}
+                  >
+                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '📥 TERAPKAN JSON'}
+                  </button>
+                </div>
+
+                <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
+                  <b style={{ fontSize: 14, color: '#1e3a8a' }}>📋 Copy / Paste JSON</b>
+                  <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
+                    Tempel mapping langsung. Tidak perlu membuat file.
+                  </p>
+                  <textarea
+                    value={jsonMappingText}
+                    onChange={e => setJsonMappingText(e.target.value)}
+                    placeholder={'{\n  "createMissingClasses": true,\n  "classes": [ ... ]\n}'}
+                    style={{ width: '100%', minHeight: 150, boxSizing: 'border-box', padding: 10, border: '1px solid #d0d5dd', borderRadius: 8, fontFamily: 'monospace', fontSize: 12 }}
+                  />
+                  <button
+                    type="button"
+                    style={{ ...S.btn, marginTop: 10, background: jsonMappingLoading ? '#94a3b8' : '#166534' }}
+                    disabled={jsonMappingLoading || !jsonMappingText.trim()}
+                    onClick={() => submitJsonMapping(jsonMappingText, 'Copy/Paste')}
+                  >
+                    {jsonMappingLoading ? '⏳ MEMPROSES…' : '✅ VALIDASI & TERAPKAN'}
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 12, padding: 10, borderRadius: 8, background: '#fff', fontSize: 12, color: '#475569' }}>
+                <b>createMissingClasses: true</b> = jika classId belum ada, sistem membuat master kelas baru. Jika <b>false</b>, kelas yang belum terdaftar hanya dilaporkan sebagai dilewati.
+              </div>
             </div>
 
             <Toolbar search={search} setSearch={setSearch} />
