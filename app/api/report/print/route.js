@@ -8,22 +8,181 @@ import { readSheet, spreadsheetMeta, exportSheetPdf } from '@/lib/google-sheets'
 export const dynamic = 'force-dynamic';
 
 const clean = v => String(v ?? '').trim();
-const norm = v => clean(v).toLowerCase().normalize('NFKC').replace(/[^\\p{L}\\p{N}]+/gu, ' ').replace(/\\s+/g, ' ').trim();
+
+function norm(v) {
+  return clean(v)
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[\\u200B-\\u200D\\uFEFF]/g, '')
+    .replace(/[^\\p{L}\\p{N}]+/gu, ' ')
+    .replace(/\\s+/g, ' ')
+    .trim();
+}
+
+function normDigits(v) {
+  return clean(v)
+    .normalize('NFKC')
+    .replace(/\\D/g, '');
+}
+
+function compact(v) {
+  return norm(v).replace(/\\s+/g, '');
+}
 
 function rowText(row) {
   return (row || []).map(clean).join(' ');
 }
 
-function findStudentRow(values, student) {
-  const wantedNis = norm(student.nisn || student.nis || '');
-  const wantedName = norm(student.name || student.fullName || '');
+function levenshtein(a, b) {
+  if (a === b) return 0;
+  if (!a) return b.length;
+  if (!b) return a.length;
 
-  for (let i = 0; i < values.length; i++) {
-    const text = norm(rowText(values[i]));
-    if (wantedNis && text.includes(wantedNis)) return i;
-    if (wantedName && text.includes(wantedName)) return i;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 0; i < a.length; i++) {
+    const cur = [i + 1];
+    for (let j = 0; j < b.length; j++) {
+      const cost = a[i] === b[j] ? 0 : 1;
+      cur.push(Math.min(
+        cur[j] + 1,
+        prev[j + 1] + 1,
+        prev[j] + cost
+      ));
+    }
+    prev = cur;
   }
-  return -1;
+  return prev[b.length];
+}
+
+function similarity(a, b) {
+  const x = compact(a);
+  const y = compact(b);
+  if (!x || !y) return 0;
+  if (x === y) return 1;
+  if (x.includes(y) || y.includes(x)) {
+    return Math.min(x.length, y.length) / Math.max(x.length, y.length);
+  }
+  const distance = levenshtein(x, y);
+  return 1 - distance / Math.max(x.length, y.length);
+}
+
+function detectStudentColumns(values) {
+  const aliases = {
+    nisn: ['nisn', 'n i s n', 'nomor induk siswa nasional', 'no nisn'],
+    nis: ['nis', 'n i s', 'nomor induk siswa', 'no nis'],
+    name: ['nama', 'nama siswa', 'nama peserta didik', 'peserta didik', 'siswa']
+  };
+
+  const columns = { nisn: [], nis: [], name: [] };
+  const scanRows = Math.min(values.length, 30);
+
+  for (let rowIndex = 0; rowIndex < scanRows; rowIndex++) {
+    const row = values[rowIndex] || [];
+    row.forEach((cell, colIndex) => {
+      const header = norm(cell);
+      if (!header) return;
+
+      for (const key of Object.keys(aliases)) {
+        if (aliases[key].some(alias => header === alias || header.includes(alias))) {
+          if (!columns[key].includes(colIndex)) columns[key].push(colIndex);
+        }
+      }
+    });
+  }
+
+  return columns;
+}
+
+function cellMatchesNis(cell, wanted) {
+  const a = normDigits(cell);
+  const b = normDigits(wanted);
+  if (!a || !b) return false;
+  if (a === b) return true;
+
+  // Google Sheets/Excel kadang mengubah angka menjadi format yang
+  // berbeda. Untuk NIS/NISN numerik, bandingkan nilai tanpa pemisah.
+  return a.replace(/^0+/, '') === b.replace(/^0+/, '');
+}
+
+function findStudentRow(values, student) {
+  const wantedNisn = normDigits(student.nisn);
+  const wantedNis = normDigits(student.nis);
+  const wantedName = norm(student.name || student.fullName);
+  const columns = detectStudentColumns(values);
+
+  // 1. Prioritas tertinggi: NISN pada kolom yang terdeteksi.
+  if (wantedNisn) {
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      if (columns.nisn.some(col => cellMatchesNis(row[col], wantedNisn))) {
+        return { rowIndex: i, matchedBy: 'NISN' };
+      }
+    }
+  }
+
+  // 2. Fallback: NIS pada kolom yang terdeteksi.
+  if (wantedNis) {
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      if (columns.nis.some(col => cellMatchesNis(row[col], wantedNis))) {
+        return { rowIndex: i, matchedBy: 'NIS' };
+      }
+    }
+  }
+
+  // 3. Nama exact pada kolom nama.
+  if (wantedName) {
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      if (columns.name.some(col => norm(row[col]) === wantedName)) {
+        return { rowIndex: i, matchedBy: 'NAMA_EXACT' };
+      }
+    }
+  }
+
+  // 4. Jika header tidak terdeteksi, tetap coba semua sel untuk NIS/NISN.
+  if (wantedNisn || wantedNis) {
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      if ((wantedNisn && row.some(cell => cellMatchesNis(cell, wantedNisn))) ||
+          (wantedNis && row.some(cell => cellMatchesNis(cell, wantedNis)))) {
+        return { rowIndex: i, matchedBy: wantedNisn ? 'NISN_FALLBACK' : 'NIS_FALLBACK' };
+      }
+    }
+  }
+
+  // 5. Fallback nama: toleransi tanda baca, spasi, dan typo kecil.
+  if (wantedName) {
+    let best = { rowIndex: -1, score: 0 };
+    const candidateColumns = columns.name.length ? columns.name : null;
+
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      const cells = candidateColumns
+        ? candidateColumns.map(col => row[col])
+        : row;
+
+      for (const cell of cells) {
+        const value = norm(cell);
+        if (!value || value.length < 3) continue;
+
+        const score = similarity(value, wantedName);
+        if (score > best.score) {
+          best = { rowIndex: i, score };
+        }
+      }
+    }
+
+    if (best.rowIndex >= 0 && best.score >= 0.82) {
+      return {
+        rowIndex: best.rowIndex,
+        matchedBy: 'NAMA_FUZZY',
+        score: Number(best.score.toFixed(3))
+      };
+    }
+  }
+
+  return null;
 }
 
 function studentBlock(values, rowIndex) {
