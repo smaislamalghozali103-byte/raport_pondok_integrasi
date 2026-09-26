@@ -31,7 +31,8 @@ export default function AdminClient() {
   const [bedahLoading, setBedahLoading] = useState(false);
   const [fillClassId, setFillClassId] = useState('');
   const [fillLoading, setFillLoading] = useState(false);
-  const [fillResultMsg, setFillResultMsg] = useState('');\n  const [spreadsheetUploadFile, setSpreadsheetUploadFile] = useState(null);
+  const [fillResultMsg, setFillResultMsg] = useState('');
+  const [spreadsheetUploadFile, setSpreadsheetUploadFile] = useState(null);
   const [spreadsheetUploadLoading, setSpreadsheetUploadLoading] = useState(false);
   const [spreadsheetUploadResult, setSpreadsheetUploadResult] = useState(null);
 
