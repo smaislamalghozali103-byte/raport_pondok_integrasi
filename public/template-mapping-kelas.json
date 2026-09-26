@@ -1,0 +1,16 @@
+{
+  "schoolYear": "2026-2027",
+  "semester": "GANJIL",
+  "createMissingClasses": true,
+  "classes": [
+    {
+      "classId": "1A",
+      "className": "1A",
+      "unit": "SMP",
+      "jenjang": "SMP",
+      "spreadsheetId": "ISI_SPREADSHEET_ID",
+      "spreadsheetSheet": "Rekap",
+      "reportSheets": ["RAPOT", "RAPORT"]
+    }
+  ]
+}
