@@ -406,6 +406,34 @@ export default function AdminClient() {
     }
   }
 
+  async function resetStudents() {
+    if (!selectedClass) {
+      setErr('Pilih kelas terlebih dahulu.');
+      return;
+    }
+    const cls = data.classes.find(x => x.id === selectedClass);
+    const confirmed = window.confirm(
+      `RESET DATA SISWA KELAS ${cls?.name || selectedClass}?\\n\\nSemua roster siswa hasil impor untuk kelas ini akan dihapus dari APP_DB dan dapat diimpor ulang dari Rekap. NILAI TIDAK DIHAPUS.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setBusy('resetStudents');
+      setErr('');
+      setMsg('Sedang mereset daftar siswa...');
+      const r = await fetch(`/api/admin/students?classId=${encodeURIComponent(selectedClass)}`, { method: 'DELETE' });
+      const d = await readJsonResponse(r);
+      if (!r.ok || !d.success) throw new Error(d.message || 'Gagal reset siswa.');
+      setStudents([]);
+      setMsg(`✓ ${d.message}`);
+      await loadData();
+    } catch (e) {
+      setErr(e.message || 'Gagal reset siswa.');
+    } finally {
+      setBusy('');
+    }
+  }
+
   async function toggle(kind, item) {
     try {
       setBusy(item.id);
@@ -1171,6 +1199,15 @@ export default function AdminClient() {
                 {data.classes.map(c => <option key={c.id} value={c.id}>{c.name || c.id}</option>)}
               </select>
               <span>{students.length} siswa</span>
+              <button
+                type="button"
+                onClick={resetStudents}
+                disabled={!selectedClass || busy === 'resetStudents'}
+                style={{ ...S.sm, background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' }}
+                title="Hapus roster siswa kelas ini dari APP_DB agar dapat diimpor ulang dari Rekap"
+              >
+                {busy === 'resetStudents' ? 'RESET...' : '↻ RESET SISWA'}
+              </button>
             </div>
             {selectedClass && (
               <table>
