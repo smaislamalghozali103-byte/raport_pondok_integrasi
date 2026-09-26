@@ -51,10 +51,15 @@ export async function POST(req) {
       updatedAt: new Date()
     });
 
+    const rawRole = String(teacher.role || 'guru').trim().toLowerCase();
+    const role = ['wali_kelas', 'wali kelas', 'wali'].includes(rawRole) ? 'wali_kelas' : 'guru';
+
     const teacherSession = {
       teacherId: id,
       teacherCode: teacher.teacherCode || id,
       teacherName: teacher.name || '',
+      role,
+      roleLabel: role === 'wali_kelas' ? 'Wali Kelas' : 'Guru',
       schoolYear: process.env.SCHOOL_YEAR || '2026-2027'
     };
 
