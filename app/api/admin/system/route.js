@@ -39,8 +39,7 @@ export async function POST() {
 
     // Production/Vercel tidak bergantung pada file XLSX lokal.
     // Jika file legacy tersedia, tetap dukung kompatibilitas. Jika tidak,
-    // gunakan data master yang sudah tersinkron di Firestore melalui
-    // Google Sheets / Master Data AI.
+    // gunakan datastore Google Sheets melalui Master Data AI.
     if (!fs.existsSync(xlsxPath)) {
       const collections = ['units', 'teachers', 'subjects', 'classes', 'teacher_assignments', 'students'];
       const countResults = await Promise.all(collections.map(async name => {
@@ -58,9 +57,9 @@ export async function POST() {
 
       return Response.json({
         success: true,
-        mode: 'firestore',
+        mode: 'google-sheets',
         message: sync?.status === 'SYNCED'
-          ? 'Data master sudah menggunakan sumber Google Sheets dan tersimpan di Firestore. File XLSX lokal tidak diperlukan di Vercel.'
+          ? 'Data master sudah menggunakan sumber Google Sheets dan tersimpan di Google Sheets. File XLSX lokal tidak diperlukan di Vercel.'
           : 'File XLSX lokal tidak tersedia di server. Gunakan fitur Master Data AI untuk mengambil master langsung dari Google Sheets.',
         counts: {
           units: counts.units || 0,
