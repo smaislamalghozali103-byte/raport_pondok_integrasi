@@ -35,7 +35,7 @@ export default function AdminClient() {
 
   // Admin password states
   const [authorized, setAuthorized] = useState(false);
-  const [adminPass, setAdminPass] = useState('');
+  const [adminPin, setAdminPin] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [authErr, setAuthErr] = useState('');
 
@@ -75,12 +75,12 @@ export default function AdminClient() {
       const r = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPass })
+        body: JSON.stringify({ pin: adminPin })
       });
       const d = await r.json();
       if (!r.ok || !d.success) throw new Error(d.message || 'Password salah.');
       setAuthorized(true);
-      setAdminPass('');
+      setAdminPin('');
       await loadData();
     } catch (err) {
       setAuthErr(err.message);
@@ -340,14 +340,14 @@ export default function AdminClient() {
             <input
               type="password"
               placeholder="Masukkan Password Admin…"
-              value={adminPass}
-              onChange={e => setAdminPass(e.target.value)}
+              value={adminPin}
+              onChange={e => setAdminPin(e.target.value)}
               style={{ ...S.input, width: '100%', boxSizing: 'border-box', marginBottom: 16, fontSize: 16 }}
               autoFocus
             />
             <button
               type="submit"
-              disabled={authLoading || !adminPass}
+              disabled={authLoading || !adminPin}
               style={{ ...S.btn, width: '100%', padding: '12px', fontSize: 15, fontWeight: 700 }}
             >
               {authLoading ? 'MEMVERIFIKASI…' : '🔓 BUKA PANEL ADMIN'}
