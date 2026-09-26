@@ -20,36 +20,49 @@ export async function POST(req) {
       return Response.json({ success: false, message: 'Konfirmasi PIN tidak sama.' }, { status: 400 });
     }
 
-    const r = db.collection('teachers').doc(id);
-    const s = await r.get();
-    if (!s.exists) {
+    const ref = db.collection('teachers').doc(id);
+    const snap = await ref.get();
+
+    if (!snap.exists) {
       return Response.json({ success: false, message: 'Guru tidak ditemukan.' }, { status: 404 });
     }
 
-    const t = s.data();
-    if (String(t.status || '').trim().toUpperCase() !== 'AKTIF') {
+    const teacher = snap.data();
+
+    if (String(teacher.status || '').trim().toUpperCase() !== 'AKTIF') {
       return Response.json({ success: false, message: 'Akun guru tidak aktif.' }, { status: 403 });
     }
 
-    // Buat hash PIN
+    // PIN hanya boleh dibuat satu kali melalui endpoint bootstrap.
+    // Setelah PIN ada, perubahan/reset harus dilakukan oleh administrator.
+    if (teacher.pinConfigured || teacher.pinHash) {
+      return Response.json({
+        success: false,
+        message: 'PIN guru sudah dibuat. Untuk reset/perubahan PIN, hubungi administrator.'
+      }, { status: 409 });
+    }
+
     const pinHash = await bcrypt.hash(p, 12);
-    await r.update({
+
+    await ref.update({
       pinHash,
       pinConfigured: true,
       pinCreatedAt: new Date(),
       updatedAt: new Date()
     });
 
-    // Otomatis login guru setelah PIN dibuat
-    const teacher = {
+    const teacherSession = {
       teacherId: id,
-      teacherCode: t.teacherCode || id,
-      teacherName: t.name || '',
+      teacherCode: teacher.teacherCode || id,
+      teacherName: teacher.name || '',
       schoolYear: process.env.SCHOOL_YEAR || '2026-2027'
     };
 
-    const isHttps = req.headers.get('x-forwarded-proto') === 'https' || process.env.NODE_ENV === 'production';
-    (await cookies()).set(SESSION_COOKIE_NAME, createSessionToken(teacher), {
+    const isHttps =
+      req.headers.get('x-forwarded-proto') === 'https' ||
+      process.env.NODE_ENV === 'production';
+
+    (await cookies()).set(SESSION_COOKIE_NAME, createSessionToken(teacherSession), {
       httpOnly: true,
       secure: isHttps,
       sameSite: isHttps ? 'none' : 'lax',
@@ -60,9 +73,13 @@ export async function POST(req) {
     return Response.json({
       success: true,
       message: 'PIN berhasil dibuat dan berhasil login.',
-      teacher
+      teacher: teacherSession
     });
-  } catch (e) {
-    return Response.json({ success: false, message: e.message }, { status: 500 });
+  } catch (err) {
+    console.error('[REGISTER PIN ERROR]', err);
+    return Response.json({
+      success: false,
+      message: err?.message || 'Gagal membuat PIN.'
+    }, { status: 500 });
   }
 }
