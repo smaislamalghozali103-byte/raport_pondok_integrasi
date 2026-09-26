@@ -31,7 +31,10 @@ export default function AdminClient() {
   const [bedahLoading, setBedahLoading] = useState(false);
   const [fillClassId, setFillClassId] = useState('');
   const [fillLoading, setFillLoading] = useState(false);
-  const [fillResultMsg, setFillResultMsg] = useState('');
+  const [fillResultMsg, setFillResultMsg] = useState('');\n  const [spreadsheetUploadFile, setSpreadsheetUploadFile] = useState(null);
+  const [spreadsheetUploadLoading, setSpreadsheetUploadLoading] = useState(false);
+  const [spreadsheetUploadResult, setSpreadsheetUploadResult] = useState(null);
+
 
   // Admin PIN states
   const [authorized, setAuthorized] = useState(false);
@@ -209,6 +212,46 @@ export default function AdminClient() {
       setErr('Gagal mengisi raport: ' + (e.message || 'Error'));
     } finally {
       setFillLoading(false);
+    }
+  }
+
+  async function handleBulkSpreadsheetUpload() {
+    if (!spreadsheetUploadFile) {
+      setErr('Silakan pilih file mapping Spreadsheet terlebih dahulu.');
+      return;
+    }
+
+    try {
+      setSpreadsheetUploadLoading(true);
+      setSpreadsheetUploadResult(null);
+      setErr('');
+      setMsg('Sedang membaca mapping Spreadsheet dan menghubungkan semua kelas...');
+
+      const formData = new FormData();
+      formData.append('file', spreadsheetUploadFile);
+
+      const r = await fetch('/api/admin/classes/bulk-spreadsheets', {
+        method: 'POST',
+        body: formData
+      });
+      const d = await r.json();
+
+      if (!r.ok || !d.success) {
+        throw new Error(d.message || 'Gagal mengimpor mapping Spreadsheet.');
+      }
+
+      setSpreadsheetUploadResult(d);
+      setMsg(d.message || 'Mapping Spreadsheet berhasil diperbarui.');
+      setSpreadsheetUploadFile(null);
+
+      const input = document.getElementById('bulkSpreadsheetMappingInput');
+      if (input) input.value = '';
+
+      await loadData();
+    } catch (e) {
+      setErr(e.message || 'Gagal mengimpor mapping Spreadsheet.');
+    } finally {
+      setSpreadsheetUploadLoading(false);
     }
   }
 
@@ -727,6 +770,65 @@ export default function AdminClient() {
 
         {tab === 'classes' && (
           <Section title="Kelas & Koneksi Google Spreadsheet">
+            <div style={{ ...S.card, background: '#f8fafc', border: '1px solid #cbd5e1', boxShadow: 'none' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
+                <div style={{ maxWidth: 820 }}>
+                  <h3 style={{ ...S.h2, margin: '0 0 8px', fontSize: 18 }}>📤 Hubungkan Spreadsheet Sekaligus</h3>
+                  <p style={{ ...S.muted, margin: '0 0 8px', fontSize: 13, lineHeight: 1.6 }}>
+                    Tidak perlu memasukkan ID satu per satu. Upload satu file <b>.xlsx, .xls, atau .csv</b> dengan kolom:
+                    <b> KELAS</b>, <b>SPREADSHEET ID/URL</b>, dan opsional <b>SHEET</b>.
+                    Sistem akan mencocokkan nama/ID kelas dengan Master Kelas dan menyimpan semua koneksi sekaligus.
+                  </p>
+                  <div style={{ fontSize: 12, color: '#475569' }}>
+                    Contoh: <code>KELAS | SPREADSHEET ID/URL | SHEET</code> → <code>1A | https://docs.google.com/spreadsheets/d/xxxxx/edit | Rekap</code>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <input
+                    id="bulkSpreadsheetMappingInput"
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={e => setSpreadsheetUploadFile(e.target.files?.[0] || null)}
+                    style={{ maxWidth: 260 }}
+                  />
+                  <button
+                    type="button"
+                    style={{ ...S.btn, background: spreadsheetUploadLoading ? '#94a3b8' : '#166534' }}
+                    disabled={spreadsheetUploadLoading || !spreadsheetUploadFile}
+                    onClick={handleBulkSpreadsheetUpload}
+                  >
+                    {spreadsheetUploadLoading ? '⏳ MEMPROSES…' : '📥 UPLOAD & HUBUNGKAN SEMUA'}
+                  </button>
+                </div>
+              </div>
+
+              {spreadsheetUploadFile && (
+                <div style={{ marginTop: 10, fontSize: 13, color: '#334155' }}>
+                  File: <b>{spreadsheetUploadFile.name}</b> ({(spreadsheetUploadFile.size / 1024).toFixed(1)} KB)
+                </div>
+              )}
+
+              {spreadsheetUploadResult && (
+                <div style={{ marginTop: 14, background: '#fff', border: '1px solid #d1fae5', borderRadius: 10, padding: 12, fontSize: 13 }}>
+                  <b style={{ color: '#166534' }}>✓ {spreadsheetUploadResult.updatedCount} kelas berhasil dihubungkan</b>
+                  {spreadsheetUploadResult.skippedCount > 0 && (
+                    <span style={{ marginLeft: 12, color: '#92400e' }}>⚠ {spreadsheetUploadResult.skippedCount} dilewati</span>
+                  )}
+                  {spreadsheetUploadResult.errorCount > 0 && (
+                    <span style={{ marginLeft: 12, color: '#b42318' }}>✕ {spreadsheetUploadResult.errorCount} error</span>
+                  )}
+                  {(spreadsheetUploadResult.skipped?.length || spreadsheetUploadResult.errors?.length) > 0 && (
+                    <details style={{ marginTop: 8 }}>
+                      <summary style={{ cursor: 'pointer', fontWeight: 700 }}>Lihat detail baris yang tidak terhubung</summary>
+                      <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, marginTop: 8 }}>
+                        {JSON.stringify([...(spreadsheetUploadResult.skipped || []), ...(spreadsheetUploadResult.errors || [])], null, 2)}
+                      </pre>
+                    </details>
+                  )}
+                </div>
+              )}
+            </div>
+
             <Toolbar search={search} setSearch={setSearch} />
             <table>
               <thead>
