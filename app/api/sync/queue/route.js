@@ -4,6 +4,7 @@ import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth-session';
 import { readRekap, writeRekapCells } from '@/lib/google-sheets';
 import { detectRekap, normalize, colLetter } from '@/lib/rekap-detector';
 import { archiveSpreadsheet } from '@/lib/google-drive';
+import { canTeach } from '@/lib/authorization';
 
 const clean=v=>String(v??'').trim();
 const schoolYearDefault=()=>process.env.SCHOOL_YEAR||'2026-2027';
@@ -31,6 +32,21 @@ export async function POST(request){
     const batchSnap=await db.collection('grade_batches').doc(batchId).get();
     if(!batchSnap.exists) throw new Error('Grade batch tidak ditemukan.');
     const batch=batchSnap.data();
+
+    if (String(batch.teacherId || '') !== String(session.teacherId || '')) {
+      return Response.json({
+        success: false,
+        message: 'Batch ini bukan milik guru yang sedang login.'
+      }, { status: 403 });
+    }
+
+    if (!(await canTeach(session, batch.classId, batch.subjectId))) {
+      return Response.json({
+        success: false,
+        message: 'Guru tidak memiliki penugasan aktif untuk kelas dan mata pelajaran batch ini.'
+      }, { status: 403 });
+    }
+
     const classSnap=await db.collection('classes').doc(batch.classId).get();
     if(!classSnap.exists) throw new Error('Kelas batch tidak ditemukan.');
     const cls=classSnap.data();
