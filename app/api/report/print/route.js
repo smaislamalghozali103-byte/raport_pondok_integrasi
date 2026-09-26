@@ -185,6 +185,117 @@ function findStudentRow(values, student) {
   return null;
 }
 
+function scoreReportSheet(title, values, student) {
+  const sheetNorm = norm(title);
+  const sample = norm(
+    (values || []).slice(0, 120)
+      .map(row => (row || []).slice(0, 30).map(clean).join(' '))
+      .join(' ')
+  );
+
+  let score = 0;
+  const reasons = [];
+
+  if (/raport|rapor/.test(sheetNorm)) {
+    score += 100;
+    reasons.push('nama-sheet-raport');
+  }
+  if (/rekap|rekapitulasi|nilai/.test(sheetNorm)) {
+    score -= 100;
+    reasons.push('nama-sheet-rekap');
+  }
+
+  const reportSignals = [
+    ['mata pelajaran', 35],
+    ['nama lengkap', 30],
+    ['tahun ajaran', 25],
+    ['peringkat', 25],
+    ['wali kelas', 25],
+    ['wali الفصل', 20],
+    ['jumlah', 15],
+    ['nilai rata rata', 15],
+    ['hasil', 10],
+    ['مدير المعهد', 10],
+    ['الاسم كامل', 10],
+    ['العام الدراسي', 10],
+    ['النتيجة المعدلة', 10]
+  ];
+
+  for (const [signal, points] of reportSignals) {
+    if (sample.includes(norm(signal))) {
+      score += points;
+      reasons.push(signal);
+    }
+  }
+
+  const rekapSignals = [
+    ['rekap', 45],
+    ['nisn', 25],
+    ['kode mapel', 15],
+    ['nama siswa', 15],
+    ['kelas', 10],
+    ['guru', 10],
+    ['mapel', 10]
+  ];
+
+  let rekapHits = 0;
+  for (const [signal, points] of rekapSignals) {
+    if (sample.includes(norm(signal))) {
+      score -= points;
+      rekapHits++;
+    }
+  }
+  if (rekapHits >= 3) {
+    score -= 60;
+    reasons.push('struktur-rekap');
+  }
+
+  if (student) {
+    const match = findStudentRow(values, student);
+    if (match) {
+      score += 80;
+      reasons.push('siswa-' + match.matchedBy);
+    }
+  }
+
+  return { score, reasons };
+}
+
+async function findBestReportSheet(meta, spreadsheetId, configuredSheetName, student) {
+  const candidates = [];
+  const sheets = meta.sheets || [];
+
+  for (let index = 0; index < sheets.length; index++) {
+    const sheet = sheets[index];
+    const title = clean(sheet.title);
+    if (!title) continue;
+
+    const valuesResult = await readSheet(spreadsheetId, title, 'A:ZZ');
+    const scored = scoreReportSheet(title, valuesResult.values || [], student);
+
+    candidates.push({
+      sheet,
+      values: valuesResult.values || [],
+      index,
+      score: scored.score,
+      reasons: scored.reasons
+    });
+  }
+
+  candidates.sort((a, b) => b.score - a.score);
+
+  if (!candidates.length) return null;
+
+  const best = candidates[0];
+  const namedReport = candidates.find(c => /raport|rapor/i.test(c.sheet.title));
+
+  if (namedReport && namedReport.score >= best.score - 20) {
+    return namedReport;
+  }
+
+  return best;
+}
+
 function studentBlock(values, rowIndex) {
   if (rowIndex < 0) return null;
 
@@ -262,27 +373,33 @@ export async function GET(request) {
     }
 
     const meta = await spreadsheetMeta(spreadsheetId);
-    const configuredSheetIndex = meta.sheets.findIndex(
-      s => String(s.title).trim().toLowerCase() === sheetName.trim().toLowerCase()
+
+    // Deteksi otomatis sheet RAPORT berdasarkan NAMA + ISI + kecocokan siswa.
+    // Tidak lagi bergantung pada posisi sheet (mis. "sheet ke-4").
+    let studentForDetection = null;
+    if (mode === 'student' && studentId) {
+      const studentSnapForDetection = await db.collection('students').doc(studentId).get();
+      if (studentSnapForDetection.exists) {
+        studentForDetection = {
+          id: studentSnapForDetection.id,
+          ...studentSnapForDetection.data()
+        };
+      }
+    }
+
+    const bestReport = await findBestReportSheet(
+      meta,
+      spreadsheetId,
+      sheetName,
+      studentForDetection
     );
 
-    // spreadsheetSheet tetap menunjuk ke sheet REKAP sebagai sumber pemetaan.
-    // Untuk cetak raport, gunakan sheet RAPORT yang berada setelah REKAP.
-    // Prioritas:
-    // 1) sheet bernama "Raport" / "Rapor"
-    // 2) sheet setelah sheet REKAP
-    // 3) sheet konfigurasi jika tidak ada alternatif.
-    const reportSheet =
-      meta.sheets.find(s => /^(raport|rapor)$/i.test(String(s.title).trim())) ||
-      (configuredSheetIndex >= 0 ? meta.sheets[configuredSheetIndex + 1] : null) ||
-      meta.sheets.find(s => /raport|rapor/i.test(String(s.title))) ||
-      (configuredSheetIndex >= 0 ? meta.sheets[configuredSheetIndex] : null) ||
-      meta.sheets[0];
+    if (!bestReport) {
+      throw new Error('Tidak ditemukan sheet yang dapat dikenali sebagai RAPORT.');
+    }
 
-    if (!reportSheet) throw new Error('Sheet raport tidak ditemukan.');
-
-    const targetSheet = reportSheet;
-    const valuesResult = await readSheet(spreadsheetId, targetSheet.title, 'A:ZZ');
+    const targetSheet = bestReport.sheet;
+    const valuesResult = { values: bestReport.values };
     let rowStart = 0;
     let rowEnd = Number(targetSheet.gridProperties?.rowCount || valuesResult.values.length || 1000);
 
