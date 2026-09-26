@@ -14,6 +14,8 @@ export default function DashboardClient() {
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
   const [assignments, setAssignments] = useState([]);
+  const [homeroomMonitoring, setHomeroomMonitoring] = useState(null);
+  const [loadingMonitoring, setLoadingMonitoring] = useState(false);
 
   const [jenjang, setJenjang] = useState("");
   const [classId, setClassId] = useState("");
@@ -65,6 +67,10 @@ export default function DashboardClient() {
       setTeacher(me.teacher);
       setUnits(unitsData.units || []);
 
+      if (me.teacher?.role === "wali_kelas") {
+        loadHomeroomMonitoring();
+      }
+
       if (assignRes && assignRes.ok) {
         const assignData = await assignRes.json();
         if (assignData.success && Array.isArray(assignData.assignments)) {
@@ -75,6 +81,26 @@ export default function DashboardClient() {
       setError(err.message || "Gagal memuat dashboard.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadHomeroomMonitoring() {
+    try {
+      setLoadingMonitoring(true);
+      const res = await fetch("/api/homeroom/monitoring", {
+        cache: "no-store",
+        credentials: "include"
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Gagal memuat monitoring wali kelas.");
+      }
+      setHomeroomMonitoring(data);
+    } catch (err) {
+      setHomeroomMonitoring(null);
+      setError(err.message || "Gagal memuat monitoring wali kelas.");
+    } finally {
+      setLoadingMonitoring(false);
     }
   }
 
@@ -551,13 +577,6 @@ export default function DashboardClient() {
             <p style={styles.school}>Pondok Modern Al-Ghozali</p>
           </div>
           <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={() => router.push("/admin")}
-              style={{ ...styles.logout, background: "#176b3a", color: "#fff", display: "flex", alignItems: "center", gap: 6 }}
-              title="Akses menu Admin untuk mengatur Spreadsheet ID per kelas"
-            >
-              ⚙️ KELOLA SPREADSHEET (ADMIN)
-            </button>
             <button onClick={logout} style={styles.logout}>KELUAR</button>
           </div>
         </header>
@@ -565,7 +584,76 @@ export default function DashboardClient() {
         <div style={styles.teacherBox}>
           <strong>{teacher?.teacherName}</strong>
           <span>Kode Guru: {teacher?.teacherCode}</span>
+          <span style={{
+            marginLeft: "auto",
+            padding: "6px 12px",
+            borderRadius: 999,
+            background: teacher?.role === "wali_kelas" ? "#fff7ed" : "#eff6ff",
+            color: teacher?.role === "wali_kelas" ? "#9a3412" : "#1d4ed8",
+            fontWeight: 800,
+            fontSize: 12
+          }}>
+            {teacher?.roleLabel || (teacher?.role === "wali_kelas" ? "Wali Kelas" : "Guru")}
+          </span>
         </div>
+
+        {teacher?.role === "wali_kelas" && (
+          <section style={{
+            margin: "16px 0",
+            padding: 16,
+            borderRadius: 14,
+            border: "1px solid #fed7aa",
+            background: "#fffaf5"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <div>
+                <h3 style={{ margin: 0, color: "#9a3412" }}>📊 Monitoring Nilai Kelas Binaan</h3>
+                <p style={{ margin: "5px 0 0", color: "#7c2d12", fontSize: 13 }}>
+                  Wali Kelas dapat melihat progres nilai yang sudah masuk pada kelas yang dibimbing.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={loadHomeroomMonitoring}
+                disabled={loadingMonitoring}
+                style={{ ...styles.logout, background: "#fff", border: "1px solid #fdba74" }}
+              >
+                {loadingMonitoring ? "Memuat..." : "↻ Refresh"}
+              </button>
+            </div>
+
+            {homeroomMonitoring?.classes?.length > 0 ? (
+              <div style={{ overflowX: "auto", marginTop: 12 }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: "#ffedd5" }}>
+                      <th style={{ padding: 8, textAlign: "left" }}>Kelas</th>
+                      <th style={{ padding: 8, textAlign: "left" }}>Jenjang</th>
+                      <th style={{ padding: 8, textAlign: "left" }}>Mapel Sudah Masuk</th>
+                      <th style={{ padding: 8, textAlign: "left" }}>Jumlah Input</th>
+                      <th style={{ padding: 8, textAlign: "left" }}>Guru</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {homeroomMonitoring.classes.map(item => (
+                      <tr key={item.id}>
+                        <td style={{ padding: 8, fontWeight: 700 }}>{item.name}</td>
+                        <td style={{ padding: 8 }}>{item.jenjang || "-"}</td>
+                        <td style={{ padding: 8 }}>{item.subjectCount || 0} mapel</td>
+                        <td style={{ padding: 8 }}>{item.inputCount || 0} nilai</td>
+                        <td style={{ padding: 8 }}>{item.teachers?.join(", ") || "-"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div style={{ marginTop: 12, padding: 12, background: "#fff", borderRadius: 10, color: "#7c2d12" }}>
+                {loadingMonitoring ? "Memuat monitoring..." : "Belum ada kelas binaan yang terdaftar untuk akun ini."}
+              </div>
+            )}
+          </section>
+        )}
 
         <h2 style={styles.sectionTitle}>INPUT NILAI RAPORT</h2>
 
