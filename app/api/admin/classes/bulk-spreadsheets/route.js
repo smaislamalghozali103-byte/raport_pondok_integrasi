@@ -284,13 +284,10 @@ export async function POST(request) {
   } catch (error) {
     console.error('BULK SPREADSHEET IMPORT ERROR', error);
     const rawMessage = error?.message || 'Gagal mengimpor mapping Spreadsheet.';
-    const rawMessage = error?.message || 'Gagal mengimpor mapping Spreadsheet.';
     return Response.json({
       success: false,
-      code: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'BULK_SPREADSHEET_IMPORT_ERROR',
-      message: isQuota
-        ? 'Firestore sedang kehabisan kuota. Mapping JSON sudah terbaca, tetapi database tidak dapat menerima perubahan sekarang. Cek Firebase Console → Firestore → Usage/Quotas, lalu coba lagi setelah kuota tersedia.'
-        : rawMessage
-    }, { status: isQuota ? 429 : 500 });
+      code: 'BULK_SPREADSHEET_IMPORT_ERROR',
+      message: rawMessage
+    }, { status: 500 });
   }
 }
