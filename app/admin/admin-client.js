@@ -16,6 +16,18 @@ const tabs = [
   ['print', '🖨️ Cetak Raport']
 ];
 
+async function readJsonResponse(response) {
+  const text = await response.text();
+  if (!text.trim()) {
+    throw new Error(`Server tidak mengirim respons JSON (HTTP ${response.status}).`);
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(`Server mengirim respons yang bukan JSON (HTTP ${response.status}). ${text.slice(0, 180)}`);
+  }
+}
+
 export default function AdminClient() {
   const router = useRouter();
   const [tab, setTab] = useState('overview');
@@ -53,7 +65,7 @@ export default function AdminClient() {
 
   async function get(url) {
     const r = await fetch(url, { cache: 'no-store' });
-    const d = await r.json();
+    const d = await readJsonResponse(r);
     if (!r.ok) throw new Error(d.message || 'Gagal memuat data');
     return d;
   }
@@ -85,7 +97,7 @@ export default function AdminClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pin: adminPin })
       });
-      const d = await r.json();
+      const d = await readJsonResponse(r);
       if (!r.ok || !d.success) throw new Error(d.message || 'PIN administrator salah.');
       setAuthorized(true);
       setAdminPin('');
@@ -132,7 +144,7 @@ export default function AdminClient() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
-      const d = await r.json();
+      const d = await readJsonResponse(r);
       if (!d.success) throw new Error(d.message);
       setMsg(`✓ ${d.message} (Unit: ${d.counts?.units}, Guru: ${d.counts?.teachers}, Mapel: ${d.counts?.subjects}, Kelas: ${d.counts?.classes}, Penugasan: ${d.counts?.assignments}, Siswa: ${d.counts?.students})`);
       await loadData();
@@ -239,7 +251,7 @@ export default function AdminClient() {
         method: 'POST',
         body: formData
       });
-      const d = await r.json();
+      const d = await readJsonResponse(r);
 
       if (!r.ok || !d.success) {
         throw new Error(d.message || 'Gagal mengimpor mapping Spreadsheet.');
