@@ -25,7 +25,61 @@ function pick(row, names) {
   return '';
 }
 
-function extractRows(buffer) {
+function parseMarkdownRows(text) {
+  const lines = String(text || '').replace(/\\r/g, '').split('\\n');
+  const rows = [];
+  let headers = null;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line || !line.includes('|')) continue;
+
+    const cells = line
+      .replace(/^\\|/, '')
+      .replace(/\\|$/, '')
+      .split('|')
+      .map(v => v.trim());
+
+    if (cells.length < 2) continue;
+    if (cells.every(v => /^:?-{3,}:?$/.test(v))) continue;
+
+    if (!headers) {
+      headers = cells;
+      continue;
+    }
+
+    const row = {};
+    headers.forEach((header, i) => {
+      row[header] = cells[i] || '';
+    });
+    rows.push(row);
+  }
+
+  // Format Markdown alternatif:
+  // KELAS: 1A
+  // SPREADSHEET ID: xxxxx
+  // SHEET: Rekap
+  if (!rows.length) {
+    let current = {};
+    for (const rawLine of lines) {
+      const m = rawLine.match(/^\\s*[-*]?\\s*(KELAS|SPREADSHEET(?:\\s+ID|_ID)?|SPREADSHEET|SHEET)\\s*:\\s*(.+?)\\s*$/i);
+      if (!m) continue;
+      current[m[1]] = m[2];
+      if (current.KELAS && (current['SPREADSHEET ID'] || current.SPREADSHEET || current.SPREADSHEET_ID)) {
+        rows.push({ ...current });
+        current = {};
+      }
+    }
+  }
+
+  return rows;
+}
+
+function extractRows(buffer, fileName) {
+  if (String(fileName).toLowerCase().endsWith('.md')) {
+    return { workbook: null, rows: parseMarkdownRows(buffer.toString('utf8')) };
+  }
+
   const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: false });
   const rows = [];
 
@@ -61,9 +115,9 @@ export async function POST(request) {
     const fileName = clean(file.name || 'spreadsheet-mapping.xlsx');
     const lowerName = fileName.toLowerCase();
 
-    if (!/\\.(xlsx|xls|csv)$/.test(lowerName)) {
+    if (!/\\.md$/.test(lowerName)) {
       return Response.json(
-        { success: false, message: 'Format harus .xlsx, .xls, atau .csv.' },
+        { success: false, message: 'Format harus .md (Markdown).' },
         { status: 400 }
       );
     }
@@ -76,7 +130,7 @@ export async function POST(request) {
       );
     }
 
-    const { rows } = extractRows(buffer);
+    const { rows } = extractRows(buffer, fileName);
 
     if (!rows.length) {
       return Response.json(
