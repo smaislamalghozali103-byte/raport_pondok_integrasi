@@ -169,17 +169,28 @@ export async function POST(request) {
       );
     }
 
-    const formData = await request.formData();
-    const file = formData.get('file');
+    const contentType = request.headers.get('content-type') || '';
+    let fileName = 'spreadsheet-mapping.json';
+    let buffer;
 
-    if (!file || typeof file === 'string') {
-      return Response.json(
-        { success: false, message: 'File mapping Spreadsheet wajib diunggah.' },
-        { status: 400 }
-      );
+    if (contentType.includes('application/json')) {
+      const body = await request.json();
+      buffer = Buffer.from(JSON.stringify(body), 'utf8');
+    } else {
+      const formData = await request.formData();
+      const file = formData.get('file');
+
+      if (!file || typeof file === 'string') {
+        return Response.json(
+          { success: false, message: 'File mapping Spreadsheet wajib diunggah.' },
+          { status: 400 }
+        );
+      }
+
+      fileName = clean(file.name || 'spreadsheet-mapping.json');
+      buffer = Buffer.from(await file.arrayBuffer());
     }
 
-    const fileName = clean(file.name || 'spreadsheet-mapping.xlsx');
     const lowerName = fileName.toLowerCase();
 
     if (!/\\.(md|json)$/.test(lowerName)) {
@@ -189,7 +200,6 @@ export async function POST(request) {
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
     if (!buffer.length || buffer.length > 10 * 1024 * 1024) {
       return Response.json(
         { success: false, message: 'Ukuran file tidak valid. Maksimal 10 MB.' },
