@@ -48,10 +48,15 @@ export async function POST(req) {
       return Response.json({ success: false, message: 'PIN salah.' }, { status: 401 });
     }
 
+    const rawRole = String(t.role || 'guru').trim().toLowerCase();
+    const role = ['wali_kelas', 'wali kelas', 'wali'].includes(rawRole) ? 'wali_kelas' : 'guru';
+
     const teacher = {
       teacherId: id,
       teacherCode: t.teacherCode || id,
       teacherName: t.name || '',
+      role,
+      roleLabel: role === 'wali_kelas' ? 'Wali Kelas' : 'Guru',
       schoolYear: process.env.SCHOOL_YEAR || '2026-2027'
     };
 
