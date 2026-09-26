@@ -823,12 +823,12 @@ export default function AdminClient() {
                 <div style={{ maxWidth: 820 }}>
                   <h3 style={{ ...S.h2, margin: '0 0 8px', fontSize: 18 }}>📤 Hubungkan Spreadsheet Sekaligus</h3>
                   <p style={{ ...S.muted, margin: '0 0 8px', fontSize: 13, lineHeight: 1.6 }}>
-                    Tidak perlu memasukkan ID satu per satu. Upload satu file <b>.xlsx, .xls, atau .csv</b> dengan kolom:
+                    Tidak perlu memasukkan ID satu per satu. Upload satu file <b>Markdown (.md)</b> dengan tabel:
                     <b> KELAS</b>, <b>SPREADSHEET ID/URL</b>, dan opsional <b>SHEET</b>.
                     Sistem akan mencocokkan nama/ID kelas dengan Master Kelas dan menyimpan semua koneksi sekaligus.
                   </p>
                   <div style={{ fontSize: 12, color: '#475569' }}>
-                    Contoh: <code>KELAS | SPREADSHEET ID/URL | SHEET</code> → <code>1A | https://docs.google.com/spreadsheets/d/xxxxx/edit | Rekap</code>
+                    Contoh Markdown: <code>| KELAS | SPREADSHEET ID/URL | SHEET |</code> → <code>| 1A | https://docs.google.com/spreadsheets/d/xxxxx/edit | Rekap |</code>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
