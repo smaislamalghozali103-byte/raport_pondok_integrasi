@@ -1180,10 +1180,9 @@ export default function AdminClient() {
                 <tbody>
                   {students.map((x, i) => (
                     <tr key={x.id}>
-                      <td>{i + 1}</td>
-                      <td>{x.nisn || '-'}</td>
-                      <td>{x.nis || '-'}</td>
+                      <td>{x.no || i + 1}</td>
                       <td>{x.name || x.fullName || '-'}</td>
+                      <td>{x.nisn || '-'}</td>
                       <td>{x.rekapRow ?? '-'}</td>
                     </tr>
                   ))}
