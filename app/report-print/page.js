@@ -14,14 +14,10 @@ export default function ReportPrintPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [studentPage, setStudentPage] = useState(0);
-  const STUDENTS_PER_PAGE = 4;
+  const [previewKey, setPreviewKey] = useState(0);
 
   const students = selectedClass?.students || [];
-  const totalStudentPages = Math.max(1, Math.ceil(students.length / STUDENTS_PER_PAGE));
-  const visibleStudents = students.slice(
-    studentPage * STUDENTS_PER_PAGE,
-    studentPage * STUDENTS_PER_PAGE + STUDENTS_PER_PAGE
-  );
+  const activeStudent = students[studentPage] || null;
 
   const selectedClass = useMemo(
     () => classes.find(c => c.id === classId),
@@ -116,11 +112,32 @@ export default function ReportPrintPage() {
     }
   }
 
-  function printStudent(sid) {
+  function selectStudent(index) {
+    if (!students[index]) return;
+    setStudentPage(index);
+    setStudentId(students[index].id);
+    setError("");
+    setMessage("");
+    setPreviewKey(k => k + 1);
+  }
+
+  function printStudent(sid = activeStudent?.id) {
+    if (!sid) {
+      setError("Belum ada siswa yang dipilih.");
+      return;
+    }
     setPrinting("student-" + sid);
     setError("");
     openPrint("student", sid);
     setTimeout(() => setPrinting(""), 800);
+  }
+
+  function moveStudent(delta) {
+    const next = Math.min(
+      Math.max(studentPage + delta, 0),
+      Math.max(students.length - 1, 0)
+    );
+    selectStudent(next);
   }
 
   if (loading) {
@@ -154,7 +171,7 @@ export default function ReportPrintPage() {
         {message && <div style={styles.success}>{message}</div>}
 
         <label style={styles.label}>Pilih Kelas</label>
-        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setStudentPage(0); setError(""); }} style={styles.select}>
+        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setStudentPage(0); setPreviewKey(k => k + 1); setError(""); }} style={styles.select}>
           <option value="">Pilih kelas…</option>
           {classes.map(c => (
             <option key={c.id} value={c.id}>
@@ -188,62 +205,130 @@ export default function ReportPrintPage() {
               </button>
             </div>
 
-            <div style={styles.sectionHead}>
-              <div>
-                <h2 style={styles.h2}>Pilih Siswa</h2>
-                <p style={styles.muted}>Pilih salah satu dari 4 siswa yang tampil, lalu cetak raportnya.</p>
-              </div>
-              <div style={styles.pageInfo}>
-                {students.length
-                  ? `Siswa ${studentPage * STUDENTS_PER_PAGE + 1}–${Math.min((studentPage + 1) * STUDENTS_PER_PAGE, students.length)} dari ${students.length}`
-                  : "Belum ada siswa"}
-              </div>
-            </div>
+            <div style={styles.previewLayout}>
+              <div style={styles.previewPane}>
+                <div style={styles.previewHeader}>
+                  <div>
+                    <h2 style={styles.h2}>Preview Raport Asli</h2>
+                    <p style={styles.muted}>
+                      Menampilkan sheet {selectedClass.spreadsheetSheet || "Rapot"} dari Spreadsheet asli.
+                    </p>
+                  </div>
+                  {activeStudent && (
+                    <div style={styles.previewStudent}>
+                      <b>{activeStudent.name}</b>
+                      <span>NISN: {activeStudent.nisn || "-"}</span>
+                    </div>
+                  )}
+                </div>
 
-            <div style={styles.studentGrid}>
-              {visibleStudents.map((s, localIndex) => {
-                const number = studentPage * STUDENTS_PER_PAGE + localIndex + 1;
-                const isPrinting = printing === "student-" + s.id;
-                return (
+                {activeStudent && selectedClass.spreadsheetId ? (
+                  <iframe
+                    key={`${classId}-${activeStudent.id}-${previewKey}`}
+                    title={`Preview raport ${activeStudent.name}`}
+                    src={`/api/report/print?classId=${encodeURIComponent(classId)}&mode=student&studentId=${encodeURIComponent(activeStudent.id)}`}
+                    style={styles.pdfFrame}
+                  />
+                ) : (
+                  <div style={styles.previewEmpty}>
+                    Pilih kelas yang memiliki Spreadsheet Raport untuk melihat preview.
+                  </div>
+                )}
+              </div>
+
+              <aside style={styles.controlPanel}>
+                <div style={styles.navButtons}>
                   <button
-                    key={s.id}
-                    onClick={() => printStudent(s.id)}
-                    disabled={!selectedClass.spreadsheetId || isPrinting}
-                    style={styles.studentBtn}
+                    type="button"
+                    onClick={() => moveStudent(-1)}
+                    disabled={!activeStudent || studentPage === 0}
+                    style={{ ...styles.arrowBtn, ...(studentPage === 0 ? styles.navBtnDisabled : {}) }}
+                    aria-label="Siswa sebelumnya"
+                    title="Siswa sebelumnya"
                   >
-                    <span style={styles.studentNumber}>SISWA {number}</span>
-                    <strong style={styles.studentName}>{s.name || "Nama siswa"}</strong>
-                    <span style={styles.studentNisn}>NISN: {s.nisn || "-"}</span>
-                    <span style={styles.studentAction}>
-                      {isPrinting ? "MEMBUKA PDF…" : "🖨️ CETAK RAPORT"}
-                    </span>
+                    ▲
                   </button>
-                );
-              })}
-              {!students.length && <div style={styles.emptyStudent}>Belum ada siswa pada kelas ini.</div>}
-            </div>
+                  <div style={styles.studentPosition}>
+                    <b>{activeStudent ? `SISWA ${studentPage + 1}` : "SISWA"}</b>
+                    <span>{students.length ? `dari ${students.length}` : "—"}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => moveStudent(1)}
+                    disabled={!activeStudent || studentPage >= students.length - 1}
+                    style={{ ...styles.arrowBtn, ...(studentPage >= students.length - 1 ? styles.navBtnDisabled : {}) }}
+                    aria-label="Siswa berikutnya"
+                    title="Siswa berikutnya"
+                  >
+                    ▼
+                  </button>
+                </div>
 
-            {students.length > STUDENTS_PER_PAGE && (
-              <div style={styles.pagination}>
+                <label style={styles.panelLabel}>SISWA</label>
+                <select
+                  value={activeStudent?.id || ""}
+                  onChange={e => {
+                    const index = students.findIndex(s => s.id === e.target.value);
+                    if (index >= 0) selectStudent(index);
+                  }}
+                  style={styles.panelSelect}
+                  disabled={!students.length}
+                >
+                  <option value="">Pilih siswa…</option>
+                  {students.map((s, i) => (
+                    <option key={s.id} value={s.id}>
+                      {i + 1}. {s.name}
+                    </option>
+                  ))}
+                </select>
+
+                <label style={styles.panelLabel}>KELAS</label>
+                <select value={classId} onChange={e => {
+                  setClassId(e.target.value);
+                  setStudentId("");
+                  setStudentPage(0);
+                  setPreviewKey(k => k + 1);
+                  setError("");
+                }} style={styles.panelSelect}>
+                  {classes.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}{c.unit ? ` — ${c.unit}` : ""}
+                    </option>
+                  ))}
+                </select>
+
+                <label style={styles.panelLabel}>JENJANG</label>
+                <select value={selectedClass?.unit || ""} readOnly style={styles.panelSelect}>
+                  <option value={selectedClass?.unit || ""}>{selectedClass?.unit || "—"}</option>
+                </select>
+
                 <button
                   type="button"
-                  onClick={() => setStudentPage(p => Math.max(0, p - 1))}
-                  disabled={studentPage === 0}
-                  style={{ ...styles.navBtn, ...(studentPage === 0 ? styles.navBtnDisabled : {}) }}
+                  onClick={() => printStudent()}
+                  disabled={!activeStudent || !selectedClass.spreadsheetId || !!printing}
+                  style={styles.printBtn}
                 >
-                  ← SEBELUMNYA
+                  {printing ? "MEMBUKA…" : "PRINT"}
                 </button>
-                <div style={styles.pageCounter}>HALAMAN {studentPage + 1} / {totalStudentPages}</div>
+
                 <button
                   type="button"
-                  onClick={() => setStudentPage(p => Math.min(totalStudentPages - 1, p + 1))}
-                  disabled={studentPage >= totalStudentPages - 1}
-                  style={{ ...styles.navBtn, ...(studentPage >= totalStudentPages - 1 ? styles.navBtnDisabled : {}) }}
+                  onClick={() => openPrint("class")}
+                  disabled={!selectedClass.spreadsheetId}
+                  style={styles.printAllBtn}
                 >
-                  SESUDAHNYA →
+                  PRINT ALL
                 </button>
-              </div>
-            )}
+
+                <div style={styles.panelHint}>
+                  <b>{activeStudent ? activeStudent.name : "Belum ada siswa"}</b>
+                  <span>
+                    Gunakan tombol ▲ / ▼ untuk berpindah siswa. Preview mengambil PDF dari sheet
+                    raport asli sehingga layout dan tulisan Arab tetap mengikuti Spreadsheet.
+                  </span>
+                </div>
+              </aside>
+            </div>
           </>
         )}
       </section>
@@ -268,27 +353,23 @@ const styles = {
   actions: { marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" },
   primary: { border: 0, borderRadius: 10, padding: "12px 18px", background: "#176b3a", color: "#fff", fontWeight: 800, cursor: "pointer" },
   pdf: { border: "1px solid #176b3a", borderRadius: 10, padding: "12px 18px", background: "#f0fdf4", color: "#176b3a", fontWeight: 800, cursor: "pointer" },
-  sectionHead: { marginTop: 28, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 15 },
+  previewLayout: { marginTop: 24, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 245px", gap: 16, alignItems: "stretch" },
+  previewPane: { minWidth: 0, background: "#f2f2f2", border: "1px solid #d9dedb", borderRadius: 14, overflow: "hidden" },
+  previewHeader: { padding: 14, background: "#fff", borderBottom: "1px solid #e2e5e3", display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" },
   h2: { margin: 0, color: "#176b3a", fontSize: 18 },
   muted: { margin: "5px 0 0", color: "#777", fontSize: 13 },
-  pageInfo: { padding: "8px 12px", borderRadius: 999, background: "#f1f5f2", color: "#176b3a", fontSize: 12, fontWeight: 800 },
-  studentGrid: { marginTop: 14, display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 12 },
-  studentBtn: { minHeight: 175, textAlign: "left", border: "1px solid #d9e5dc", borderRadius: 14, padding: 16, background: "#fff", color: "#176b3a", cursor: "pointer", display: "flex", flexDirection: "column", gap: 8, boxShadow: "0 4px 14px rgba(23,107,58,.06)" },
-  studentNumber: { fontSize: 11, fontWeight: 900, letterSpacing: ".05em", color: "#fff", background: "#176b3a", borderRadius: 999, padding: "5px 8px", alignSelf: "flex-start" },
-  studentName: { fontSize: 15, lineHeight: 1.35, color: "#17231b", minHeight: 42 },
-  studentNisn: { fontSize: 12, color: "#777" },
-  studentAction: { marginTop: "auto", fontSize: 12, fontWeight: 900, color: "#176b3a" },
-  emptyStudent: { gridColumn: "1 / -1", padding: 24, textAlign: "center", border: "1px dashed #cbd5ce", borderRadius: 12, color: "#777" },
-  pagination: { marginTop: 16, display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap" },
-  navBtn: { border: "1px solid #176b3a", borderRadius: 10, padding: "10px 16px", background: "#fff", color: "#176b3a", fontWeight: 900, cursor: "pointer" },
-  navBtnDisabled: { opacity: .45, cursor: "not-allowed" },
-  pageCounter: { minWidth: 110, textAlign: "center", fontSize: 12, fontWeight: 900, color: "#555" },
-  studentSearch: { display: "none" },
-  tableWrap: { overflowX: "auto", marginTop: 12 },
-  table: { width: "100%", borderCollapse: "collapse" },
-  th: { textAlign: "left", padding: 11, background: "#f1f5f2", borderBottom: "1px solid #ddd" },
-  td: { padding: 10, borderBottom: "1px solid #eee" },
-  smallBtn: { border: "1px solid #176b3a", borderRadius: 8, padding: "8px 12px", background: "#fff", color: "#176b3a", fontWeight: 800, cursor: "pointer" },
+  previewStudent: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3, fontSize: 12 },
+  pdfFrame: { display: "block", width: "100%", height: "760px", border: 0, background: "#fff" },
+  previewEmpty: { minHeight: 760, display: "grid", placeItems: "center", padding: 30, color: "#777", background: "#fff", textAlign: "center" },
+  controlPanel: { background: "#fff", border: "1px solid #d9dedb", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 10, boxShadow: "0 8px 25px rgba(0,0,0,.05)" },
+  navButtons: { display: "flex", flexDirection: "column", alignItems: "center", gap: 8, paddingBottom: 8 },
+  arrowBtn: { width: 72, height: 42, border: "1px solid #cbd5cf", borderRadius: 8, background: "#f7faf8", color: "#111", fontSize: 20, fontWeight: 900, cursor: "pointer" },
+  studentPosition: { display: "flex", flexDirection: "column", alignItems: "center", gap: 2, fontSize: 12, color: "#176b3a" },
+  panelLabel: { marginTop: 7, fontSize: 11, fontWeight: 900, color: "#555", letterSpacing: ".05em" },
+  panelSelect: { width: "100%", boxSizing: "border-box", padding: "10px 11px", border: "1px solid #cfd8d2", borderRadius: 8, background: "#fff", fontSize: 13 },
+  printBtn: { marginTop: 12, width: "100%", border: 0, borderRadius: 8, padding: "11px 14px", background: "#4f79c9", color: "#fff", fontSize: 16, fontWeight: 900, cursor: "pointer" },
+  printAllBtn: { width: "100%", border: "1px solid #bbb", borderRadius: 8, padding: "11px 14px", background: "#f5f5f5", color: "#222", fontSize: 12, fontWeight: 900, cursor: "pointer" },
+  panelHint: { marginTop: "auto", padding: 10, borderRadius: 9, background: "#f5f8f6", color: "#555", display: "flex", flexDirection: "column", gap: 5, fontSize: 11, lineHeight: 1.45 },
   error: { marginTop: 15, padding: 12, borderRadius: 9, background: "#fff0f0", color: "#a21d1d", fontSize: 14 },
   success: { marginTop: 15, padding: 12, borderRadius: 9, background: "#edf9f0", color: "#176b3a", fontSize: 14 }
 };
