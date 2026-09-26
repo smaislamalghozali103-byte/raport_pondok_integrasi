@@ -1007,7 +1007,7 @@ export default function AdminClient() {
                 <div style={{ background: '#fff', border: '1px solid #dbeafe', borderRadius: 12, padding: 14 }}>
                   <b style={{ fontSize: 14, color: '#1e3a8a' }}>📁 Upload JSON</b>
                   <p style={{ ...S.muted, fontSize: 12, margin: '6px 0 10px' }}>
-                    Bisa memakai format lengkap <code>classes: []</code> atau format singkat <code>{"{ "1A": "SPREADSHEET_ID" }"}</code>.
+                    Bisa memakai format lengkap <code>classes: []</code> atau format singkat <code>{'{ "1A": "SPREADSHEET_ID" }'}</code>.
                   </p>
                   <input
                     type="file"
