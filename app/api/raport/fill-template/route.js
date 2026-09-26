@@ -67,7 +67,6 @@ export async function POST(request) {
         id: d.id,
         name: s.name || s.full_name,
         nisn: s.nisn || "",
-        nis: s.nis || "",
       });
     });
 
@@ -106,7 +105,6 @@ export async function POST(request) {
         studentId: g.studentId,
         name: st?.name || g.studentName || "",
         nisn: st?.nisn || "",
-        nis: st?.nis || "",
         score: g.value,
       });
     });
@@ -130,7 +128,6 @@ export async function POST(request) {
         studentId: st.id,
         name: st.name,
         nisn: st.nisn,
-        nis: st.nis,
         score: "",
       }));
       subjectMappings.push({
