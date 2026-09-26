@@ -321,7 +321,6 @@ export async function POST(request) {
 
       seenClassIds.add(target.id);
 
-      const wasExisting = byId.has(norm(target.id)) || byName.has(norm(target.name));
       const extra = {};
       if (Array.isArray(row.reportSheets)) extra.reportSheets = row.reportSheets.map(clean).filter(Boolean);
       if (clean(row.unit || row.jenjang || row.level)) {
@@ -340,8 +339,7 @@ export async function POST(request) {
         classId: target.id,
         className: target.name || target.id,
         spreadsheetId,
-        sheetName,
-        created: createMissingClasses && !wasExisting
+        sheetName
       });
     }
 
@@ -355,7 +353,6 @@ export async function POST(request) {
       updated,
       skipped,
       errors,
-      createdCount: updated.filter(x => x.created).length,
       mode: lowerName.endsWith('.json') ? 'json' : 'markdown',
       message: updated.length
         ? `${updated.length} kelas berhasil dihubungkan dengan Spreadsheet.`
