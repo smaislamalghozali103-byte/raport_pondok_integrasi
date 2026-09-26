@@ -300,6 +300,29 @@ export default function AdminClient() {
     }
   }
 
+  async function updateTeacherRole(teacher, role, homeroomClassId = teacher.homeroomClassId || '') {
+    try {
+      setBusy(teacher.id);
+      const r = await fetch('/api/admin/teachers', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teacherId: teacher.id,
+          role,
+          homeroomClassId: role === 'wali_kelas' ? homeroomClassId : ''
+        })
+      });
+      const d = await r.json();
+      if (!r.ok || !d.success) throw new Error(d.message || 'Gagal mengubah role guru.');
+      setMsg('Role guru berhasil diperbarui.');
+      await loadData();
+    } catch (e) {
+      setErr(e.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
   async function loadStudents(id) {
     setSelectedClass(id);
     try {
@@ -754,25 +777,72 @@ export default function AdminClient() {
         )}
 
         {tab === 'teachers' && (
-          <Section title="Master Guru">
+          <Section title="Master Guru & Role">
             <Toolbar search={search} setSearch={setSearch} />
-            <table>
-              <thead>
-                <tr><th>ID</th><th>Nama</th><th>Unit</th><th>PIN</th><th>Status</th><th></th></tr>
-              </thead>
-              <tbody>
-                {filtered(data.teachers, ['name', 'unit', 'id']).map(x => (
-                  <tr key={x.id}>
-                    <td>{x.id}</td>
-                    <td>{x.name || '-'}</td>
-                    <td>{x.unit || '-'}</td>
-                    <td>{x.pinConfigured ? 'Sudah dibuat' : 'Belum dibuat'}</td>
-                    <td>{x.status || '-'}</td>
-                    <td><button style={S.sm} onClick={() => toggle('teacher', x)}>Ubah Status</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <p style={{ ...S.muted, fontSize: 13 }}>
+              <b>Guru</b> hanya melihat kelas/mapel yang ditugaskan. <b>Wali Kelas</b> juga memiliki monitoring kelas binaan.
+              <br />Admin tetap menggunakan PIN administrator terpisah di <code>/admin</code>.
+            </p>
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr><th>ID</th><th>Nama</th><th>Unit</th><th>Role</th><th>Kelas Binaan</th><th>PIN</th><th>Status</th><th>Aksi</th></tr>
+                </thead>
+                <tbody>
+                  {filtered(data.teachers, ['name', 'unit', 'id', 'role']).map(x => (
+                    <tr key={x.id}>
+                      <td>{x.id}</td>
+                      <td>{x.name || '-'}</td>
+                      <td>{x.unit || '-'}</td>
+                      <td>
+                        <select
+                          value={x.role === 'wali_kelas' ? 'wali_kelas' : 'guru'}
+                          onChange={e => {
+                            const role = e.target.value;
+                            setData(d => ({
+                              ...d,
+                              teachers: d.teachers.map(t => t.id === x.id ? { ...t, role } : t)
+                            }));
+                          }}
+                          style={S.sm}
+                        >
+                          <option value="guru">Guru</option>
+                          <option value="wali_kelas">Wali Kelas</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          value={x.homeroomClassId || ''}
+                          disabled={x.role !== 'wali_kelas'}
+                          onChange={e => setData(d => ({
+                            ...d,
+                            teachers: d.teachers.map(t => t.id === x.id ? { ...t, homeroomClassId: e.target.value } : t)
+                          }))}
+                          style={{ ...S.sm, minWidth: 180 }}
+                        >
+                          <option value="">-- Pilih kelas --</option>
+                          {data.classes.map(cls => (
+                            <option key={cls.id} value={cls.id}>{cls.name} ({cls.jenjang || cls.unit || '-'})</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>{x.pinConfigured ? 'Sudah dibuat' : 'Belum dibuat'}</td>
+                      <td>{x.status || '-'}</td>
+                      <td>
+                        <button
+                          style={S.sm}
+                          disabled={busy === x.id}
+                          onClick={() => updateTeacherRole(x, x.role === 'wali_kelas' ? 'wali_kelas' : 'guru', x.homeroomClassId || '')}
+                        >
+                          {busy === x.id ? 'Menyimpan…' : 'Simpan Role'}
+                        </button>{' '}
+                        <button style={S.sm} onClick={() => toggle('teacher', x)}>Ubah Status</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </Section>
         )}
 
