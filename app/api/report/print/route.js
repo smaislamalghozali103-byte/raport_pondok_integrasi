@@ -286,15 +286,24 @@ export async function GET(request) {
         return Response.json({ success: false, message: 'Siswa bukan anggota kelas yang dipilih.' }, { status: 400 });
       }
 
-      const foundRow = findStudentRow(valuesResult.values, student);
-      if (foundRow < 0) {
+      const match = findStudentRow(valuesResult.values, student);
+      if (!match) {
         return Response.json({
           success: false,
-          message: 'Nama/NISN siswa tidak ditemukan pada Spreadsheet Raport. Cetak kelas tetap dapat digunakan.'
+          message: 'Nama/NIS/NISN siswa tidak ditemukan pada Spreadsheet Raport. Cetak kelas tetap dapat digunakan.',
+          debug: {
+            namaDicari: clean(student.name || student.fullName),
+            nisDicari: clean(student.nis),
+            nisnDicari: clean(student.nisn),
+            spreadsheetId,
+            sheet: targetSheet.title,
+            rowsChecked: valuesResult.values.length,
+            detectedColumns: detectStudentColumns(valuesResult.values)
+          }
         }, { status: 404 });
       }
 
-      const block = studentBlock(valuesResult.values, foundRow);
+      const block = studentBlock(valuesResult.values, match.rowIndex);
       rowStart = block.start;
       rowEnd = block.end;
       fileLabel = student.name || student.fullName || 'Siswa';
