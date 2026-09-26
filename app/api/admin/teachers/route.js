@@ -22,6 +22,18 @@ export async function PATCH(req) {
   const data = {};
   if (b.status !== undefined) data.status = String(b.status).toUpperCase();
   if (b.name !== undefined) data.name = String(b.name).trim();
+
+  if (b.role !== undefined) {
+    const role = String(b.role).trim().toLowerCase();
+    if (!['guru', 'wali_kelas'].includes(role)) {
+      return Response.json({ success: false, message: 'Role harus guru atau wali_kelas.' }, { status: 400 });
+    }
+    data.role = role;
+  }
+
+  if (b.homeroomClassId !== undefined) {
+    data.homeroomClassId = b.homeroomClassId ? String(b.homeroomClassId).trim() : null;
+  }
   await ref.set({ ...data, updatedAt: new Date(), updatedBy: auth.session.teacherId }, { merge: true });
   return Response.json({ success: true });
 }
