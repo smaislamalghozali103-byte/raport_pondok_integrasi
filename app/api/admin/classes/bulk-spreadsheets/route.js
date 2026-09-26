@@ -193,7 +193,7 @@ export async function POST(request) {
 
     const lowerName = fileName.toLowerCase();
 
-    if (!/\\.(md|json)$/.test(lowerName)) {
+    if (!(lowerName.endsWith('.md') || lowerName.endsWith('.json'))) {
       return Response.json(
         { success: false, message: 'Format harus .json atau .md (Markdown).' },
         { status: 400 }
