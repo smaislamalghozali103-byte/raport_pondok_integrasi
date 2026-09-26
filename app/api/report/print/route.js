@@ -73,13 +73,16 @@ function similarity(a, b) {
 }
 
 function detectStudentColumns(values) {
+  // Format identitas siswa resmi yang dipakai aplikasi:
+  // NO | NAMA | NISN
+  // NIS sengaja TIDAK dipakai sebagai identifier.
   const aliases = {
+    no: ['no', 'nomor', 'no urut', 'nomor urut'],
     nisn: ['nisn', 'n i s n', 'nomor induk siswa nasional', 'no nisn'],
-    nis: ['nis', 'n i s', 'nomor induk siswa', 'no nis'],
     name: ['nama', 'nama siswa', 'nama peserta didik', 'peserta didik', 'siswa']
   };
 
-  const columns = { nisn: [], nis: [], name: [] };
+  const columns = { no: [], nisn: [], name: [] };
   const scanRows = Math.min(values.length, 30);
 
   for (let rowIndex = 0; rowIndex < scanRows; rowIndex++) {
@@ -145,7 +148,6 @@ function cellMatchesFlexibleNumber(cell, wanted) {
 
 function findStudentRow(values, student) {
   const wantedNisn = normDigits(student.nisn);
-  const wantedNis = normDigits(student.nis);
   const wantedName = normalizePersonName(student.name || student.fullName);
   const columns = detectStudentColumns(values);
 
@@ -155,9 +157,7 @@ function findStudentRow(values, student) {
     if (wantedNisn && columns.nisn.some(col => cellMatchesFlexibleNumber(row[col], wantedNisn))) {
       return { rowIndex: i, matchedBy: 'NISN' };
     }
-    if (wantedNis && columns.nis.some(col => cellMatchesFlexibleNumber(row[col], wantedNis))) {
-      return { rowIndex: i, matchedBy: 'NIS' };
-    }
+
   }
 
   // 2. Nama exact pada kolom yang terdeteksi.
@@ -176,9 +176,7 @@ function findStudentRow(values, student) {
     if (wantedNisn && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNisn))) {
       return { rowIndex: i, matchedBy: 'NISN_FALLBACK' };
     }
-    if (wantedNis && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNis))) {
-      return { rowIndex: i, matchedBy: 'NIS_FALLBACK' };
-    }
+
   }
 
   if (!wantedName) return null;
@@ -395,7 +393,6 @@ function sameStudentName(a, b) {
 
 function findSelectorValueInRekap(values, student) {
   const wantedNisn = normDigits(student.nisn);
-  const wantedNis = normDigits(student.nis);
   const wantedName = normalizePersonName(student.name || student.fullName);
 
   for (let i = 0; i < values.length; i++) {
@@ -403,8 +400,7 @@ function findSelectorValueInRekap(values, student) {
     const rowName = normalizePersonName(rowText(row));
 
     const numberMatch =
-      (wantedNisn && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNisn))) ||
-      (wantedNis && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNis)));
+      wantedNisn && row.some(cell => cellMatchesFlexibleNumber(cell, wantedNisn));
 
     const nameMatch = wantedName && (
       sameStudentName(rowName, wantedName) ||
@@ -413,7 +409,10 @@ function findSelectorValueInRekap(values, student) {
 
     if (!numberMatch && !nameMatch) continue;
 
-    const selector = row[0];
+    // Kolom NO adalah nomor urut siswa dan menjadi selector I18.
+    // Jika kolom pertama berisi NO, gunakan langsung.
+    const noColumn = detectStudentColumns(values).no[0];
+    const selector = noColumn != null ? row[noColumn] : row[0];
     const numericSelector = Number(selector);
     if (Number.isFinite(numericSelector) && numericSelector > 0) {
       return numericSelector;
