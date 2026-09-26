@@ -13,6 +13,15 @@ export default function ReportPrintPage() {
   const [printing, setPrinting] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [studentPage, setStudentPage] = useState(0);
+  const STUDENTS_PER_PAGE = 4;
+
+  const students = selectedClass?.students || [];
+  const totalStudentPages = Math.max(1, Math.ceil(students.length / STUDENTS_PER_PAGE));
+  const visibleStudents = students.slice(
+    studentPage * STUDENTS_PER_PAGE,
+    studentPage * STUDENTS_PER_PAGE + STUDENTS_PER_PAGE
+  );
 
   const selectedClass = useMemo(
     () => classes.find(c => c.id === classId),
@@ -145,7 +154,7 @@ export default function ReportPrintPage() {
         {message && <div style={styles.success}>{message}</div>}
 
         <label style={styles.label}>Pilih Kelas</label>
-        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setError(""); }} style={styles.select}>
+        <select value={classId} onChange={e => { setClassId(e.target.value); setStudentId(""); setStudentPage(0); setError(""); }} style={styles.select}>
           <option value="">Pilih kelas…</option>
           {classes.map(c => (
             <option key={c.id} value={c.id}>
