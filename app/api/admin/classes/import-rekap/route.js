@@ -28,16 +28,16 @@ export async function POST(request){
 
     const writes=[];
     for(const s of layout.students){
-      const nisn=clean(s.nisn), nis=clean(s.nis), name=clean(s.name);
+      const no=clean(s.no), nisn=clean(s.nisn), name=clean(s.name);
       if(!name) continue;
       const key=nisn?`nisn__${normalize(nisn)}`:(nis?`nis__${normalize(nis)}`:`name__${normalize(name)}`);
       const ref=db.collection('students').doc(`${classId}__${key}`.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,140));
-      writes.push({ref,data:{classId,schoolYear,name,fullName:name,nisn:nisn||null,nis:nis||null,status:'AKTIF',rekapRow:s.row+1,updatedAt:new Date()}});
+      writes.push({ref,data:{classId,schoolYear,no:no||null,name,fullName:name,nisn:nisn||null,status:'AKTIF',rekapRow:s.row+1,updatedAt:new Date()}});
     }
     for(let i=0;i<writes.length;i+=400){const b=db.batch();for(const x of writes.slice(i,i+400))b.set(x.ref,x.data,{merge:true});await b.commit();}
 
     const layoutRef=db.collection('rekap_layouts').doc(`${classId}__${schoolYear}__${sheetName}`.replace(/[^a-zA-Z0-9_-]/g,'_'));
-    await layoutRef.set({classId,schoolYear,sheetName,headerRow:layout.headerRow,nameColumn:layout.nameColumn,idColumn:layout.idColumn,nisColumn:layout.nisColumn??-1,subjectMapping:layout.subjectColumns,studentRowMapping:layout.students,status:'DETECTED',detectedAt:new Date(),spreadsheetId:resolvedId},{merge:true});
+    await layoutRef.set({classId,schoolYear,sheetName,headerRow:layout.headerRow,noColumn:layout.noColumn??-1,nameColumn:layout.nameColumn,idColumn:layout.idColumn,subjectMapping:layout.subjectColumns,studentRowMapping:layout.students,status:'DETECTED',detectedAt:new Date(),spreadsheetId:resolvedId},{merge:true});
     await classRef.set({spreadsheetId:resolvedId,spreadsheetSheet:sheetName,schoolYear,updatedAt:new Date()},{merge:true});
     return Response.json({success:true,spreadsheetId:resolvedId,class:cls.name||classId,studentsImported:writes.length,headerRow:layout.headerRow+1,subjectsDetected:Object.keys(layout.subjectColumns).length});
   }catch(err){console.error('IMPORT REKAP ERROR',err);return Response.json({success:false,message:err?.message||'Gagal impor Rekap.'},{status:500});}
