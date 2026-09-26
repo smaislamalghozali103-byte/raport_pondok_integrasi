@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "schoolYear": "2026/2027",
+  "source": "Uploaded master TS files in this conversation",
+  "canonicalRuntime": "lib/master-registry.js",
+  "identity": [
+    "NO",
+    "NAMA",
+    "NISN",
+    "classId",
+    "className",
+    "unit"
+  ],
+  "counts": {
+    "students": 818,
+    "uniqueTeachers": 182,
+    "teacherAssignments": 1119,
+    "teachingSchedule": 1119,
+    "waliKelas": 43,
+    "subjectCatalogEntries": 87,
+    "studentClassIds": 43
+  },
+  "sourceFiles": [
+    "data/master-source/masterStudents.ts",
+    "data/master-source/masterStudents2SMP.ts",
+    "data/master-source/masterStudents3SMP.ts",
+    "data/master-source/masterStudents1Intensif.ts",
+    "data/master-source/masterStudents2Intensif.ts",
+    "data/master-source/masterStudents3Intensif.ts",
+    "data/master-source/masterStudents4SMA.ts",
+    "data/master-source/masterStudents5SMA.ts",
+    "data/master-source/masterStudents6SMA.ts",
+    "data/master-source/masterStudentsFullDay.ts",
+    "data/master-source/masterTeachingSchedule.ts",
+    "data/master-source/teacherAssignmentsRekap.ts",
+    "data/master-source/teacherAssignmentsSMARekap.ts",
+    "data/master-source/curriculumSubjects.ts",
+    "data/master-source/waliKelasDatabase.ts",
+    "data/master-source/teacherSubjectsDatabase.ts",
+    "data/master-source/initialData.ts",
+    "data/master-source/reportDesign.ts"
+  ],
+  "notes": [
+    "Student application identity is NO/NAMA/NISN; NIS from the Full Day source is not used as the application identity.",
+    "The uploaded source terminology is preserved; data is synchronized into APP_DB by the admin system sync.",
+    "No synthetic/sample student records are created by the new master sync."
+  ]
+}
