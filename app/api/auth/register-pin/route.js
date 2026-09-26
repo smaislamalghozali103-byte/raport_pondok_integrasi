@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { db } from '@/lib/firebase-admin';
+import crypto from 'crypto';
 import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/auth-session';
 
 export async function POST(req) {
@@ -9,6 +10,7 @@ export async function POST(req) {
     const id = String(body.teacherId || '').trim();
     const p = String(body.pin || '').trim();
     const c = String(body.confirmPin || body.pinConfirm || '').trim();
+    const setupToken = String(body.setupToken || '').trim();
 
     if (!id) {
       return Response.json({ success: false, message: 'Guru belum dipilih.' }, { status: 400 });
@@ -28,6 +30,26 @@ export async function POST(req) {
     }
 
     const teacher = snap.data();
+
+    if (!setupToken) {
+      return Response.json({
+        success: false,
+        message: 'Kode aktivasi PIN wajib dimasukkan. Minta kode aktivasi kepada administrator.'
+      }, { status: 403 });
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(setupToken).digest('hex');
+    const storedHash = String(teacher.pinSetupTokenHash || '');
+    const expiresAt = teacher.pinSetupTokenExpiresAt?.toDate
+      ? teacher.pinSetupTokenExpiresAt.toDate()
+      : (teacher.pinSetupTokenExpiresAt ? new Date(teacher.pinSetupTokenExpiresAt) : null);
+
+    if (!storedHash || !crypto.timingSafeEqual(Buffer.from(tokenHash), Buffer.from(storedHash.padEnd(tokenHash.length, '0').slice(0, tokenHash.length))) || !expiresAt || Number.isNaN(expiresAt.getTime()) || expiresAt.getTime() <= Date.now()) {
+      return Response.json({
+        success: false,
+        message: 'Kode aktivasi PIN tidak valid atau sudah kedaluwarsa.'
+      }, { status: 403 });
+    }
 
     const configuredAdminIds = String(process.env.ADMIN_TEACHER_IDS || '')
       .split(',')
@@ -67,6 +89,9 @@ export async function POST(req) {
       pinHash,
       pinConfigured: true,
       pinCreatedAt: new Date(),
+      pinSetupTokenHash: null,
+      pinSetupTokenExpiresAt: null,
+      pinSetupTokenCreatedAt: null,
       updatedAt: new Date()
     });
 
