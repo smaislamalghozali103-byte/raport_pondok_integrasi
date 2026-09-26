@@ -71,12 +71,39 @@ export default function ReportPrintPage() {
   }
 
   async function exportPdfClass() {
-    setPrinting("class");
+    if (!classId) {
+      setError("Pilih kelas terlebih dahulu.");
+      return;
+    }
+
+    setPrinting("pdf");
     setError("");
     try {
-      openPrint("class");
+      const params = new URLSearchParams({ classId, mode: "class" });
+      const r = await fetch("/api/report/print?" + params.toString(), {
+        cache: "no-store",
+        credentials: "include"
+      });
+
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        throw new Error(d.message || "Gagal export PDF.");
+      }
+
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Raport_${(selectedClass?.name || "Kelas").replace(/[^a-zA-Z0-9_-]+/g, "_")}_1_Kelas.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setMessage("✓ PDF satu kelas berhasil diekspor.");
+    } catch (e) {
+      setError(e.message || "Gagal export PDF.");
     } finally {
-      setTimeout(() => setPrinting(""), 800);
+      setPrinting("");
     }
   }
 
@@ -145,7 +172,7 @@ export default function ReportPrintPage() {
               </button>
               <button
                 onClick={exportPdfClass}
-                disabled={printing === "class" || !selectedClass.spreadsheetId}
+                disabled={printing === "pdf" || !selectedClass.spreadsheetId}
                 style={styles.pdf}
               >
                 📄 EXPORT TO PDF
