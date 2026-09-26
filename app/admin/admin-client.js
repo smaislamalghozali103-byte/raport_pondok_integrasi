@@ -10,7 +10,8 @@ const tabs = [
   ['teachers', 'Guru'],
   ['subjects', 'Mapel'],
   ['students', 'Siswa'],
-  ['monitoring', 'Monitoring']
+  ['monitoring', 'Monitoring'],
+  ['print', '🖨️ Cetak Raport']
 ];
 
 export default function AdminClient() {
@@ -482,6 +483,25 @@ export default function AdminClient() {
             </button>
           ))}
         </nav>
+
+        {tab === 'print' && (
+          <Section title="Ruang Cetak Raport">
+            <div style={{ ...S.card, background: '#f0f7f2', border: '1px solid #dbe7df', boxShadow: 'none' }}>
+              <h3 style={{ ...S.h2, marginTop: 0 }}>🖨️ Cetak Raport Asli</h3>
+              <p style={{ ...S.muted, lineHeight: 1.6 }}>
+                Buka ruang cetak khusus untuk memilih kelas dan siswa. Raport diekspor langsung dari
+                Google Spreadsheet yang terhubung, sehingga tampilan raport asli tetap dipertahankan.
+              </p>
+              <button
+                type="button"
+                style={S.btn}
+                onClick={() => router.push('/report-print')}
+              >
+                BUKA RUANG CETAK RAPORT
+              </button>
+            </div>
+          </Section>
+        )}
 
         {tab === 'overview' && (
           <div style={S.grid}>
