@@ -792,7 +792,7 @@ export default function AdminClient() {
                               <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>Baris Excel</th>
                               <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>Nama Santri</th>
                               <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>NISN</th>
-                              <th style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>NIS</th>
+                              
                             </tr>
                           </thead>
                           <tbody>
@@ -801,7 +801,7 @@ export default function AdminClient() {
                                 <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.row}</td>
                                 <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1', fontWeight: 600 }}>{st.name}</td>
                                 <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.nisn || '-'}</td>
-                                <td style={{ padding: '6px 10px', border: '1px solid #cbd5e1' }}>{st.nis || '-'}</td>
+                                
                               </tr>
                             ))}
                           </tbody>
@@ -1175,7 +1175,7 @@ export default function AdminClient() {
             {selectedClass && (
               <table>
                 <thead>
-                  <tr><th>No</th><th>NISN</th><th>NIS</th><th>Nama</th><th>Baris Rekap</th></tr>
+                  <tr><th>No</th><th>Nama</th><th>NISN</th><th>Baris Rekap</th></tr>
                 </thead>
                 <tbody>
                   {students.map((x, i) => (
