@@ -151,7 +151,44 @@ function findStudentRow(values, student) {
     }
   }
 
-  // 5. Fallback nama: toleransi tanda baca, spasi, dan typo kecil.
+  // 5. Template RAPORT/RAPOT sering tidak memiliki header NAMA/NISN.
+  // Cari nama langsung di seluruh isi sheet, termasuk jika nama berada
+  // setelah label seperti "الاسم كامل :" atau terpecah di beberapa sel.
+  if (wantedName) {
+    const wantedTokens = wantedName.split(' ').filter(token => token.length >= 2);
+
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i] || [];
+      const rowNorm = norm(rowText(row));
+
+      // Nama lengkap muncul sebagai bagian dari satu sel/baris.
+      if (rowNorm.includes(wantedName)) {
+        return { rowIndex: i, matchedBy: 'NAMA_IN_CONTENT' };
+      }
+
+      // Nama bisa terpecah menjadi beberapa sel pada baris yang sama.
+      if (wantedTokens.length >= 2 && wantedTokens.every(token => rowNorm.includes(token))) {
+        return { rowIndex: i, matchedBy: 'NAMA_TOKENS_ROW' };
+      }
+
+      // Beberapa template menulis "label : nama". Ambil bagian setelah
+      // pemisah agar label Arab/Indonesia tidak menurunkan skor similarity.
+      for (const cell of row) {
+        const raw = clean(cell);
+        if (!raw) continue;
+
+        const parts = raw.split(/[:：=|]/).map(part => clean(part)).filter(Boolean);
+        for (const part of parts) {
+          const value = norm(part);
+          if (value === wantedName || value.includes(wantedName)) {
+            return { rowIndex: i, matchedBy: 'NAMA_LABEL_VALUE' };
+          }
+        }
+      }
+    }
+  }
+
+  // 6. Fallback nama: toleransi tanda baca, spasi, dan typo kecil.
   if (wantedName) {
     let best = { rowIndex: -1, score: 0 };
     const candidateColumns = columns.name.length ? columns.name : null;
