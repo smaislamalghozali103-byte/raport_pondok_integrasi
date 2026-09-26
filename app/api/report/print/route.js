@@ -546,10 +546,23 @@ export async function GET(request) {
       })
     );
 
+    // Sheet Rapot adalah template raport satu siswa. Jangan memotongnya
+    // mulai dari baris tempat nama ditemukan karena bagian kop, identitas,
+    // tanda tangan, wali kelas, dan mudir dapat berada sebelum/sesudah baris itu.
+    // Validasi siswa tetap dilakukan, tetapi PDF memakai seluruh area terisi.
+    const usedRowCount = Math.max(
+      valuesResult.values.length,
+      ...valuesResult.values.map((row, index) => row && row.some(cell => clean(cell)) ? index + 1 : 0),
+      1
+    );
+
+    const exportRowStart = mode === "student" ? 0 : rowStart;
+    const exportRowEnd = mode === "student" ? usedRowCount : rowEnd;
+
     const pdf = await exportSheetPdf(spreadsheetId, {
       sheetName: targetSheet.title,
-      rowStart,
-      rowEnd,
+      rowStart: exportRowStart,
+      rowEnd: exportRowEnd,
       colStart: 0,
       colEnd: Math.min(
         Number(targetSheet.gridProperties?.columnCount || usedColumnCount),
