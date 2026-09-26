@@ -75,21 +75,88 @@ function parseMarkdownRows(text) {
   return rows;
 }
 
-function extractRows(buffer, fileName) {
-  if (String(fileName).toLowerCase().endsWith('.md')) {
-    return { workbook: null, rows: parseMarkdownRows(buffer.toString('utf8')) };
-  }
+function parseJsonMappings(text) {
+  const parsed = JSON.parse(String(text || ''));
+  const root = Array.isArray(parsed) ? { classes: parsed } : (parsed || {});
+  const createMissingClasses = root.createMissingClasses === true;
+  const source = Array.isArray(root.classes)
+    ? root.classes
+    : Object.entries(root.classes || root).filter(([key]) =>
+        !['schoolYear', 'semester', 'createMissingClasses', 'metadata'].includes(key)
+      ).map(([classId, value]) => ({
+        classId,
+        className: classId,
+        ...(typeof value === 'string' ? { spreadsheetId: value } : (value || {}))
+      }));
 
-  const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: false });
+  const rows = source.map((item, index) => ({
+    ...item,
+    __jsonIndex: index,
+    KELAS: item.classId ?? item.id ?? item.code ?? item.className ?? item.name ?? '',
+    'SPREADSHEET ID': item.spreadsheetId ?? item.spreadsheetUrl ?? item.spreadsheet ?? item.url ?? '',
+    SHEET: item.spreadsheetSheet ?? item.sheet ?? item.sheetName ?? 'Rekap',
+    UNIT: item.unit ?? item.jenjang ?? '',
+    JENJANG: item.jenjang ?? item.level ?? item.unit ?? ''
+  }));
+
+  return { rows, createMissingClasses };
+}
+
+function parseMarkdownRows(text) {
+  const lines = String(text || '').replace(/\r/g, '').split('\n');
   const rows = [];
+  let headers = null;
 
-  for (const sheetName of workbook.SheetNames) {
-    const sheet = workbook.Sheets[sheetName];
-    const values = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
-    for (const row of values) rows.push({ ...row, __sourceSheet: sheetName });
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line || !line.includes('|')) continue;
+
+    const cells = line
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map(v => v.trim());
+
+    if (cells.length < 2) continue;
+    if (cells.every(v => /^:?-{3,}:?$/.test(v))) continue;
+
+    if (!headers) {
+      headers = cells;
+      continue;
+    }
+
+    const row = {};
+    headers.forEach((header, i) => {
+      row[header] = cells[i] || '';
+    });
+    rows.push(row);
   }
 
-  return { workbook, rows };
+  if (!rows.length) {
+    let current = {};
+    for (const rawLine of lines) {
+      const m = rawLine.match(/^\s*[-*]?\s*(KELAS|SPREADSHEET(?:\s+ID|_ID)?|SPREADSHEET|SHEET)\s*:\s*(.+?)\s*$/i);
+      if (!m) continue;
+      current[m[1]] = m[2];
+      if (current.KELAS && (current['SPREADSHEET ID'] || current.SPREADSHEET || current.SPREADSHEET_ID)) {
+        rows.push({ ...current });
+        current = {};
+      }
+    }
+  }
+
+  return rows;
+}
+
+function extractRows(buffer, fileName) {
+  const lower = String(fileName || '').toLowerCase();
+  if (lower.endsWith('.json')) {
+    return { workbook: null, ...parseJsonMappings(buffer.toString('utf8')) };
+  }
+  if (lower.endsWith('.md')) {
+    return { workbook: null, rows: parseMarkdownRows(buffer.toString('utf8')), createMissingClasses: false };
+  }
+  throw new Error('Format harus .json atau .md.');
 }
 
 export async function POST(request) {
@@ -115,9 +182,9 @@ export async function POST(request) {
     const fileName = clean(file.name || 'spreadsheet-mapping.xlsx');
     const lowerName = fileName.toLowerCase();
 
-    if (!/\\.md$/.test(lowerName)) {
+    if (!/\\.(md|json)$/.test(lowerName)) {
       return Response.json(
-        { success: false, message: 'Format harus .md (Markdown).' },
+        { success: false, message: 'Format harus .json atau .md (Markdown).' },
         { status: 400 }
       );
     }
@@ -130,7 +197,13 @@ export async function POST(request) {
       );
     }
 
-    const { rows } = extractRows(buffer, fileName);
+    let extracted;
+    try {
+      extracted = extractRows(buffer, fileName);
+    } catch (parseError) {
+      return Response.json({ success: false, message: `Format mapping tidak valid: ${parseError.message}` }, { status: 400 });
+    }
+    const { rows, createMissingClasses } = extracted;
 
     if (!rows.length) {
       return Response.json(
@@ -195,15 +268,44 @@ export async function POST(request) {
         continue;
       }
 
-      const target =
+      let target =
         byId.get(norm(classValue)) ||
         byName.get(norm(classValue));
+
+      if (!target && createMissingClasses) {
+        const classId = clean(row.classId || row.id || classValue);
+        const className = clean(row.className || row.name || classValue);
+        if (!/^[A-Za-z0-9._-]+$/.test(classId)) {
+          errors.push({
+            row: index + 2,
+            class: classValue,
+            reason: 'ID kelas baru hanya boleh berisi huruf, angka, titik, garis bawah, atau tanda hubung.'
+          });
+          continue;
+        }
+        const newRef = db.collection('classes').doc(classId);
+        const newData = {
+          name: className,
+          code: clean(row.code || classId),
+          jenjang: clean(row.jenjang || row.level || row.unit || ''),
+          unit: clean(row.unit || row.jenjang || ''),
+          status: 'AKTIF',
+          createdAt: new Date(),
+          createdBy: auth.session.teacherId,
+          updatedAt: new Date(),
+          updatedBy: auth.session.teacherId
+        };
+        await newRef.set(newData, { merge: true });
+        target = { id: classId, ...newData };
+        byId.set(norm(classId), target);
+        byName.set(norm(className), target);
+      }
 
       if (!target) {
         skipped.push({
           row: index + 2,
           class: classValue,
-          reason: 'Kelas tidak ditemukan di master kelas.'
+          reason: 'Kelas tidak ditemukan di master kelas. Gunakan createMissingClasses: true untuk membuat kelas baru.'
         });
         continue;
       }
@@ -219,9 +321,17 @@ export async function POST(request) {
 
       seenClassIds.add(target.id);
 
+      const wasExisting = byId.has(norm(target.id)) || byName.has(norm(target.name));
+      const extra = {};
+      if (Array.isArray(row.reportSheets)) extra.reportSheets = row.reportSheets.map(clean).filter(Boolean);
+      if (clean(row.unit || row.jenjang || row.level)) {
+        extra.unit = clean(row.unit || row.jenjang || row.level);
+        extra.jenjang = clean(row.jenjang || row.level || row.unit);
+      }
       await db.collection('classes').doc(target.id).set({
         spreadsheetId,
         spreadsheetSheet: sheetName,
+        ...extra,
         updatedAt: new Date(),
         updatedBy: auth.session.teacherId
       }, { merge: true });
@@ -230,7 +340,8 @@ export async function POST(request) {
         classId: target.id,
         className: target.name || target.id,
         spreadsheetId,
-        sheetName
+        sheetName,
+        created: createMissingClasses && !wasExisting
       });
     }
 
@@ -244,6 +355,8 @@ export async function POST(request) {
       updated,
       skipped,
       errors,
+      createdCount: updated.filter(x => x.created).length,
+      mode: lowerName.endsWith('.json') ? 'json' : 'markdown',
       message: updated.length
         ? `${updated.length} kelas berhasil dihubungkan dengan Spreadsheet.`
         : 'Tidak ada kelas yang berhasil diperbarui.'
