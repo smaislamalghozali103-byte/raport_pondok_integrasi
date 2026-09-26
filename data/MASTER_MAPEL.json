@@ -1,0 +1,173 @@
+{
+  "MASTER_MAPEL": {
+    "KELAS_1_VII_SMP": {
+      "nama_kelompok": "KELAS 1 (VII SMP)",
+      "jumlah_mapel": 21,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Mutholaah", "Aqidah", "Hadist", "Fiqih",
+        "Tarikh Islam", "Tajwid", "Imla", "Khot", "Mahfudzot",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
+        "Pendidikan Kewarganegaraan", "Informatika",
+        "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
+      ],
+      "kelas": ["1A","1B","1D","1E"]
+    },
+    "KELAS_2_VIII_SMP": {
+      "nama_kelompok": "KELAS 2 (VIII SMP)",
+      "jumlah_mapel": 22,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Nahwu", "Mutholaah", "Aqidah", "Hadist", "Fiqih",
+        "Tarikh Islam", "Tajwid", "Imla", "Khot", "Mahfudzot",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
+        "Pendidikan Kewarganegaraan", "Informatika",
+        "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
+      ],
+      "kelas": ["2A","2B","2C","2D","2E","2F"]
+    },
+    "KELAS_3_IX_SMP": {
+      "nama_kelompok": "KELAS 3 (IX SMP)",
+      "jumlah_mapel": 21,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Nahwu", "Shorof", "Muthola'ah", "Insya", "Hadist",
+        "Fiqih", "Faroid", "Imla", "Khot", "Pendidikan Agama Islam",
+        "Bahasa Indonesia", "Bahasa Inggris", "Matematika",
+        "Ilmu Pengetahuan Alam", "Ilmu Pengetahuan Sosial",
+        "Pendidikan Kewarganegaraan", "Informatika",
+        "Pendidikan Jasmani dan Kesehatan", "Seni Budaya", "Bahasa Sunda"
+      ],
+      "kelas": ["3A","3B","3C","3D","3E","3F"]
+    },
+    "KELAS_4_10_SMA": {
+      "nama_kelompok": "KELAS 4 (10 SMA)",
+      "jumlah_mapel": 26,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Nahwu", "Shorof", "Muthola'ah", "Insya", "Tafsir",
+        "Tarbiyah", "Grammar", "Hadist", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Fisika", "Kimia", "Biologi", "Ekonomi", "Geografi",
+        "Sosiologi", "Pendidikan Kewarganegaraan", "Sejarah",
+        "Pendidikan Jasmani dan Kesehatan", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["4A","4B","4C"]
+    },
+    "KELAS_5A_5C_11_SMA_IPA": {
+      "nama_kelompok": "KELAS 5A+5C IPA (11 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Hadist", "Mustholahul Hadist", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Matematika Tingkat Lanjut", "Fisika", "Kimia", "Biologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["5A","5C"]
+    },
+    "KELAS_5B_5D_11_SMA_IPS": {
+      "nama_kelompok": "KELAS 5B+5D IPS (11 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Hadist", "Mustholahul Hadist", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Antropologi", "Ekonomi", "Geografi", "Sosiologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["5B","5D"]
+    },
+    "KELAS_6A_6C_12_SMA_IPA": {
+      "nama_kelompok": "KELAS 6A+6C IPA (12 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Balagoh", "Ulumul Qur'an", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Matematika Tingkat Lanjut", "Fisika", "Kimia", "Biologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["6A","6C"]
+    },
+    "KELAS_6B_6D_12_SMA_IPS": {
+      "nama_kelompok": "KELAS 6B+6D IPS (12 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Balagoh", "Ulumul Qur'an", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Antropologi", "Ekonomi", "Geografi", "Sosiologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["6B","6D"]
+    },
+    "KELAS_1INT_10_SMA": {
+      "nama_kelompok": "KELAS 1INT (10 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Mutholaah", "Aqidah", "Hadist", "Fiqih",
+        "Tarikh Islam", "Tajwid", "Imla", "Khot", "Mahfudzot",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Fisika", "Kimia", "Biologi", "Ekonomi", "Geografi",
+        "Sosiologi", "Pendidikan Kewarganegaraan", "Sejarah",
+        "Pendidikan Jasmani dan Kesehatan", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["1INTA"]
+    },
+    "KELAS_2INTA_11_SMA_IPA": {
+      "nama_kelompok": "KELAS 2INT A-IPA (11 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Nahwu", "Shorof", "Muthola'ah", "Insya", "Tafsir",
+        "Tarbiyah", "Grammar", "Hadist", "Fiqih", "Imla",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Matematika Tingkat Lanjut", "Fisika", "Kimia", "Biologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["2INTA"]
+    },
+    "KELAS_2INTB_11_SMA_IPS": {
+      "nama_kelompok": "KELAS 2INT B-IPS (11 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Tamrin Lughoh", "Nahwu", "Shorof", "Muthola'ah", "Insya", "Tafsir",
+        "Tarbiyah", "Grammar", "Hadist", "Fiqih", "Imla",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Antropologi", "Ekonomi", "Geografi", "Sosiologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["2INTB"]
+    },
+    "KELAS_3INTA_12_SMA_IPA": {
+      "nama_kelompok": "KELAS 3INT A-IPA (12 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Mustholahul Hadist", "Ulumul Qur'an", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Matematika Tingkat Lanjut", "Fisika", "Kimia", "Biologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["3INTA"]
+    },
+    "KELAS_3INTB_12_SMA_IPS": {
+      "nama_kelompok": "KELAS 3INT B-IPS (12 SMA)",
+      "jumlah_mapel": 25,
+      "mata_pelajaran": [
+        "Insya", "Nahwu", "Shorof", "Muthola'ah", "Tafsir", "Tarbiyah",
+        "Grammar", "Mustholahul Hadist", "Ulumul Qur'an", "Fiqih", "Ushul Fiqh",
+        "Pendidikan Agama Islam", "Bahasa Indonesia", "Bahasa Inggris",
+        "Matematika", "Antropologi", "Ekonomi", "Geografi", "Sosiologi",
+        "Pendidikan Kewarganegaraan", "Sejarah", "Pendidikan Jasmani dan Kesehatan",
+        "Informatika", "Life Skill", "Bahasa Sunda"
+      ],
+      "kelas": ["3INTB"]
+    }
+  }
+}
