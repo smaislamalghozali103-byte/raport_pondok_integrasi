@@ -16,13 +16,13 @@ export default function ReportPrintPage() {
   const [studentPage, setStudentPage] = useState(0);
   const [previewKey, setPreviewKey] = useState(0);
 
-  const students = selectedClass?.students || [];
-  const activeStudent = students[studentPage] || null;
-
   const selectedClass = useMemo(
     () => classes.find(c => c.id === classId),
     [classes, classId]
   );
+
+  const students = selectedClass?.students || [];
+  const activeStudent = students[studentPage] || null;
 
   useEffect(() => {
     load();
