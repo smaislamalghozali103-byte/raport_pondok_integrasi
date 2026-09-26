@@ -41,6 +41,7 @@ export default function AdminClient() {
   const [adminPin, setAdminPin] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [authErr, setAuthErr] = useState('');
+  const [pinSetupCode, setPinSetupCode] = useState(null);
 
   useEffect(() => {
     checkAdminAuth();
@@ -361,6 +362,32 @@ export default function AdminClient() {
       await loadData();
     } catch (e) {
       setErr(e.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function generateTeacherPinSetupCode(teacher) {
+    try {
+      setBusy('pin-' + teacher.id);
+      setPinSetupCode(null);
+      setErr('');
+
+      const r = await fetch('/api/admin/teachers/pin-setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ teacherId: teacher.id })
+      });
+      const d = await r.json();
+
+      if (!r.ok || !d.success) {
+        throw new Error(d.message || 'Gagal membuat kode aktivasi PIN.');
+      }
+
+      setPinSetupCode(d);
+      setMsg('Kode aktivasi PIN berhasil dibuat. Berikan kode tersebut kepada guru.');
+    } catch (e) {
+      setErr(e.message || 'Gagal membuat kode aktivasi PIN.');
     } finally {
       setBusy('');
     }
@@ -880,6 +907,30 @@ export default function AdminClient() {
 
         {tab === 'teachers' && (
           <Section title="Master Guru & Role">
+            {pinSetupCode && (
+              <div style={{ ...S.card, background: '#fffbeb', border: '1px solid #f59e0b', boxShadow: 'none', marginBottom: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#92400e' }}>🔑 Kode Aktivasi PIN Guru</div>
+                    <div style={{ marginTop: 6, fontSize: 13, color: '#78350f' }}>
+                      {pinSetupCode.teacherName} • berlaku sampai {new Date(pinSetupCode.expiresAt).toLocaleString('id-ID')}
+                    </div>
+                    <code style={{ display: 'inline-block', marginTop: 10, padding: '10px 14px', background: '#fff', border: '1px dashed #d97706', borderRadius: 8, fontSize: 18, fontWeight: 800, letterSpacing: 1 }}>
+                      {pinSetupCode.setupToken}
+                    </code>
+                    <div style={{ marginTop: 8, fontSize: 12, color: '#92400e' }}>
+                      Kode hanya ditampilkan sekarang. Jangan dipasang di GitHub, screenshot publik, atau chat grup terbuka.
+                    </div>
+                  </div>
+                  <button
+                    style={S.sm}
+                    onClick={() => navigator.clipboard?.writeText(pinSetupCode.setupToken)}
+                  >
+                    Salin Kode
+                  </button>
+                </div>
+              </div>
+            )}
             <Toolbar search={search} setSearch={setSearch} />
             <p style={{ ...S.muted, fontSize: 13 }}>
               <b>Guru</b> hanya melihat kelas/mapel yang ditugaskan. <b>Wali Kelas</b> juga memiliki monitoring kelas binaan.
@@ -938,6 +989,15 @@ export default function AdminClient() {
                         >
                           {busy === x.id ? 'Menyimpan…' : 'Simpan Role'}
                         </button>{' '}
+                        {!x.pinConfigured && (
+                          <button
+                            style={S.sm}
+                            disabled={busy === 'pin-' + x.id}
+                            onClick={() => generateTeacherPinSetupCode(x)}
+                          >
+                            {busy === 'pin-' + x.id ? 'Membuat…' : 'Buat Kode PIN'}
+                          </button>
+                        )}{' '}
                         <button style={S.sm} onClick={() => toggle('teacher', x)}>Ubah Status</button>
                       </td>
                     </tr>
