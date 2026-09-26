@@ -10,17 +10,15 @@
     "lint": "next lint",
     "import:database": "node scripts/import-user-database.mjs",
     "import:master": "node scripts/import-master.mjs",
-    "import:master:firebase": "node scripts/import-master-firebase.mjs",
     "backup:config": "node scripts/backup-config.mjs",
     "health": "node scripts/healthcheck.mjs",
-    "preflight": "node scripts/preflight.mjs"
+    "preflight": "node scripts/preflight.mjs",
+    "import:master:sheets": "node scripts/import-master-firebase.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.6.1",
     "exceljs": "^4.4.0",
-    "firebase": "^12.2.1",
-    "firebase-admin": "^13.5.0",
     "googleapis": "^150.0.1",
     "next": "^16.3.6",
     "react": "^19.1.0",
