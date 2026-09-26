@@ -262,9 +262,26 @@ export async function GET(request) {
     }
 
     const meta = await spreadsheetMeta(spreadsheetId);
-    const targetSheet = meta.sheets.find(s => String(s.title) === sheetName) || meta.sheets[0];
-    if (!targetSheet) throw new Error('Sheet raport tidak ditemukan.');
+    const configuredSheetIndex = meta.sheets.findIndex(
+      s => String(s.title).trim().toLowerCase() === sheetName.trim().toLowerCase()
+    );
 
+    // spreadsheetSheet tetap menunjuk ke sheet REKAP sebagai sumber pemetaan.
+    // Untuk cetak raport, gunakan sheet RAPORT yang berada setelah REKAP.
+    // Prioritas:
+    // 1) sheet bernama "Raport" / "Rapor"
+    // 2) sheet setelah sheet REKAP
+    // 3) sheet konfigurasi jika tidak ada alternatif.
+    const reportSheet =
+      meta.sheets.find(s => /^(raport|rapor)$/i.test(String(s.title).trim())) ||
+      (configuredSheetIndex >= 0 ? meta.sheets[configuredSheetIndex + 1] : null) ||
+      meta.sheets.find(s => /raport|rapor/i.test(String(s.title))) ||
+      (configuredSheetIndex >= 0 ? meta.sheets[configuredSheetIndex] : null) ||
+      meta.sheets[0];
+
+    if (!reportSheet) throw new Error('Sheet raport tidak ditemukan.');
+
+    const targetSheet = reportSheet;
     const valuesResult = await readSheet(spreadsheetId, targetSheet.title, 'A:ZZ');
     let rowStart = 0;
     let rowEnd = Number(targetSheet.gridProperties?.rowCount || valuesResult.values.length || 1000);
@@ -296,7 +313,7 @@ export async function GET(request) {
             nisDicari: clean(student.nis),
             nisnDicari: clean(student.nisn),
             spreadsheetId,
-            sheet: targetSheet.title,
+            sheet: targetSheet.title,\n            configuredSheet: sheetName,\n            configuredSheetIndex,
             rowsChecked: valuesResult.values.length,
             detectedColumns: detectStudentColumns(valuesResult.values)
           }
