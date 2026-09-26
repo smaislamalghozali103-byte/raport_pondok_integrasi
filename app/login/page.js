@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [setup, setSetup] = useState(false);
+  const selectedTeacher = teachers.find(t => t.id === teacherId);
 
   useEffect(() => {
     fetch('/api/auth/teachers')
@@ -128,10 +129,26 @@ export default function LoginPage() {
             <select id="teacher" value={teacherId} onChange={handleTeacherChange} required>
               <option value="">Pilih nama guru</option>
               {teachers.map(t => (
-                <option key={t.id} value={t.id}>{t.name}</option>
+                <option key={t.id} value={t.id}>
+                  {t.name} — {t.role === 'wali_kelas' ? 'Wali Kelas' : 'Guru'}
+                </option>
               ))}
             </select>
           </div>
+
+          {selectedTeacher && (
+            <div style={{
+              margin: '0 0 12px',
+              padding: '8px 12px',
+              borderRadius: 8,
+              background: selectedTeacher.role === 'wali_kelas' ? '#fff7ed' : '#eff6ff',
+              color: selectedTeacher.role === 'wali_kelas' ? '#9a3412' : '#1d4ed8',
+              fontSize: 13,
+              fontWeight: 700
+            }}>
+              Peran: {selectedTeacher.role === 'wali_kelas' ? 'Wali Kelas' : 'Guru'}
+            </div>
+          )}
 
           <label htmlFor="pin">{setup ? 'PIN Baru' : 'PIN'}</label>
           <div className={styles.inputWrap}>
