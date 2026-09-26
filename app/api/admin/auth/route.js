@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { clientIp } from '@/lib/security';
+import { clientIp, safeEqual } from '@/lib/security';
 import {
   ADMIN_COOKIE_NAME,
   ADMIN_SESSION_MAX_AGE,
@@ -11,12 +11,43 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-function getAdminPinHash() {
+function getAdminPinConfig() {
   const hash = String(process.env.ADMIN_PIN_HASH || '').trim();
-  if (!hash) {
-    throw new Error('ADMIN_PIN_HASH belum dikonfigurasi.');
+
+  // Mode utama: bcrypt hash di environment server.
+  if (hash) {
+    return {
+      type: 'hash',
+      value: hash
+    };
   }
-  return hash;
+
+  // Fallback setup: PIN mentah tetap hanya berada di server environment.
+  // Tidak pernah dikirim ke browser atau disimpan di localStorage/sessionStorage.
+  const pin = String(process.env.ADMIN_PIN || '').trim();
+
+  if (pin) {
+    if (!/^\d{6,}$/.test(pin)) {
+      throw new Error('ADMIN_PIN harus berupa minimal 6 digit angka.');
+    }
+
+    return {
+      type: 'pin',
+      value: pin
+    };
+  }
+
+  throw new Error('ADMIN_PIN_HASH atau ADMIN_PIN belum dikonfigurasi.');
+}
+
+async function verifyAdminPin(pin) {
+  const config = getAdminPinConfig();
+
+  if (config.type === 'hash') {
+    return bcrypt.compare(pin, config.value);
+  }
+
+  return safeEqual(pin, config.value);
 }
 
 export async function GET() {
@@ -49,7 +80,7 @@ export async function POST(req) {
       }, { status: 400 });
     }
 
-    const valid = await bcrypt.compare(pin, getAdminPinHash());
+    const valid = await verifyAdminPin(pin);
 
     if (!valid) {
       return Response.json({
@@ -87,6 +118,7 @@ export async function POST(req) {
 export async function DELETE() {
   const cookieStore = await cookies();
   cookieStore.delete(ADMIN_COOKIE_NAME);
+
   return Response.json({
     success: true,
     message: 'Sesi administrator berakhir.'
