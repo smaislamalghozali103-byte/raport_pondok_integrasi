@@ -319,7 +319,7 @@ export default function DashboardClient() {
 
       const rows = students.map((s, idx) => ({
         "No": idx + 1,
-        "NISN": s.nisn || s.nis || "",
+        "NISN": s.nisn || "",
         "Nama Siswa": s.name || s.fullName || "",
         "Nilai": grades[s.id] !== undefined && grades[s.id] !== "" ? Number(grades[s.id]) : ""
       }));
@@ -368,7 +368,7 @@ export default function DashboardClient() {
       if (!rows.length) throw new Error("File Excel tidak berisi data.");
 
       const headers = Object.keys(rows[0]);
-      const nisnCol = findColumn(headers, ["NISN", "NIS"]);
+      const nisnCol = findColumn(headers, ["NISN"]);
       const nameCol = findColumn(headers, ["Nama Siswa", "Nama", "Siswa"]);
       const gradeCol = findColumn(headers, ["Nilai", "Nilai Akhir", "Score"]);
 
@@ -393,7 +393,7 @@ export default function DashboardClient() {
         }
 
         let student = students.find(s => {
-          const sn = normalize(s.nisn || s.nis || "");
+          const sn = normalize(s.nisn || "");
           const ss = normalize(s.name || "");
           return (nisn && sn && nisn === sn) || (name && ss && name === ss);
         });
@@ -410,7 +410,7 @@ export default function DashboardClient() {
         mapped.push({
           studentId: student.id,
           studentName: student.name,
-          nisn: student.nisn || student.nis || "",
+          nisn: student.nisn || "",
           value,
         });
       }
@@ -832,7 +832,7 @@ export default function DashboardClient() {
                   {students.map((s, i) => (
                     <tr key={s.id}>
                       <td style={styles.td}>{i + 1}</td>
-                      <td style={styles.td}>{s.nisn || s.nis || "-"}</td>
+                      <td style={styles.td}>{s.nisn || "-"}</td>
                       <td style={styles.td}>{s.name}</td>
                       <td style={styles.td}>
                         <input
