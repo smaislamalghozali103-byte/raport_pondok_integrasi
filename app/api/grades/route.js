@@ -26,6 +26,10 @@ export async function GET(request) {
       return Response.json({ success: false, message: "classId dan subjectId wajib diisi." }, { status: 400 });
     }
 
+    if (!(await canTeach(session, classId, subjectId))) {
+      return Response.json({ success: false, message: "Anda tidak memiliki akses ke kelas dan mata pelajaran ini." }, { status: 403 });
+    }
+
     const snap = await db.collection("grades")
       .where("classId", "==", classId)
       .where("subjectId", "==", subjectId)
