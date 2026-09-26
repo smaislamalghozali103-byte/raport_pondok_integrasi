@@ -9,6 +9,7 @@ export default function LoginPage() {
   const [teacherId, setTeacherId] = useState("");
   const [pin, setPin] = useState("");
   const [pin2, setPin2] = useState("");
+  const [setupToken, setSetupToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -42,7 +43,8 @@ export default function LoginPage() {
             teacherId,
             pin,
             confirmPin: pin2,
-            pinConfirm: pin2
+            pinConfirm: pin2,
+            setupToken
           })
         });
 
@@ -58,6 +60,7 @@ export default function LoginPage() {
         setSetup(false);
         setPin('');
         setPin2('');
+        setSetupToken('');
         setIsSuccess(true);
         setMessage('✅ PIN berhasil disimpan! Silakan masukkan PIN Anda untuk masuk.');
         return;
@@ -77,6 +80,7 @@ export default function LoginPage() {
         setSetup(true);
         setPin('');
         setPin2('');
+        setSetupToken('');
         setIsSuccess(false);
         setMessage('Guru ini belum memiliki PIN. Silakan buat PIN baru (minimal 6 digit angka).');
         return;
@@ -102,6 +106,7 @@ export default function LoginPage() {
     setSetup(false);
     setPin('');
     setPin2('');
+    setSetupToken('');
     setMessage('');
     setIsSuccess(false);
   }
@@ -173,6 +178,20 @@ export default function LoginPage() {
 
           {setup && (
             <>
+              <label htmlFor="setupToken">Kode Aktivasi PIN</label>
+              <div className={styles.inputWrap}>
+                <span>🔑</span>
+                <input
+                  id="setupToken"
+                  type="text"
+                  autoComplete="one-time-code"
+                  placeholder="Masukkan kode dari Admin"
+                  value={setupToken}
+                  onChange={e => setSetupToken(e.target.value.trim())}
+                  required
+                />
+              </div>
+
               <label htmlFor="pin2">Konfirmasi PIN</label>
               <div className={styles.inputWrap}>
                 <span>✓</span>
@@ -206,7 +225,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className={styles.help}>ⓘ &nbsp; Butuh bantuan? Hubungi Admin IT</div>
+          <div className={styles.help}>ⓘ &nbsp; Untuk PIN pertama, minta Kode Aktivasi kepada Admin IT.</div>
         </form>
 
         <footer>
