@@ -185,6 +185,11 @@ function findStudentRow(values, student) {
   return null;
 }
 
+function isReportSheetName(title) {
+  const normalized = clean(title).normalize('NFKC').trim().toUpperCase();
+  return normalized === 'RAPORT' || normalized === 'RAPOT';
+}
+
 function scoreReportSheet(title, values, student) {
   const sheetNorm = norm(title);
   const sample = norm(
@@ -196,8 +201,8 @@ function scoreReportSheet(title, values, student) {
   let score = 0;
   const reasons = [];
 
-  if (/raport|rapor|raport|rapor|rapot/.test(sheetNorm)) {
-    score += 100;
+  if (isReportSheetName(title)) {
+    score += 150;
     reasons.push('nama-sheet-raport');
   }
   if (/rekap|rekapitulasi|nilai/.test(sheetNorm)) {
@@ -287,7 +292,7 @@ async function findBestReportSheet(meta, spreadsheetId, configuredSheetName, stu
   if (!candidates.length) return null;
 
   const best = candidates[0];
-  const namedReport = candidates.find(c => /raport|rapor|raport|rapor|rapot/i.test(c.sheet.title));
+  const namedReport = candidates.find(c => isReportSheetName(c.sheet.title));
 
   if (namedReport && namedReport.score >= best.score - 20) {
     return namedReport;
@@ -430,7 +435,8 @@ export async function GET(request) {
             nisDicari: clean(student.nis),
             nisnDicari: clean(student.nisn),
             spreadsheetId,
-            sheet: targetSheet.title,\n            configuredSheet: sheetName,\n            configuredSheetIndex,
+            sheet: targetSheet.title,
+            configuredSheet: sheetName,
             rowsChecked: valuesResult.values.length,
             detectedColumns: detectStudentColumns(valuesResult.values)
           }
