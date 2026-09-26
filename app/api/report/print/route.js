@@ -365,14 +365,18 @@ async function findBestReportSheet(meta, spreadsheetId, configuredSheetName, stu
 
   if (!candidates.length) return null;
 
-  const best = candidates[0];
-  const namedReport = candidates.find(c => isReportSheetName(c.sheet.title));
+  // RAPORT/RAPOT adalah nama resmi sheet raport.
+  // Jika sheet tersebut ada, jangan biarkan sheet REKAP menang hanya
+  // karena memiliki kecocokan siswa atau struktur tabel yang lebih tinggi.
+  const namedReports = candidates
+    .filter(c => isReportSheetName(c.sheet.title))
+    .sort((a, b) => b.score - a.score);
 
-  if (namedReport && namedReport.score >= best.score - 20) {
-    return namedReport;
+  if (namedReports.length) {
+    return namedReports[0];
   }
 
-  return best;
+  return candidates[0];
 }
 
 function studentBlock(values, rowIndex) {
