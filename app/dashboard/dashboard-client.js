@@ -7,6 +7,7 @@ export default function DashboardClient() {
   const router = useRouter();
   const fileRef = useRef(null);
   const fillRaportRef = useRef(null);
+  const masterVersionRef = useRef(null);
 
   const [teacher, setTeacher] = useState(null);
   const [units, setUnits] = useState([]);
@@ -45,6 +46,32 @@ export default function DashboardClient() {
 
   useEffect(() => {
     loadInitial();
+  }, []);
+
+  useEffect(() => {
+    let stopped = false;
+    const checkMasterVersion = async () => {
+      try {
+        const res = await fetch('/api/master/version', { cache: 'no-store', credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (stopped || !data.success || !data.version) return;
+        if (masterVersionRef.current === null) {
+          masterVersionRef.current = String(data.version);
+          return;
+        }
+        if (masterVersionRef.current !== String(data.version)) {
+          masterVersionRef.current = String(data.version);
+          await loadInitial();
+        }
+      } catch {}
+    };
+    const timer = setInterval(checkMasterVersion, 5000);
+    checkMasterVersion();
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
   }, []);
 
   async function loadInitial() {
